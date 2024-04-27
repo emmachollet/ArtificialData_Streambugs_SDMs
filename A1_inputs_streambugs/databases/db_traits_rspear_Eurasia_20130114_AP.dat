@@ -1,0 +1,1604 @@
+name	region	exposed	exposedcoding	generationTime	Gen.TimeThreshold	Gen.TimeCoding	sensitivity	SensitivityThreshold	SensitivityCoding	Migration	MigrationCoding	CodingSpear	checksum
+Acari	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Acentria	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Acentria ephemerella	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Acilius	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Acilius canaliculatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Acilius sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Acilius sulcatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Acroloxidae	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Acroloxus	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Acroloxus lacustris	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Adicella	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Adicella reducta	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Adicella sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Aedes	Eurasia	1	1	0.25	0.5	0	-0.28635	-0.357	1	0	1	0	3
+Aedes sp.	Eurasia	1	1	0.25	0.5	0	-0.28635	-0.357	1	0	1	0	3
+Aelosoma	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Aelosomatidae	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Aeolosoma hemprichi	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Aeshna	Eurasia	1	1	2.21667	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshna caerulea	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshna cyanea	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshna grandis	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshna juncea	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshna mixta	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshna sp.	Eurasia	1	1	2.3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Aeshnidae	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Agabus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus affinis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus arcticus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus biguttatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus bipustulatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus chalconatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus congener	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus conspersus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus didymus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus guttatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus labiatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus melanarius	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus melanocornis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus nebulosus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus neglectus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus obscurus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus paludosus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus sturmi	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus subtilis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus uliginosus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus undulatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agabus unguicularis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Agapetus	Eurasia	1	1	0.625	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agapetus fuscipes	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agapetus sp.	Eurasia	1	1	0.75	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agraylea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agraylea multipunctata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agraylea sexmaculata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agraylea sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agrypnia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agrypnia obsoleta	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agrypnia pagetana	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agrypnia sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Agrypnia varia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Alboglossiphonia	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Alboglossiphonia heteroclita	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Allogamus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Allogamus auricollis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Allogamus sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Allogamus uncatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ameletidae	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ameletus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ameletus inopinatus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ampharetidae	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Amphinemura	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Amphinemura sp.	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Amphinemura sulcicollis	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Amphipoda	Eurasia	1	1	0.52895	0.5	1	0.16215	-0.357	1	0	1	1	4
+Anabolia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	1	0	0	3
+Anabolia nervosa	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	1	0	0	3
+Anacaena	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Anacaena bipustulata	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Anacaena globulus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Anacaena limbata	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Anacaena lutescens	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Anacaena sp.	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Anax	Eurasia	1	1	1.66667	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Anax imperator	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Anax parthenope	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Anax sp.	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Ancylidae	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Ancylus	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Ancylus fluviatilis	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Ancylus sp.	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Anisoptera	Eurasia	1	1	1.715	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Anisus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Anisus leucostoma	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Anisus sp.	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Anisus vortex	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Annitella	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Annitella obscurata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Anodonta	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Anodonta anatina	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Anodonta cygnea	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Anodonta sp.	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Anomalopterygella	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Anomalopterygella chauvinia.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Aphanoneura	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Aphelocheiridae	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Aphelocheirus	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Aphelocheirus aestivalis	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Aplexa	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Aplexa hypnorum	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Aquarius	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Aquarius paludum	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Arachnida	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Araneae	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Arctocorixa	Eurasia	0	0	0.66667	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Arctocorixa carinata	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Arctocorixa germari	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Arctocorixa sp.	Eurasia	0	0	1	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Argulidae	Eurasia	1	1	0.4	0.5	0	0.04139	-0.357	1	0	1	0	3
+Arguloidea	Eurasia	1	1	0.4	0.5	0	0.04139	-0.357	1	0	1	0	3
+Argulus	Eurasia	1	1	0.4	0.5	0	0.04139	-0.357	1	0	1	0	3
+Argulus foliaceus	Eurasia	1	1	0.4	0.5	0	0.04139	-0.357	1	0	1	0	3
+Argyroneta	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Argyroneta aquatica	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Arhynchobdellida	Eurasia	1	1	1	0.5	1	-0.43282	-0.357	0	0	1	0	3
+Armiger	Eurasia	1	1	0.33	0.5	0	-1.94	-0.357	0	0	1	0	2
+Armiger crista	Eurasia	1	1	0.33	0.5	0	-1.94	-0.357	0	0	1	0	2
+Asellidae	Eurasia	1	1	0.462	0.5	0	-0.47936	-0.357	0	0	1	0	2
+Asellus	Eurasia	1	1	0.33	0.5	0	-0.42856	-0.357	0	0	1	0	2
+Asellus aquaticus	Eurasia	1	1	0.33	0.5	0	-0.17455	-0.357	1	0	1	0	3
+Asellus meridianus	Eurasia	1	1	0.33	0.5	0	-0.55556	-0.357	0	0	1	0	2
+Asellus sp.	Eurasia	1	1	0.33	0.5	0	-0.55556	-0.357	0	0	1	0	2
+Assiminea	Eurasia	1	1	1.7	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Assiminea grayana	Eurasia	1	1	1.7	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Assimineidae	Eurasia	1	1	1.7	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Astacidae	Eurasia	1	1	1	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Athericidae	Eurasia	1	1	0.6875	0.5	1	-0.35	-0.357	1	0	1	1	4
+Atherix	Eurasia	1	1	0.66667	0.5	1	-0.35	-0.357	1	0	1	1	4
+Atherix ibis	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Atherix marginata	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Atherix sp.	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Athripsodes	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Athripsodes albifrons	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Athripsodes aterrimus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Athripsodes bilineatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Athripsodes cinereus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Athripsodes sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Atrichops	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Atrichops crassipes	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Atyaephyra	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Atyaephyra desmaresti	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Atyidae	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Aulodrilus	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Aulodrilus pluriseta	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Austropotamobius	Eurasia	1	1	1	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Austropotamobius pallipes	Eurasia	1	1	1	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Baetidae	Eurasia	1	1	0.60208	0.5	1	-0.06711	-0.357	1	0	1	1	4
+Baetis	Eurasia	1	1	0.64564	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis alpinus	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis buceratus	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis digitatus	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis fuscatus	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis muticus	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis niger	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis rhodani	Eurasia	0	0	0.5	0.5	1	0.02159	-0.357	1	0	1	0	3
+Baetis scambus	Eurasia	1	1	2	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis sp.	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis tracheatus	Eurasia	1	1	0.60208	0.5	1	0.02159	-0.357	1	0	1	1	4
+Baetis vernus	Eurasia	1	1	0.5	0.5	1	0.02159	-0.357	1	0	1	1	4
+Balanidae	Eurasia	1	1	1	0.5	1	-0.44421	-0.357	0	0	1	0	3
+Balanus	Eurasia	1	1	1	0.5	1	-0.44421	-0.357	0	0	1	0	3
+Balanus balanoides	Eurasia	1	1	1	0.5	1	-0.44421	-0.357	0	0	1	0	3
+Balanus improvisus	Eurasia	1	1	1	0.5	1	-0.44421	-0.357	0	0	1	0	3
+Balanus sp.	Eurasia	1	1	1	0.5	1	-0.44421	-0.357	0	0	1	0	3
+Basommatophora	Eurasia	1	1	0.93894	0.5	1	-1.36943	-0.357	0	0	1	0	3
+Bathyomphalus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Bathyomphalus contortus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Batracobdella	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Batracobdella paludosa	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Bdellocephala	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Bdellocephala punctata	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Beraea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Beraea pullata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Beraeidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Beraeodes	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Beraeodes minutus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Berosus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Berosus affinis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Berosus bicolor	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Berosus luridus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Berosus signaticollis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Bezzia	Eurasia	1	1	0.33	0.5	0	-0.35	-0.357	1	0	1	0	3
+Bezzia sp.	Eurasia	1	1	0.33	0.5	0	-0.35	-0.357	1	0	1	0	3
+Bithynia	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Bithynia leachi	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Bithynia sp.	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Bithynia tentaculata	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Bithyniidae	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Bivalvia	Eurasia	1	1	0.89583	0.5	1	-2.09	-0.357	0	0	1	0	3
+Blephariceridae	Eurasia	1	1	1	0.5	1	-0.46	-0.357	0	0	1	0	3
+Boreobdella	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Boreobdella verrucata	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Bosmina	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Bosmina sp.	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Bosminidae	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Brachycentridae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Brachycentrus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Brachycentrus maculatum	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Brachycentrus maculatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Brachycentrus subnubilus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Brachycercus	Eurasia	1	1	0.83333	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Brachycercus harrisella	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Brachycercus harrisellus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Brachycercus sp.	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Brachyptera	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Brachyptera risi	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Brachytron	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Brachytron pratense	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Branchiopoda	Eurasia	1	1	0.33	0.5	0	0.17808	-0.357	1	0	1	0	3
+Branchiura	Eurasia	1	1	0.33333	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Branchiura sowerbyi	Eurasia	1	1	0.33333	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Brillia	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Brillia longifurca	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Brychius	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Brychius elevatus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Byrrhoidea	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Bythinella	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Bythinella sp.	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Caenidae	Eurasia	1	1	0.70909	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis	Eurasia	1	1	0.6625	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis beskidensis	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis horaria	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis luctuosa	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis macrura	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis pseudorivulorum	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis rivulorum	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis robusta	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Caenis sp.	Eurasia	1	1	0.8	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Callicorixa	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Callicorixa praeusta	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Callicorixa wollastoni	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Calopterygidae	Eurasia	1	1	1.77667	0.5	1	-0.35634	-0.357	1	0	1	1	4
+Calopteryx	Eurasia	1	1	1.77667	0.5	1	-0.35634	-0.357	1	0	1	1	4
+Calopteryx sp.	Eurasia	1	1	1.33	0.5	1	-0.35634	-0.357	1	0	1	1	4
+Calopteryx splendens	Eurasia	1	1	2	0.5	1	-0.35634	-0.357	1	0	1	1	4
+Calopteryx virgo	Eurasia	1	1	2	0.5	1	-0.35634	-0.357	1	0	1	1	4
+Cambaridae	Eurasia	1	1	2	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Canalipalpata	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Capnia	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Capnia bifrons	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Capnia sp.	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Capniidae	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Carcinus	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Carcinus maenas	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Centroptilum	Eurasia	1	1	0.5	0.5	1	-0.25068	-0.357	1	0	1	1	4
+Centroptilum luteolum	Eurasia	1	1	0.5	0.5	1	-0.25068	-0.357	1	0	1	1	4
+Ceraclea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ceraclea albimacula	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ceraclea dissimilis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ceraclea nigronervosa	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ceraclea senilis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ceraclea sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ceratopogonidae	Eurasia	1	1	0.33	0.5	0	-0.35	-0.357	1	0	1	0	3
+Cercyon	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon bifenestratus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon convexiusculus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon granarius	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon marinus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon sp.	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon sternalis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon tristis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cercyon ustulatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Ceriagrion	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Ceriagrion tenellum	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Chaetarthria	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Chaetarthria seminulum	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Chaetogaster	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Chaetogaster diaphanus	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Chaetogaster diastrophus	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Chaetogaster langi	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Chaetopterygini	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Chaetopterygini sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Chaetopteryx	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Chaetopteryx major	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Chaetopteryx sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Chaetopteryx villosa	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Chalcolestes	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Chalcolestes viridis	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Chaoboridae	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Chaoborus	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Chaoborus sp.	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Cheumatopsyche	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Cheumatopsyche lepida	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Chironomidae	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Chironominae	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Chironomini	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Chironomini sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Chironomus	Eurasia	1	1	0.38889	0.5	0	-0.33356	-0.357	1	0	1	0	3
+Chironomus plumosus-Gruppe	Eurasia	1	1	0.5	0.5	1	-0.33356	-0.357	1	0	1	1	4
+Chironomus sp.	Eurasia	1	1	0.33333	0.5	0	-0.33356	-0.357	1	0	1	0	3
+Chironomus thummi-Gruppe	Eurasia	1	1	0.33333	0.5	0	-0.33356	-0.357	1	0	1	0	3
+Chloroperla	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Chloroperla sp.	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Chloroperla torrentium	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Chloroperlidae	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Chrysomelidae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Chydoridae	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Cladocera	Eurasia	1	1	0.33	0.5	0	0.17808	-0.357	1	0	1	0	3
+Cloeon	Eurasia	1	1	0.4	0.5	0	-0.32398	-0.357	1	0	1	0	3
+Cloeon dipterum	Eurasia	1	1	0.3	0.5	0	-0.32398	-0.357	1	0	1	0	3
+Cloeon simile	Eurasia	1	1	0.5	0.5	1	-0.32398	-0.357	1	0	1	1	4
+Coelambus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelambus confluens	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelambus impressopunctatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelambus lautus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelambus nigrolineatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelambus paralellogrammus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelambus parallelogrammus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Coelostoma	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Coelostoma orbiculare	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Coenagrion	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coenagrion hastulatum	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coenagrion puella	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coenagrion puella/pulchellum	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coenagrion pulchellum	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coenagrion sp.	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coenagrionidae	Eurasia	1	1	0.92857	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Coleoptera	Eurasia	1	1	1.07309	0.5	1	-0.97551	-0.357	0	0	1	0	3
+Colymbetes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Colymbetes fuscus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Colymbetes kotulae	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Colymbetes sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Colymbetinae	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Colymbetinae sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Conchapelopia	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Conchapelopia melanops	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Conchapelopia sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Congeria	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Congeria leucophaeata	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Copelatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Copelatus haemorrhoidalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Corbicula	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Corbicula fluminalis	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Corbicula fluminea	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Corbiculidae	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Cordulegaster	Eurasia	1	1	3.5	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Cordulegaster boltonii	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Cordulegaster sp.	Eurasia	1	1	4	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Cordulegastridae	Eurasia	1	1	3.5	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Cordulia	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Cordulia aenea	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Corduliidae	Eurasia	1	1	1.25	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Corixa	Eurasia	0	0	0.55	0.5	1	-0.31275	-0.357	1	0	1	0	3
+Corixa affinis	Eurasia	0	0	0.5	0.5	1	-0.31275	-0.357	1	0	1	0	3
+Corixa dentipes	Eurasia	0	0	0.5	0.5	1	-0.31275	-0.357	1	0	1	0	3
+Corixa panzeri	Eurasia	0	0	0.5	0.5	1	-0.31275	-0.357	1	0	1	0	3
+Corixa punctata	Eurasia	0	0	0.75	0.5	1	-0.31275	-0.357	1	0	1	0	3
+Corixa sp.	Eurasia	0	0	0.5	0.5	1	-0.31275	-0.357	1	0	1	0	3
+Corixidae	Eurasia	0	0	0.9	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Corophiidae	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Corophium	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Corophium curvispinum	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Corophium lacustre	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Corophium multisetosum	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Corophium sp.	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Corophium volutator	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Crambidae	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Crangon	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Crangon crangon	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Crangonidae	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Crangonyctidae	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Crangonyx	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Crangonyx pseudogracilis	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Crenobia	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Crenobia alpina	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Cricotopus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Cricotopus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Crunoecia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Crunoecia irrorata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Cryptochironomus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Cryptochironomus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Culex	Eurasia	1	1	0.25	0.5	0	-0.28635	-0.357	1	0	1	0	3
+Culex sp.	Eurasia	1	1	0.25	0.5	0	-0.28635	-0.357	1	0	1	0	3
+Culicidae	Eurasia	1	1	0.25	0.5	0	-0.28976	-0.357	1	0	1	0	3
+Culiseta	Eurasia	1	1	0.25	0.5	0	-0.28635	-0.357	1	0	1	0	3
+Culiseta sp.	Eurasia	1	1	0.25	0.5	0	-0.28635	-0.357	1	0	1	0	3
+Curculionidae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Curculionidae sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Curculionoidea	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Cybaeidae	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Cymatia	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Cymatia bonsdorffi	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Cymatia coleoptrata	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Cymbiodyta	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cymbiodyta marginella	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Cyrnus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Cyrnus flavidus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Cyrnus trimaculatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Daphnia	Eurasia	1	1	0.33	0.5	0	0.20231	-0.357	1	0	1	0	3
+Daphnia sp.	Eurasia	1	1	0.33	0.5	0	0.20231	-0.357	1	0	1	0	3
+Daphniidae	Eurasia	1	1	0.33	0.5	0	0.20231	-0.357	1	0	1	0	3
+Decapoda	Eurasia	1	1	1.11111	0.5	1	-0.16687	-0.357	1	0	1	1	4
+Demicryptochironomus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Demicryptochironomus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Dendrocoelidae	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Dendrocoelum	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Dendrocoelum lacteum	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Deronectes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Deronectes latus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Diamesa	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Diamesa sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Dicranota	Eurasia	0	0	1	0.5	1	-0.35	-0.357	1	0	1	0	3
+Dicranota sp.	Eurasia	0	0	1	0.5	1	-0.35	-0.357	1	0	1	0	3
+Dicrotendipes	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Dicrotendipes nervosus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Dicrotendipes sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Dikerogammarus	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Dikerogammarus sp.	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Dikerogammarus villosus	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Diptera	Eurasia	1	1	0.42964	0.5	0	-0.39011	-0.357	0	0	1	0	2
+Diura	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Diura bicaudata	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Dixa	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Dixa sp.	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Dixidae	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Dolichopodidae	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Donacia	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donacia dentata	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donacia semicuprea	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donacia sparganii	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donacia versicolorea	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donacia vulgaris	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donaciinae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Donaciinae sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dreissena	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Dreissena polymorpha	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Dreissenidae	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Drusus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Drusus annulatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Drusus biguttatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Drusus sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Dryopidae	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dryops	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dryops ernesti	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dryops luridus	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dryops similaris	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dryops sp.	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dryops striatellus	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Dugesia	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesia gonocephala	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesia lugubris	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesia lugubris/polychroa	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesia polychroa	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesia sp.	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesia tigrina	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dugesiidae	Eurasia	1	1	1	0.5	1	-0.46578	-0.357	0	0	1	0	3
+Dytiscidae	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus circumcinctus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus circumflexus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus lapponicus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus marginalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus semisulcatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Dytiscus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ecdyonurus	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ecdyonurus dispar	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ecdyonurus sp.	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ecdyonurus torrentis	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ecdyonurus venosus	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Echinogammarus	Eurasia	1	1	0.75	0.5	1	0.16	-0.357	1	1	0	0	3
+Echinogammarus berilloni	Eurasia	1	1	0.75	0.5	1	0.16	-0.357	1	1	0	0	3
+Echinogammarus sp.	Eurasia	1	1	0.75	0.5	1	0.16	-0.357	1	1	0	0	3
+Ecnomidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ecnomus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ecnomus tenellus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Einfeldia	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Einfeldia sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Eiseniella	Eurasia	1	1	0.33333	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Eiseniella tetraedra	Eurasia	1	1	0.33333	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Electrogena	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Electrogena lateralis	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Electrogena quadrilineata	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Electrogena sp.	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Electrogena ujhelyii	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Elmidae	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elmis	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elmis aenea	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elmis latreillei	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elmis maugetii	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elmis sp.	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elodes	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elodes elongata	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elodes marginata	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Elodes minuta	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Eloeophila	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Eloeophila sp.	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Elophila	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Elophila nymphaeata	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Empididae	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Enallagma	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Enallagma cyathigerum	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Enochrus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus affinis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus bicolor	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus coarctatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus fuscipennis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus halophilus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus isotae	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus melanocephalus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus ochropterus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus quadripunctatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus sp.	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enochrus testaceus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Enoicyla	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Enoicyla pusilla	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Enoicyla sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Epeorus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Epeorus sylvicola	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemera	Eurasia	1	1	1.75	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemera danica	Eurasia	1	1	2	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemera lineata	Eurasia	1	1	2	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemera sp.	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemera vulgata	Eurasia	1	1	2	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemerella	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemerella ignita	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemerella major	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemerella mucronota	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemerella notata	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemerellidae	Eurasia	1	1	0.91667	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemeridae	Eurasia	1	1	1.75	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephemeroptera	Eurasia	1	1	0.8174	0.5	1	-0.24045	-0.357	1	0	1	1	4
+Ephoron	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Ephoron virgo	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Epitheca	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Epitheca bimaculata	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Eriocheir	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Eriocheir sinensis	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Eristalis	Eurasia	1	1	0.25	0.5	0	-0.35	-0.357	1	0	1	0	3
+Eristalis sp.	Eurasia	1	1	0.25	0.5	0	-0.35	-0.357	1	0	1	0	3
+Eristalomyia	Eurasia	1	1	0.25	0.5	0	-0.35	-0.357	1	0	1	0	3
+Eristalomyia tenax	Eurasia	1	1	0.25	0.5	0	-0.35	-0.357	1	0	1	0	3
+Erpobdella	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erpobdella nigricollis	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erpobdella octoculata	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erpobdella sp.	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erpobdella testacea	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erpobdella vilnensis	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erpobdellidae	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Erythromma	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Erythromma najas	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Erythromma viridulum	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Eukiefferiella	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Eukiefferiella sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Eurycercus	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Eurycercus lamellatus	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Eusimulium	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Eusimulium costatum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Ferrissia	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Ferrissia wautieri	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Galba	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Galba truncatula	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Gammaridae	Eurasia	1	1	0.65818	0.5	1	0.16372	-0.357	1	1	0	0	3
+Gammarus	Eurasia	1	1	0.72571	0.5	1	0.16584	-0.357	1	1	0	0	3
+Gammarus lacustris	Eurasia	1	1	1	0.5	1	0.32	-0.357	1	0	1	1	4
+Gammarus pulex	Eurasia	1	1	0.75	0.5	1	0.04091	-0.357	1	1	0	0	3
+Gammarus roeseli	Eurasia	1	1	0.75	0.5	1	0.16	-0.357	1	1	0	0	3
+Gammarus salinus	Eurasia	1	1	1	0.5	1	0.16	-0.357	1	0	1	1	4
+Gammarus sp.	Eurasia	1	1	0.75	0.5	1	0.16	-0.357	1	1	0	0	3
+Gammarus tigrinus	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	1	0	0	2
+Gammarus zaddachi	Eurasia	1	1	0.5	0.5	1	0.16	-0.357	1	0	1	1	4
+Gastropoda/Prosobranchia	Eurasia	1	1	1.0125	0.5	1	-1.75847	-0.357	0	0	1	0	3
+Gastropoda/Pulmonata	Eurasia	1	1	0.94021	0.5	1	-1.36652	-0.357	0	0	1	0	3
+Gerridae	Eurasia	1	1	0.48333	0.5	0	-0.56061	-0.357	0	0	1	0	2
+Gerris	Eurasia	1	1	0.48	0.5	0	-0.56061	-0.357	0	0	1	0	2
+Gerris argentatus	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris costai	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris gibbifer	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris lacustris	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris lateralis	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris najas	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris odontogaster	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris paludum	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Gerris sp.	Eurasia	1	1	0.3	0.5	0	-0.56061	-0.357	0	0	1	0	2
+Gerris thoracicus	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Glaenocorisa	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Glaenocorisa propinqua	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Glossiphonia	Eurasia	1	1	0.75	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Glossiphonia complanata	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Glossiphonia heteroclita	Eurasia	1	1	0.5	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Glossiphoniidae	Eurasia	1	1	0.79487	0.5	1	-0.67404	-0.357	0	0	1	0	3
+Glossosomatidae	Eurasia	1	1	0.625	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Glyphotaelius	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Glyphotaelius pellucidus	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Glyptotendipes	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Glyptotendipes Gruppe A	Eurasia	1	1	0.5	0.5	1	-0.38982	-0.357	0	0	1	0	3
+Glyptotendipes sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Goera	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Goera pilosa	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Goeridae	Eurasia	1	1	0.91667	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Gomphidae	Eurasia	1	1	2.16667	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Gomphus	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Gomphus pulchellus	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Gomphus sp.	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Gomphus vulgatissimus	Eurasia	1	1	3	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Grammotaulius	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Grammotaulius nigropunctatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Grammotaulius nitidus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Graphoderus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Graphoderus austriacus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Grapsidae	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Graptodytes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Graptodytes flavipes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Graptodytes granularis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Graptodytes pictus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Graptodytes sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Graptodytes versicolor	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Gyraulus	Eurasia	1	1	0.88333	0.5	1	-1.94	-0.357	0	0	1	0	3
+Gyraulus acronicus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Gyraulus albus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Gyraulus crista	Eurasia	1	1	0.3	0.5	0	-1.94	-0.357	0	0	1	0	2
+Gyraulus laevis	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Gyraulus parvus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Gyraulus sp.	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Gyrinidae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus aeratus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus caspius	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus distinctus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus marinus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus minutus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus natator	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus obsoletus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus opacus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus paykulli	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus substriatus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Gyrinus urinator	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Habrophlebia	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Habrophlebia fusca	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Habrophlebia lauta	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Habrophlebia sp.	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Haementeria	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Haementeria costata	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Haementeria sp.	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Haemopidae	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Haemopis	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Haemopis sanguisuga	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Halesus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Halesus digitatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Halesus radiatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Halesus sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Halesus tesselatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Haliplidae	Eurasia	1	1	1.11765	0.5	1	-1.84044	-0.357	0	0	1	0	3
+Haliplus	Eurasia	1	1	1.07143	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus confinis	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus flavicollis	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus fluviatilis	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus fulvus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus heydeni	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus immaculatus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus laminatus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus lineatocollis	Eurasia	1	1	2	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus lineolatus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus obliquus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus ruficollis	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus sp.	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus variegatus	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haliplus wehnckei	Eurasia	1	1	1	0.5	1	-1.83377	-0.357	0	0	1	0	3
+Haplotaxida	Eurasia	1	1	0.45733	0.5	0	-0.99013	-0.357	0	0	1	0	2
+Haplotaxidae	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Haplotaxis	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Haplotaxis gordioides	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Hebridae	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Hebrus	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Hebrus pusillus	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Hebrus ruficeps	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Helobdella	Eurasia	1	1	0.5	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Helobdella sp.	Eurasia	1	1	0.5	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Helobdella stagnalis	Eurasia	1	1	0.5	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Helochares	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helochares lividus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helochares obscurus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helochares punctatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helodes	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Helodes sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Helophorus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus aequalis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus alternans	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus aquaticus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus arvernicus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus asperatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus brevipalpis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus dorsalis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus flavipes	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus grandis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus granularis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus griseus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus guttulus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus longitarsis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus minutus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus nanus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus obscurus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus pumilio	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus sp.	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Helophorus strigifrons	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hemerodromia	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Hemerodromia sp.	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Hemiclepsis	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Hemiclepsis marginata	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Heptagenia	Eurasia	1	1	0.8	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Heptagenia flava	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Heptagenia fuscogrisea	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Heptagenia longicauda	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Heptagenia sp.	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Heptagenia sulphurea	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Heptageniidae	Eurasia	1	1	0.65625	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Hesperocorixa	Eurasia	0	0	0.55714	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa castanea	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa castanea/moesta	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa linnaei	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa linnei	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa moesta	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa sahlbergi	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Hesperocorixa sp.	Eurasia	0	0	0.9	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Heteroceridae	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Heterocerus	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Heterocerus fenestratus	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Heterocerus sp.	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Heteroptera	Eurasia	0	0	0.66266	0.5	1	-0.43142	-0.357	0	0	1	0	2
+Hexatomini	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Hexatomini sp.	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Hippeutis	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Hippeutis complanatus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Hirudinea	Eurasia	1	1	0.87302	0.5	1	-0.58991	-0.357	0	0	1	0	3
+Holocentropus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Holocentropus dubius	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Holocentropus picicornis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Holocentropus sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Holocentropus stagnalis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydaticus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydaticus seminiger	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydaticus transversalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydatophylax	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydatophylax infumatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydracarina	Eurasia	1	1	1	0.5	1	-1.1549	-0.357	0	0	1	0	3
+Hydrachnidia	Eurasia	1	1	1	0.5	1	-1.1549	-0.357	0	0	1	0	3
+Hydraena	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena britteni	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena gracilis	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena melas	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena nigrita	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena palustris	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena riparia	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraena testacea	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydraenidae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Hydrobiidae	Eurasia	1	1	0.875	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Hydrobius	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrobius fuscipes	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochara	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochara caraboides	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochus angustatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochus carinatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochus elongatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrochus nitidicollis	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydroglyphus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroglyphus geminus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydrometra	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Hydrometra stagnorum	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Hydrometridae	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Hydrophilidae	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrophilus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydrophilus piceus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Hydroporus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus angustatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus cantabricus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus discretus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus elongatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus erythrocephalus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus glabriusculus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus gyllenhali	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus incognitus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus latus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus longicornis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus longulus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus marginatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus melanarius	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus memnonius	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus morio	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus nanus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus neglectus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus nigrita	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus obscurus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus palustris	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus planus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus pubescens	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus rufifrons	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus striola	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus tesselatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus tristis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydroporus umbrosus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydropsyche	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche angustipennis	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche bulgaromanorum	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche contubernalis	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche incognita	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche instabilis	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche pellucidula	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche saxonica	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche siltalai	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsyche sp.	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydropsychidae	Eurasia	1	1	1	0.5	1	-1.02724	-0.357	0	0	1	0	3
+Hydroptila	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydroptila maclachlani	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydroptila sp.	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydroptila sparsa	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydroptila vectis	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydroptilidae	Eurasia	1	1	0.64583	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hydrovatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hydrovatus clypealis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrobia	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Hygrobia hermanni	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Hygrobiidae	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Hygrotus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrotus decoratus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrotus impressopunctatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrotus inaequalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrotus quinquelineatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrotus varius	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hygrotus versicolor	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hypania	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Hypania invalida	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Hyphydrus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hyphydrus ferrugineus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hyphydrus ovatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hyphydrus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Hyporhyacophila	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Hyporhyacophila sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ilybius	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius aenescens	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius angustior	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius ater	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius fenestratus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius fuliginosus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius guttiger	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius obscurus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius quadriguttatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilybius subaeneus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Ilyocoris	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Ilyocoris cimicoides	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Ironoquia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ironoquia dubia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ischnura	Eurasia	1	1	0.66667	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Ischnura elegans	Eurasia	1	1	0.5	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Ischnura pumilio	Eurasia	1	1	0.5	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Ischnura sp.	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Isoperla	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Isoperla grammatica	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Isoperla oxylepis	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Isoperla sp.	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Isopoda	Eurasia	1	1	0.462	0.5	0	-0.47936	-0.357	0	0	1	0	2
+Isoptena	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Isoptena serricornis	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Ithytrichia	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ithytrichia lamellaris	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Laccobius	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius alutaceus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius atratus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius biguttatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius bipunctatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius minutus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius sinuatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius sp.	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccobius striatulus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Laccophilus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Laccophilus hyalinus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Laccophilus minutus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Laccophilus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Lasiocephala	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lasiocephala basalis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lepidoptera	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Lepidostoma	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lepidostoma hirtum	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lepidostomatidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Leptoceridae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Leptocerus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Leptocerus lusitanicus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Leptocerus tineiformis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Leptodora	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Leptodora kindtii	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Leptodoridae	Eurasia	1	1	0.33	0.5	0	0.17	-0.357	1	0	1	0	3
+Leptophlebia	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Leptophlebia marginata	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Leptophlebia vespertina	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Leptophlebiidae	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Lestes	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Lestes dryas	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Lestes sponsa	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Lestes virens	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Lestes viridis	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Lestidae	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Leucorrhinia	Eurasia	1	1	1.5	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Leucorrhinia dubia	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Leucorrhinia pectoralis	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Leuctra	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra digitata	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra fusca	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra geniculata	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra hippopus	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra moselyi	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra nigra	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctra sp.	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Leuctridae	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Libellula	Eurasia	1	1	1.5	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Libellula depressa	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Libellula quadrimaculata	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Libellulidae	Eurasia	1	1	1.31176	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Limnebius	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius atomus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius crinifer	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius nitidus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius papposus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius parvulus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnebius truncatellus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnephilidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus	Eurasia	1	1	0.94286	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus affinis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus auricula	Eurasia	0	0	0.5	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Limnephilus binotatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus bipunctatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus bipunctatus/centralis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus borealis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus centralis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus decipens	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus elegans	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus extricatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus flavicornis	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus flavicornis/marmoratus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus fuscicornis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus griseus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus hirsutus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus ignavus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus incisus	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Limnephilus lunatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus luridus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus marmoratus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus nigriceps	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus politus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus rhombicus	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus sp.	Eurasia	1	1	0.9	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus sparsus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus stigma	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus subcentralis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnephilus vittatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Limnichidae	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Limnichus	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Limnichus pygmaeus	Eurasia	1	1	1	0.5	1	-1.15	-0.357	0	0	1	0	3
+Limnius	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnius sp.	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnius volckmari	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Limnodrilus	Eurasia	1	1	0.44444	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Limnodrilus claparedeanus	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Limnodrilus hoffmeisteri	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Limnodrilus sp.	Eurasia	1	1	0.33333	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Limnophora	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Limnophora sp.	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Limnoxenus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Limnoxenus niger	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Limoniidae	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Lithax	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lithax obscurus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lumbricidae	Eurasia	1	1	0.33333	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Lumbricina	Eurasia	1	1	0.4	0.5	0	-1.33989	-0.357	0	0	1	0	2
+Lumbriculidae	Eurasia	1	1	0.41667	0.5	0	-1.4	-0.357	0	0	1	0	2
+Lumbriculus	Eurasia	1	1	0.33333	0.5	0	-1.4	-0.357	0	0	1	0	2
+Lumbriculus sp.	Eurasia	1	1	0.33333	0.5	0	-1.4	-0.357	0	0	1	0	2
+Lumbriculus variegatus	Eurasia	1	1	0.33333	0.5	0	-1.4	-0.357	0	0	1	0	2
+Lycosidae	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Lymnaea	Eurasia	1	1	1	0.5	1	-0.63779	-0.357	0	0	1	0	3
+Lymnaea auricularia	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Lymnaea glabra	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Lymnaea palustris	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Lymnaea peregra	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Lymnaea sp.	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Lymnaea stagnalis	Eurasia	1	1	1	0.5	1	-0.62452	-0.357	0	0	1	0	3
+Lymnaea truncatula	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Lymnaeidae	Eurasia	1	1	0.94118	0.5	1	-0.63909	-0.357	0	0	1	0	3
+Lype	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lype phaeopa	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lype reducta	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lype sp.	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Lype unicolor	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Malacocerus	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Malacocerus tetracerus	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Malacostraca	Eurasia	1	1	0.66647	0.5	1	-0.0264	-0.357	1	0	1	1	4
+Marenzelleria	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Marenzelleria viridis	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Marstoniopsis	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Marstoniopsis scholtzi	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Maxillopoda/Branchiura	Eurasia	1	1	0.4	0.5	0	0.04139	-0.357	1	0	1	0	3
+Megaloptera	Eurasia	1	1	1.625	0.5	1	-0.06	-0.357	1	0	1	1	4
+Megasternum	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Megasternum obscurum	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Melampophylax	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Melampophylax mucoreus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Mesogastropoda	Eurasia	1	1	1.0125	0.5	1	-1.75847	-0.357	0	0	1	0	3
+Mesovelia	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Mesovelia furcata	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Mesoveliidae	Eurasia	1	1	1	0.5	1	-0.56	-0.357	0	0	1	0	3
+Metreletus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Metreletus balcanicus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Micronecta	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Micronecta minutissima	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Micronecta poweri	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Micronecta scholtzi	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Micronecta sp.	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Micropsectra	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Micropsectra sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Micropterna	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Micropterna lateralis	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Micropterna nycterobia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Micropterna sequax	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Micropterna sp.	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Microtendipes	Eurasia	1	1	1	0.5	1	-0.38982	-0.357	0	0	1	0	3
+Microtendipes sp.	Eurasia	1	1	1	0.5	1	-0.38982	-0.357	0	0	1	0	3
+Microvelia	Eurasia	1	1	0.83333	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Microvelia buenoi	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Microvelia pygmaea	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Microvelia reticulata	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Mideopsidae	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Mideopsis	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Mideopsis orbicularis	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Molanna	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Molanna albicans	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Molanna angustata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Molanna sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Molannidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Muscidae	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Lispe	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Musculium	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Musculium lacustre	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Mysida	Eurasia	1	1	0.3	0.5	0	-0.08	-0.357	1	0	1	0	3
+Mysidae	Eurasia	1	1	0.3	0.5	0	-0.08	-0.357	1	0	1	0	3
+Mystacides	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Mystacides azurea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Mystacides longicornis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Mystacides longicornis/nigra	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Mystacides nigra	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Mystacides sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Myxas	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Myxas glutinosa	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Naididae	Eurasia	1	1	0.3	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Nais	Eurasia	1	1	0.44444	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Nais communis	Eurasia	1	1	0.33333	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Nais elinguis	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Nais sp.	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Nanocladius	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Nanocladius bicolor	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Nanocladius sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Naucoridae	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Nebrioporus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Nebrioporus assimilis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Nebrioporus depressus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Nebrioporus elegans	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Nebrioporus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Nemotaulius	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Nemotaulius punctatolineatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Nemoura	Eurasia	1	1	1	0.5	1	0.2337	-0.357	1	0	1	1	4
+Nemoura avicularis	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemoura cambrica	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemoura cinerea	Eurasia	1	1	1	0.5	1	0.15875	-0.357	1	0	1	1	4
+Nemoura dubitans	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemoura flexuosa	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemoura sp.	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemouridae	Eurasia	1	1	1	0.5	1	0.24051	-0.357	1	0	1	1	4
+Nemurella	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemurella pictetii	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Nemourinae	Eurasia	1	1	1	0.5	1	0.235841429	-0.357	1	0	1	1	4
+Neomysis	Eurasia	1	1	0.3	0.5	0	-0.08	-0.357	1	0	1	0	3
+Neomysis integer	Eurasia	1	1	0.3	0.5	0	-0.08	-0.357	1	0	1	0	3
+Nepa	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Nepa cinerea	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Nepa rubra	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Nepidae	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Neredidae	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Nereis	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Nereis diversicolor	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Nereis sp.	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Neritidae	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Neureclipsis	Eurasia	1	1	1.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Neureclipsis bimaculata	Eurasia	1	1	1.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Neuroptera	Eurasia	1	1	0.5	0.5	1	-0.06	-0.357	1	0	1	1	4
+Nigrobaetis	Eurasia	1	1	0.33333	0.5	0	0.02159	-0.357	1	0	1	0	3
+Nigrobaetis niger	Eurasia	1	1	0.33333	0.5	0	0.02159	-0.357	1	0	1	0	3
+Niphargidae	Eurasia	1	1	0.415	0.5	0	0.16	-0.357	1	0	1	0	3
+Niphargus	Eurasia	1	1	0.415	0.5	0	0.16	-0.357	1	0	1	0	3
+Niphargus aquilex	Eurasia	1	1	0.5	0.5	1	0.16	-0.357	1	0	1	1	4
+Niphargus sp.	Eurasia	1	1	0.33	0.5	0	0.16	-0.357	1	0	1	0	3
+Normandia	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Normandia nitens	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Noteridae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Noterus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Noterus clavicornis	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Noterus crassicornis	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Notidobia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Notidobia ciliaris	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Notidobia sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Notonecta	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonecta glauca	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonecta maculata	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonecta marmorea	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonecta obliqua	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonecta sp.	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonecta viridis	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Notonectidae	Eurasia	1	1	1	0.5	1	-0.82044	-0.357	0	0	1	0	3
+Ochthebius	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius bicolon	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius dilatatus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius exsculptus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius marinus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius minimus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius nanus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius punctatus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius pusillus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Ochthebius viridis	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Odagmia	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Odagmia mitidifrons	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Odagmia ornata	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Odonata	Eurasia	1	1	1.46046	0.5	1	-0.75002	-0.357	0	0	1	0	3
+Odontoceridae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Odontocerum	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Odontocerum albicorne	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oecetis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oecetis furva	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oecetis lacustris	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oecetis ochracea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oecetis sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oecetis testacea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oligochaeta	Eurasia	1	1	0.33333	0.5	0	-1.09947	-0.357	0	0	1	0	2
+Oligoplectrum	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oligoplectrum maculatum	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oligostomis	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Oligostomis reticulata	Eurasia	0	0	1	0.5	1	-0.05811	-0.357	1	0	1	0	3
+Oligotricha	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oligotricha striata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ophiogomphus	Eurasia	1	1	1.5	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Ophiogomphus cecilia	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Ophiogomphus serpentinus	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Orconectes	Eurasia	1	1	2	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Orconectes limosus	Eurasia	1	1	2	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Orectochilus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Orectochilus villosus	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Oreodytes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Oreodytes sanmarki	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Oreodytes sanmarkii	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Oreodytes septentrionalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Orthetrum	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Orthetrum brunneum	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Orthetrum cancellatum	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Orthetrum coerulescens	Eurasia	1	1	2	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Orthocladius	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Orthocladius sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Oulimnius	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Oulimnius major	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Oulimnius tuberculatus	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Oxyethira	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oxyethira falcata	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Oxyethira sp.	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Pacifastacus	Eurasia	1	1	1	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Pacifastacus leniusculus	Eurasia	1	1	1	0.5	1	-0.5704	-0.357	0	0	1	0	3
+Palaemon	Eurasia	1	1	1	0.5	1	0.26	-0.357	1	0	1	1	4
+Palaemon longirostris	Eurasia	1	1	1	0.5	1	0.26	-0.357	1	0	1	1	4
+Palaemonetes	Eurasia	1	1	1	0.5	1	0.26	-0.357	1	0	1	1	4
+Palaemonetes varians	Eurasia	1	1	1	0.5	1	0.26	-0.357	1	0	1	1	4
+Palaemonidae	Eurasia	1	1	1	0.5	1	0.26	-0.357	1	0	1	1	4
+Parachironomus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Parachironomus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Paracorixa	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Paracorixa concinna	Eurasia	0	0	0.5	0.5	1	-0.29223	-0.357	1	0	1	0	3
+Paracymus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Paracymus scutellaris	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Paraleptophlebia	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Paraleptophlebia cincta	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Paraleptophlebia sp.	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Paraleptophlebia submarginata	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Paraleptophlebia werneri	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Parapoynx	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Parapoynx stratiotata	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Pararhyacophila	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Pararhyacophila sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Paratanytarsus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Paratanytarsus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Paratendipes	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Paratendipes sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Pediciidae	Eurasia	0	0	1	0.5	1	-0.35	-0.357	1	0	1	0	3
+Peloscolex	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Peloscolex sp.	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Peltodytes	Eurasia	1	1	2	0.5	1	-1.94716	-0.357	0	0	1	0	3
+Peltodytes caesus	Eurasia	1	1	2	0.5	1	-1.94716	-0.357	0	0	1	0	3
+Pentaneurini	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Pentaneurini sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Perla	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perla bipunctata	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perlidae	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perlodes	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perlodes microcephala	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perlodes microcephalus	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perlodes sp.	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Perlodidae	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Phaenopsectra	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Phaenopsectra sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Phagocata	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Phagocata sp.	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Philopotamidae	Eurasia	1	1	1.16667	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Philopotamus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Philopotamus sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Phryganea	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Phryganea bipunctata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Phryganea grandis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Phryganea sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Phryganeidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Phyllodocida	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Physa	Eurasia	1	1	1	0.5	1	-1.70035	-0.357	0	0	1	0	3
+Physa acuta	Eurasia	1	1	1	0.5	1	-1.88411	-0.357	0	0	1	0	3
+Physa fontinalis	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Physa heterostropha	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Physa sp.	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Physella	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Physella acuta	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Physidae	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Pirata	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Pirata piraticus	Eurasia	1	1	1	0.5	1	-1.63909	-0.357	0	0	1	0	3
+Piscicola	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Piscicola geometra	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Piscicolidae	Eurasia	1	1	1	0.5	1	-0.59591	-0.357	0	0	1	0	3
+Pisidiidae	Eurasia	1	1	0.83333	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium	Eurasia	1	1	0.8125	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium amnicum	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium casertanum	Eurasia	1	1	0.5	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium henslowanum	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium nitidum	Eurasia	1	1	0.5	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium pseudosphaerium	Eurasia	1	1	0.5	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium sp.	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium subtruncatum	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Pisidium supinum	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Planaria	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Planaria torva	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Planariidae	Eurasia	1	1	0.8325	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Planorbarius	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Planorbarius corneus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Planorbidae	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Planorbis	Eurasia	1	1	0.83333	0.5	1	-1.94	-0.357	0	0	1	0	3
+Planorbis carinatus	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Planorbis planorbis	Eurasia	1	1	0.5	0.5	1	-1.94	-0.357	0	0	1	0	3
+Planorbis sp.	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Platambus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Platambus maculatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Platycnemididae	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Platycnemis	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Platycnemis pennipes	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Platycnemis sp.	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Plea	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Plea leachi	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Plea minutissima	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Plecoptera	Eurasia	1	1	1	0.5	1	0.33592	-0.357	1	0	1	1	4
+Plectrocnemia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Plectrocnemia conspersa	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Plectrocnemia geniculata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Plectrocnemia sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Pleidae	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Poecilobothrus	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Poecilobothrus sp.	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Polycelis	Eurasia	1	1	0.665	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Polycelis felina	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Polycelis nigra	Eurasia	1	1	1	0.5	1	-0.42961	-0.357	0	0	1	0	3
+Polycelis nigra/tenuis	Eurasia	1	1	0.33	0.5	0	-0.42961	-0.357	0	0	1	0	2
+Polycelis tenuis	Eurasia	1	1	0.33	0.5	0	-0.42961	-0.357	0	0	1	0	2
+Polycentropodidae	Eurasia	1	1	1.03571	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Polycentropus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Polycentropus flavomaculatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Polycentropus irroratus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Polycentropus kingi	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Polycentropus sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Polychaeta	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Polymitarcyidae	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Polypedilum	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Polypedilum sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Porhydrus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Porhydrus lineatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Porhydrus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Portunidae	Eurasia	1	1	1	0.5	1	-0.07765	-0.357	1	0	1	1	4
+Potamanthidae	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Potamanthus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Potamanthus luteus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Potamonectes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Potamonectes assimilis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Potamonectes depressus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Potamonectes elegans	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Potamonectes griseostriatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Potamophylax	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamophylax cingulatus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamophylax latipennis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamophylax luctuosus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamophylax nigricornis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamophylax rotundipennis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamophylax sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Potamopyrgus	Eurasia	1	1	0.75	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Potamopyrgus antipodarum	Eurasia	1	1	0.5	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Potamopyrgus jenkinsi	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Potamothrix	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Potamothrix hammoniensis	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Potamothrix moldaviensis	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Pristina	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Pristina idrensis	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Proasellus	Eurasia	1	1	0.66	0.5	1	-0.55556	-0.357	0	0	1	0	3
+Proasellus coxalis	Eurasia	1	1	0.66	0.5	1	-0.55556	-0.357	0	0	1	0	3
+Proasellus meridianus	Eurasia	1	1	0.66	0.5	1	-0.55556	-0.357	0	0	1	0	3
+Procladius	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Procladius sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Procloeon	Eurasia	1	1	0.75	0.5	1	-0.25068	-0.357	1	0	1	1	4
+Procloeon bifidum	Eurasia	1	1	0.5	0.5	1	-0.25068	-0.357	1	0	1	1	4
+Procloeon pseudorufulum	Eurasia	1	1	1	0.5	1	-0.25068	-0.357	1	0	1	1	4
+Prodiamesa	Eurasia	1	1	0.37778	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Prodiamesa olivacea	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Prodiamesa rufovittata	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Prodiamesa sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Protonemura	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Protonemura meyeri	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Protonemura sp.	Eurasia	1	1	1	0.5	1	0.24869	-0.357	1	0	1	1	4
+Psammoryctides	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Psammoryctides albicola	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Psammoryctides barbatus	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Psychodidae	Eurasia	1	1	0.25	0.5	0	-0.35	-0.357	1	0	1	0	3
+Psychomyia	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Psychomyia fragilis	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Psychomyia pusilla	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Psychomyiidae	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Ptychoptera	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Ptychoptera sp.	Eurasia	1	1	1	0.5	1	-0.35	-0.357	1	0	1	1	4
+Ptychopteridae	Eurasia	1	1	0.75	0.5	1	-0.35	-0.357	1	0	1	1	4
+Pyralidae	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Pyrrhosoma	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Pyrrhosoma nymphula	Eurasia	1	1	1	0.5	1	-0.23577	-0.357	1	0	1	1	4
+Radix	Eurasia	1	1	0.75	0.5	1	-0.64	-0.357	0	0	1	0	3
+Radix auricularia	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Radix ovata	Eurasia	1	1	0.5	0.5	1	-0.64	-0.357	0	0	1	0	3
+Radix peregra	Eurasia	1	1	0.5	0.5	1	-0.64	-0.357	0	0	1	0	3
+Radix sp.	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Ranatra	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Ranatra linearis	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Rhagio	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Rhagio sp.	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Rhagionidae	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Rhantus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus bistriatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus exsoletus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus frontalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus grapii	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus latitans	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus notatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus suturalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rhantus suturellus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Rheocricotopus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Rheocricotopus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Rheopelopia	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Rheopelopia ornata	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Rheotanytarsus	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Rheotanytarsus sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Rhithrogena	Eurasia	1	1	0.75	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Rhithrogena semicolorata	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Rhithrogena sp.	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Rhyacodrilus	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Rhyacodrilus coccineus	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Rhyacophila	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila dorsalis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila fasciata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila nubila	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila obliterata	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila praemorsa	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophila vulgaris	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhyacophilidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Rhynchelmis	Eurasia	1	1	0.5	0.5	1	-1.4	-0.357	0	0	1	0	3
+Rhynchelmis limosella	Eurasia	1	1	0.5	0.5	1	-1.4	-0.357	0	0	1	0	3
+Rhynchobdellida	Eurasia	1	1	0.80952	0.5	1	-0.66846	-0.357	0	0	1	0	3
+Riolus	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Riolus cupreus	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Riolus sp.	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Riolus subviolaceus	Eurasia	1	1	2	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Scarodytes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Scarodytes halensis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Scarodytes sp.	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Sciomyzidae	Eurasia	1	1	0.5	0.5	1	-0.35	-0.357	1	0	1	1	4
+Scirtes	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Scirtes sp.	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Scirtidae	Eurasia	1	1	1	0.5	1	-1.14674	-0.357	0	0	1	0	3
+Segmentia	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Segmentia nitida	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Segmentina	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Segmentina nitida	Eurasia	1	1	1	0.5	1	-1.94	-0.357	0	0	1	0	3
+Seriata	Eurasia	1	1	0.91625	0.5	1	-0.44318	-0.357	0	0	1	0	3
+Sericostoma	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Sericostoma flavicorne	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Sericostoma personatum	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Sericostoma sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Sericostomatidae	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Serratella	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Serratella ignita	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Sialidae	Eurasia	1	1	1.625	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sialis	Eurasia	1	1	1.625	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sialis fuliginosa	Eurasia	1	1	2	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sialis lutaria	Eurasia	1	1	1	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sialis nigripes	Eurasia	1	1	2	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sialis sp.	Eurasia	1	1	1.5	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sigara	Eurasia	0	0	0.53125	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara concinna	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara distincta	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara dorsalis	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara falleni	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara fallenoides	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara fossarum	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara hellensi	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara lateralis	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara limitata	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara nigrolineata	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara scotti	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara semistriata	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara sp.	Eurasia	0	0	1	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara stagnalis	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara striata	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Sigara venusta	Eurasia	0	0	0.5	0.5	1	-0.23886	-0.357	1	0	1	0	3
+Silo	Eurasia	1	1	0.875	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Silo nigricornis	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Silo pallipes	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Silo piceus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Silo sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Simuliidae	Eurasia	1	1	0.3	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium	Eurasia	1	1	0.27484	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Boophth.) erythrocephal	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Eusimulium) angustipes	Eurasia	1	1	0.27308	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Eusimulium) aureum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Eusimulium) aureum-Grup	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Nevermannia) costatum	Eurasia	1	1	0.3	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Nevermannia) latigonium	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Nevermannia) lundstromi	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Nevermannia) vernum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) argyreatum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) intermedium	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) morsitans	Eurasia	1	1	0.5	0.5	1	-0.46	-0.357	0	0	1	0	3
+Simulium (Simulium) noelleri	Eurasia	1	1	0.5	0.5	1	-0.46	-0.357	0	0	1	0	3
+Simulium (Simulium) ornatum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) reptans	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) rostratum	Eurasia	1	1	0.27308	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) sp.	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Simulium) trifasciatum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Wilhelmia) equinum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium (Wilhelmia) lineatum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium Brevicaule	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium dunfellense	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium salopiense	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium sp.	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Simulium spinosum	Eurasia	1	1	0.25	0.5	0	-0.46	-0.357	0	0	1	0	2
+Siphlonuridae	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Siphlonurus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Siphlonurus aestivalis	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Siphlonurus armatus	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Siphlonurus lacustris	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Siphlonurus sp.	Eurasia	1	1	1	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Siphonoperla	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Siphonoperla sp.	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Siphonoperla torrentium	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Sisyra	Eurasia	1	1	0.5	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sisyra sp.	Eurasia	1	1	0.5	0.5	1	-0.06	-0.357	1	0	1	1	4
+Sisyridae	Eurasia	1	1	0.5	0.5	1	-0.06	-0.357	1	0	1	1	4
+Somatochlora	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Somatochlora metallica	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Somatochlora sp.	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Spercheus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Spercheus emarginatus	Eurasia	1	1	1	0.5	1	-0.89278	-0.357	0	0	1	0	3
+Sperchon	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Sperchon sp.	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Sperchonidae	Eurasia	1	1	0.5	0.5	1	-1.111	-0.357	0	0	1	0	3
+Sphaeriidae	Eurasia	1	1	0.75	0.5	1	-2.09	-0.357	0	0	1	0	3
+Sphaerium	Eurasia	1	1	0.75	0.5	1	-2.09	-0.357	0	0	1	0	3
+Sphaerium corneum	Eurasia	1	1	0.5	0.5	1	-2.09	-0.357	0	0	1	0	3
+Sphaerium lacustre	Eurasia	1	1	0.75	0.5	1	-2.09	-0.357	0	0	1	0	3
+Sphaerium rivicola	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Sphaerium sp.	Eurasia	1	1	0.75	0.5	1	-2.09	-0.357	0	0	1	0	3
+Spionidae	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Stagnicola	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Stagnicola corvus	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Stagnicola corvus/palustris	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Stagnicola palustris	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Stagnicola sp.	Eurasia	1	1	1	0.5	1	-0.64	-0.357	0	0	1	0	3
+Stenochironomus	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Stenochironomus sp.	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Stenophylax	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Stenophylax permistus	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Stenophylax sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Stictonectes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Stictonectes lepidus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Stictotarsus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Stictotarsus duodecimpustulatus	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Stratiomyidae	Eurasia	1	1	0.33333	0.5	0	-0.35	-0.357	1	0	1	0	3
+Stratiomyidae sp.	Eurasia	1	1	0.33333	0.5	0	-0.35	-0.357	1	0	1	0	3
+Stylaria	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Stylaria lacustris	Eurasia	1	1	0.5	0.5	1	-1.09947	-0.357	0	0	1	0	3
+Stylodrilus	Eurasia	1	1	0.5	0.5	1	-1.4	-0.357	0	0	1	0	3
+Stylodrilus heringianus	Eurasia	1	1	0.5	0.5	1	-1.4	-0.357	0	0	1	0	3
+Stylommatophora	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Succinea	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Succinea putris	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Succineidae	Eurasia	1	1	1	0.5	1	-1.23	-0.357	0	0	1	0	3
+Suphrodytes	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Suphrodytes dorsalis	Eurasia	1	1	1	0.5	1	-0.80728	-0.357	0	0	1	0	3
+Sympecma	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Sympecma fusca	Eurasia	1	1	1	0.5	1	-0.67788	-0.357	0	0	1	0	3
+Sympetrum	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum danae	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum flaveolum	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum nigrescens	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum pedemontanum	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum sanguineum	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum sp.	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum striolatum	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Sympetrum vulgatum	Eurasia	1	1	1	0.5	1	-0.95986	-0.357	0	0	1	0	3
+Symposiocladius	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Symposiocladius lignicola	Eurasia	1	1	0.4	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Syrphidae	Eurasia	1	1	0.25	0.5	0	-0.35	-0.357	1	0	1	0	3
+Tabanidae	Eurasia	0	0	0.75	0.5	1	-0.35	-0.357	1	0	1	0	3
+Tabanus	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Tabanus sp.	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Taeniopterygidae	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Taeniopteryx	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Taeniopteryx nebulosa	Eurasia	1	1	1	0.5	1	0.37964	-0.357	1	0	1	1	4
+Tanypodinae	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Tanypodinae sp.	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Terebellida	Eurasia	1	1	0.5	0.5	1	-1.1	-0.357	0	0	1	0	3
+Theodoxus	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Theodoxus fluviatilis	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Theromyzon	Eurasia	1	1	0.66667	0.5	1	-1.10379	-0.357	0	0	1	0	3
+Theromyzon sp.	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Theromyzon tessulatum	Eurasia	1	1	0.33333	0.5	0	-0.38982	-0.357	0	0	1	0	2
+Thoracica	Eurasia	1	1	1	0.5	1	-0.44421	-0.357	0	0	1	0	3
+Tinodes	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tinodes pallidulus	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tinodes sp.	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tinodes unicolor	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tinodes waeneri	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tipula	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Tipula (Yamatotipula) lateralis	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Tipula (Yamatotipula) sp.	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Tipula lateralis	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Tipulidae	Eurasia	0	0	0.5	0.5	1	-0.35	-0.357	1	0	1	0	3
+Torleya	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Torleya major	Eurasia	1	1	0.5	0.5	1	-0.29501	-0.357	1	0	1	1	4
+Triaenodes	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Triaenodes bicolor	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Triaenodes sp.	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tricholeiochiton	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Tricholeiochiton fagesii	Eurasia	1	1	0.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Trichoptera	Eurasia	1	1	0.94219	0.5	1	-0.10859	-0.357	1	0	1	1	4
+Trichostegia	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Trichostegia minor	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Trocheta	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Trocheta subviridis	Eurasia	1	1	1	0.5	1	-0.40564	-0.357	0	0	1	0	3
+Tubifex	Eurasia	1	1	0.44444	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Tubifex costatus	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Tubifex sp.	Eurasia	1	1	0.33333	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Tubifex tubifex	Eurasia	1	1	0.5	0.5	1	-0.92863	-0.357	0	0	1	0	3
+Tubificidae	Eurasia	1	1	0.3	0.5	0	-0.92863	-0.357	0	0	1	0	2
+Turbellaria	Eurasia	1	1	0.92118	0.5	1	-0.44238	-0.357	0	0	1	0	3
+Unio	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Unio pictorum	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Unio sp.	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Unio tumidus	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Unionidae	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Unionoida	Eurasia	1	1	1	0.5	1	-2.09	-0.357	0	0	1	0	3
+Valvata	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Valvata cristata	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Valvata macrostoma	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Valvata piscinalis	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Valvata pulchella	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Valvatidae	Eurasia	1	1	1	0.5	1	-1.81777	-0.357	0	0	1	0	3
+Velia	Eurasia	1	1	0.75	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Velia caprai	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Velia sp.	Eurasia	1	1	1	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Veliidae	Eurasia	1	1	0.5	0.5	1	-0.56061	-0.357	0	0	1	0	3
+Veneroida	Eurasia	1	1	0.85294	0.5	1	-2.09	-0.357	0	0	1	0	3
+Viviparidae	Eurasia	1	1	1	0.5	1	-1.50151	-0.357	0	0	1	0	3
+Viviparus	Eurasia	1	1	1	0.5	1	-1.50151	-0.357	0	0	1	0	3
+Viviparus contectus	Eurasia	1	1	1	0.5	1	-1.50151	-0.357	0	0	1	0	3
+Viviparus fasciatus	Eurasia	1	1	1	0.5	1	-1.50151	-0.357	0	0	1	0	3
+Viviparus viviparus	Eurasia	1	1	1	0.5	1	-1.50151	-0.357	0	0	1	0	3
+Wormaldia	Eurasia	1	1	1.25	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Wormaldia occipitalis	Eurasia	1	1	1	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Wormaldia sp.	Eurasia	1	1	1.5	0.5	1	-0.05811	-0.357	1	0	1	1	4
+Zygoptera	Eurasia	1	1	1.0532	0.5	1	-0.41427	-0.357	0	0	1	0	3
