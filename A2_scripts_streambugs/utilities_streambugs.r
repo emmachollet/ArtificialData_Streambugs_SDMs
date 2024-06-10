@@ -82,7 +82,7 @@ gg_color_hue <- function(n) {
 
 ## Get taxonomic level ####
 
-get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.plots){
+get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.outputs){
     # required input: 
     # data.inv = the wide-format monitoring data of the invertebrates, with taxa in columnnames starting with Occurrence_
     # data.tax = a taxonomic dictionary with all taxa in Switzerland and their taxonomic resolution
@@ -205,7 +205,7 @@ get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, v
     list.plots[[length(list.plots) + 1]] <- q
     
     file.name <- "Distribution_Prev_NbPresPoints_SelectCatch"
-    print.pdf.plots(list.plots = list.plots, width = 12, height = 8, dir.output = dir.plots, info.file.name = "", file.name = file.name, 
+    print.pdf.plots(list.plots = list.plots, width = 12, height = 8, dir.output = dir.outputs, info.file.name = "", file.name = file.name, 
                     png = F)
     
     
@@ -214,7 +214,7 @@ get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, v
 }
 
 
-write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
+write.df.preferences <- function(system.def, Invertebrates, file.name, dir.outputs){
     
     # make list with dataframes with two columns: name of env. traits and their classes
     
@@ -263,9 +263,9 @@ write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
             }
         }
         n.taxa <- length(Invertebrates)
-        file.name <- paste0(dir.outputs, "df_taxapref_", n.taxa, "Taxa_", env.pref, ".csv")
-        cat("Writing:", file.name, "\n")
-        write.csv(df.pref, file = file.name)
+        csv.name <- paste0(dir.outputs, file.name, n.taxa, "Taxa_", env.pref, ".csv")
+        cat("Writing:", csv.name, "\n")
+        write.csv(df.pref, file = csv.name)
         
         list.df.preferences[[env.pref]] <- df.pref
     }
@@ -675,6 +675,6 @@ get.plot.data.add.res <- function(catch.results, list.factors.type){
 #     }
 #     
 #     file.name <- "_AddRes_RatesLimFact"
-#     print.pdf.plots(list.plots = list.plots, width = 23, height = 8, dir.output = dir.plots, info.file.name = name.run, file.name = file.name, 
+#     print.pdf.plots(list.plots = list.plots, width = 23, height = 8, dir.output = dir.outputs, info.file.name = name.run, file.name = file.name, 
 #                     png = F)
 # }

@@ -10,11 +10,11 @@
 # get the state variables for a specific catchment
 construct.variables.par.catch <- function(catch, data.env.inputs, 
                                           data.par.update, par.adjust,
-                                          data.taxa.selection, taxa.selection,
+                                          data.taxa.selection, taxa.selection, selected.taxa.analysis,
                                           sites.selection, select.taxonomy, 
                                           catch.variable,
                                           plot.foodweb = F, name.run,
-                                          dir.inputs, dir.plots){
+                                          dir.inputs, dir.outputs){
     # catch = vect.catch.select[1]
     cat("\nConstructing variables and parameters for catchment:\n", 
         catch, "\n")
@@ -45,11 +45,12 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     Reaches   <- env.data$ReachID
     Habitats <- env.data$Habitat
     list.metadata.catch[["Reaches"]] <- Reaches
+    list.metadata.catch[["Habitats"]] <- Habitats
     
     # taxa pool of the catchment
     Invertebrates <- data.taxa.selection[which(data.taxa.selection$Taxonomic.level %in% select.taxonomy &
                                                     data.taxa.selection[, catch] > threshold), "Taxon"]
-    list.metadata.catch[["Taxa pool"]] <- Invertebrates
+    list.metadata.catch[["Invertebrates"]] <- Invertebrates
     
     # Pom and algae
     POM   <- c("FPOM","CPOM")
@@ -103,40 +104,38 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # }
     # name.traits <- unique(name.traits)
     
-    # ecr/nis 18.12.23: overwrite here some preference traits from Vermeiren et al. 2021 for selected taxa
-    # see table: T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat
-    # colnames(data.par.update)[2:9]
-    cat("\nFollowing taxa in our taxa list but not in the Vermeiren taxa list: ")
-    for (taxon in Invertebrates) {
+    if(par.adjust[["update.traits"]][["Flag"]]){
+      cat("Using updated (Vermeiren's) invertebrate ecological preferences only for selected taxa.")
+      # ecr/nis 18.12.23: overwrite here some preference traits from Vermeiren et al. 2021 for selected taxa
+      # see table: T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat
+      # colnames(data.par.update)[2:9]
+      names.selected.taxa <- gsub("Occurrence.", "", selected.taxa.analysis)
+
+      for (taxon in Invertebrates) {
         # taxon <- data.par.update$Taxon[2]
-        if(taxon %in% data.par.update$Taxon){
-            for (trait in colnames(data.par.update)[2:9]) { # update only temp and current trait
-                # trait <- colnames(data.par.update)[2]
-                ind <- which(grepl(taxon, names(par.invtraits)) & grepl(trait, names(par.invtraits)))
-                # ind <- 1073
-                if(length(ind) > 0){
-                    par.invtraits[ind] <- data.par.update[which(data.par.update$Taxon == taxon), trait]
-                }
-            }
-        } else {
-            cat(taxon, " ")
-        }
+        # taxon <- Invertebrates[1]
+          if(taxon %in% data.par.update$Taxon && taxon %in% names.selected.taxa){
+            cat("\nUpdating temperature and current preference for taxon:", taxon)
+              for (trait in colnames(data.par.update)[2:9]) { # update only temp and current trait
+                  # trait <- colnames(data.par.update)[2]
+                  ind <- which(grepl(taxon, names(par.invtraits)) & grepl(trait, names(par.invtraits)))
+                  # ind <- 1073
+                  if(length(ind) > 0){
+                      par.invtraits[ind] <- data.par.update[which(data.par.update$Taxon == taxon), trait]
+                  }
+              }
+          } else {
+            # cat("\nFollowing taxa in our taxa list but not in the Vermeiren taxa list: ")
+            #   cat(taxon, " ")
+          }
+      }
+    } else {
+      cat("Using original invertebrate ecological preferences.")
     }
     
     # try to round low preferences to 0 to get stronger responses
-    # length(par.invtraits)
-    # summary(par.invtraits)
-    # hist(par.invtraits)
     ind.current <- which(grepl("currenttolval", names(par.invtraits)))
     ind.temp <- which(grepl("tempmaxtolval", names(par.invtraits)))
-    # traits.current <- par.invtraits[ind.current]
-    # traits.temp <- par.invtraits[ind.temp]
-    # ind.test <- which(names(par.invtraits) == "Sciomyzidae_currenttolval_class4")
-    # par.invtraits[ind.test]
-    # summary(traits.current)
-    # summary(traits.temp)
-    # hist(traits.current)
-    # hist(traits.temp)
     if(par.adjust[["round.inv.traits"]][["Flag"]]){
       for(i in c(ind.current, ind.temp)){
         # print(i)
@@ -151,24 +150,7 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
         }
       }
     }
-    # hist(par.invtraits)
-    # ind.current <- which(grepl("currenttolval", names(par.invtraits)))
-    # ind.temp <- which(grepl("tempmaxtolval", names(par.invtraits)))
-    # traits.current <- par.invtraits[ind.current]
-    # traits.temp <- par.invtraits[ind.temp]
-    # ind.test <- which(names(par.invtraits) == "Sciomyzidae_currenttolval_class4")
-    # par.invtraits[ind.test]
-    # summary(traits.current)
-    # summary(traits.temp)
-    # hist(traits.current)
-    # hist(traits.temp)
-    # Sciomyzidae_currenttolval_class4 
-    
-    # sanity check
-    # par.invtraits[which(grepl("Ceratopogonidae", names(par.invtraits)))]
-    # par.invtraits.orig[c(1:3,1073,1052,3000)]
-    # par.invtraits[c(1:3,1073,1052,3000)]
-    
+
     # set dummy values with habitat suitability 1 for all invertebrates and all types
     par.invtraits.mh <- rep(1,4*length(Invertebrates))
     names(par.invtraits.mh) <- c(paste0(Invertebrates,"_microhabtolval_type",1),
@@ -296,7 +278,7 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     par.stoich.taxa <- assign.par.stoich(par.invtraits,par.stoich.out,y.names)
     
     # combine parameters
-    par.fixc <- c(par.fix,par.stoich.taxa)
+    par.fixc <- c(par.fix, par.stoich.taxa)
     
     # convert CSusPOM to DSusPOM
     # new: we convert CSusPOM to DSusPOM just before we call the model,
@@ -304,13 +286,15 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # parameters independently of each other.
     par.fixc <- convert.CSusPOM(par.fixc)
     
-    # sanity check
-    # par.invtraits.orig[which(grepl("Limoniidae", names(par.invtraits.orig)))]
-    # par.fixc[which(grepl("Limoniidae", names(par.fixc)))]
+    
+    # save results in catch folder for other use (e.g., Bayesian inference script)
+    dir.catch <- paste0(dir.outputs, catch, "_", sites.selection["n.sites"], "Sites", "/")
+    dir.create(dir.catch)
     
     if(plot.foodweb == T){
         # plot foodweb
-        pdf(paste(dir.plots, name.run, "_Foodweb",
+      cat("Printing foodweb in pdf.")
+        pdf(paste(dir.catch, catch, "_", length(Invertebrates), "Taxa_", "Foodweb",
                   # "feedtypesFWB_R_",
                   #par.fix["ratio_pred_prey"],
                   ".pdf",sep=""),
@@ -324,9 +308,13 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
         dev.off()
     }
     
-    return(list("y.names" = y.names, "par.fixc" = par.fixc, 
-                "env.data" = env.data, "Invertebrates" = Invertebrates, 
-                "par.invtraits.orig" = par.invtraits.orig, "list.metadata.catch" = list.metadata.catch))
+    list.results <- list("y.names" = y.names, "par.fixc" = par.fixc, 
+                         "env.data" = env.data, "Invertebrates" = Invertebrates, 
+                         "par.invtraits.orig" = par.invtraits.orig, "par.unc" = par.unc,
+                         "list.metadata.catch" = list.metadata.catch)
+    file.name <- paste0(dir.catch, catch, "_list.inputs.variables.parameters.rds")
+    saveRDS(list.results, file = file.name)
+    return(list.results)
 }
 
 

@@ -8,6 +8,7 @@
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+# Plot related functions ####
 
 print.pdf.plots <- function(list.plots, width = 12, height = width*3/4, dir.output, info.file.name = "", file.name = "list.plots.pdf", png = FALSE, png.square = F, png.vertical = F, png.ratio = 1){
     
@@ -79,7 +80,8 @@ gg_color_hue <- function(n) {
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
-## Get taxonomic level ####
+
+# Get taxonomic level ####
 
 get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.plots){
     # required input: 

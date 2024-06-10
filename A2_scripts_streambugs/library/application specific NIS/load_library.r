@@ -89,6 +89,7 @@ source("library/application specific NIS/check_survival.r")
 source("library/application specific NIS/calc_loglikelihood.r")
 source("library/application specific NIS/calc_max_correct_modres.r")
 source("library/application specific NIS/calc_res_steadystate.r")
+source("library/application specific NIS/calc_res_steadystate_update_ecr.r")
 source("library/application specific NIS/calc_freq_observation.r")
 
 source("library/application specific NIS/simulate_and_return_likeli_moresites.r")
