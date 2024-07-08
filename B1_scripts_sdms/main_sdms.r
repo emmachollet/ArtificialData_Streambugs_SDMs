@@ -59,7 +59,7 @@ dir.utilities           <- "../00_utilities/"
 # dir.create(dir.output)
 
 # define files
-name.streambugs.run     <- "10Catch_3081Sites_Prev0.15_10Yea_3651Steps"
+name.streambugs.run     <- "10Catch_3081Sites_update.traits.hybrid_rk4Met_50Yea_18251Steps"
 file.input.data         <- paste0(name.streambugs.run, "_WideData_ResultsThreshPresAbs.csv")
 file.prev.taxa          <- paste0(name.streambugs.run, "_PrevalenceTaxonomy_ThreshPresAbs.csv")
 file.selected.taxa      <- "selected_taxa_analysis.csv"
@@ -366,7 +366,7 @@ save.models(models=models.fit,
 
 # models.fit      <- load.models(path=dir.experiment,
 #                                split.type="FIT")
-# models.cv       <- load.models(path=dir.experiment, 
+# models.cv       <- load.models(path=dir.experiment,
 #                                split.type="CV")
 
 std.const.cv    <- readRDS(file=paste0(dir.experiment, "standardization_constant_CV.rds"))
@@ -431,6 +431,12 @@ print(fig2)
 dev.off() 
 
 ## Fig. 3 : ICE ----
+
+
+model.fit <- models.fit$GLM$entire_dataset$training$Baetisalpinus$model
+pdp::partial(model.fit, pred.var = "tempmaxC", plot = TRUE, rug = TRUE)
+
+
 
 list.plots <- list()
 

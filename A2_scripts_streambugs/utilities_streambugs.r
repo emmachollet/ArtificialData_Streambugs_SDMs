@@ -456,12 +456,12 @@ get.plot.data.add.res <- function(catch.results, list.factors.type){
     
     # catch.results <- list.results$RheinabBS
     
-    df.res.add <- as.data.frame(catch.results$res$res.add)
+    df.res.add <- as.data.frame(catch.results$res.add)
     col.df.res.add <- colnames(df.res.add)
     temp.vect.taxa <- catch.results$y.names$taxa[-c(1:2)]
     temp.vect.sites <- catch.results$y.names$reaches
     y.names <- catch.results$y.names$y.names
-    streambugs.results <- as.matrix(catch.results$res$res)
+    streambugs.results <- as.matrix(catch.results$res)
     env.data <- catch.results$env.data
     
     # make list of data frames with additional results per taxon per site

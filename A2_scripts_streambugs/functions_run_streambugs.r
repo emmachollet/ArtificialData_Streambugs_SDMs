@@ -9,13 +9,13 @@
 
 # get the state variables for a specific catchment
 construct.variables.par.catch <- function(catch, data.env.inputs, 
-                                          data.par.update, par.adjust,
+                                          list.par.update, par.adjust,
                                           data.taxa.selection, taxa.selection, selected.taxa.analysis,
                                           sites.selection, select.taxonomy, 
                                           catch.variable,
                                           plot.foodweb = F, name.run,
                                           dir.inputs, dir.outputs){
-    # catch = vect.catch.select[1]
+    # catch = vect.catch.select[4]
     cat("\nConstructing variables and parameters for catchment:\n", 
         catch, "\n")
 
@@ -34,10 +34,10 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
             }
         } else {
             rind.sites.selected <- which(grepl(sites.selection["select.sites"], env.data$ReachID))
-            if(sites.selection["n.sites"] != length(rind.sites.selected)){
+            if(length(rind.sites.selected) !=0 && sites.selection["n.sites"] != length(rind.sites.selected)){
                 rind.sites.selected <- c(1:(n.sites - length(rind.sites.selected)), rind.sites.selected) 
+                env.data <- env.data[rind.sites.selected,] # temporary take only few sites for trial
             }
-            env.data <- env.data[rind.sites.selected,] # temporary take only few sites for trial
         }
         threshold <- taxa.selection["threshold"]
     }
@@ -104,6 +104,11 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # }
     # name.traits <- unique(name.traits)
     
+    data.par.update <- list.par.update$update
+    data.par.correc <- list.par.update$correc
+    data.par.correc$Number <- data.par.correc$Class
+    data.par.correc$Class <- "class"
+    
     if(par.adjust[["update.traits"]][["Flag"]]){
       cat("Using updated (Vermeiren's) invertebrate ecological preferences only for selected taxa.")
       # ecr/nis 18.12.23: overwrite here some preference traits from Vermeiren et al. 2021 for selected taxa
@@ -113,7 +118,8 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
 
       for (taxon in Invertebrates) {
         # taxon <- data.par.update$Taxon[2]
-        # taxon <- Invertebrates[1]
+        # taxon <- Invertebrates[112]
+        # taxon <- "Potamophylaxcingulatus"
           if(taxon %in% data.par.update$Taxon && taxon %in% names.selected.taxa){
             cat("\nUpdating temperature and current preference for taxon:", taxon)
               for (trait in colnames(data.par.update)[2:9]) { # update only temp and current trait
@@ -128,6 +134,20 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
             # cat("\nFollowing taxa in our taxa list but not in the Vermeiren taxa list: ")
             #   cat(taxon, " ")
           }
+        
+        # correct preference that have an irregular shape (not unimodal)
+        if(taxon %in% data.par.correc$Taxa){
+          cat("\nCorrecting preference for ")
+          ind.tax <- which(data.par.correc$Taxa == taxon)
+          for (i in ind.tax) {
+            name.pref.problem <- paste0(paste(data.par.correc[i,c(1:3)], collapse = "_"), 
+                                        data.par.correc[i, "Number"])
+            name.pref.correct <- paste0(paste(data.par.correc[i,c(1:3)], collapse = "_"), 
+                                        data.par.correc[i, "Number"] + 1)
+            cat(name.pref.problem)
+            par.invtraits[name.pref.problem] <- par.invtraits[name.pref.correct]
+          }
+        }
       }
     } else {
       cat("Using original invertebrate ecological preferences.")
@@ -163,7 +183,18 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # other parameters
     
     # read in definitions for parameter distributions from file
-    par <- sysanal.read.distdef(paste0(dir.inputs, "parameter_input_fix.dat"))
+    # par <- sysanal.read.distdef(paste0(dir.inputs, "parameter_input_fix.dat"))
+    par <- sysanal.read.distdef(paste0(dir.inputs,"parameter_input_Reform.dat"))
+    
+    # perform sensitivity analysis of initial conditions
+    if(par.adjust[["sens.anal.init.cond"]][["Flag"]]){
+      par.sens.anal <- par.adjust[["sens.anal.init.cond"]][["Value"]]
+      ind.init.cond <- which(grepl("ini", names(par)))
+      for (i in ind.init.cond) {
+        par[[i]][[2]] <- as.numeric(par[[i]][[2]])*par.sens.anal
+      }
+    }
+    
     
     # adjust curve and intercept of limitation factor function
     if(par.adjust[["curve.curr.temp"]][["Flag"]]){
@@ -318,13 +349,13 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
 }
 
 
-run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run, dir.output, run.C = T, write.plot.results = F, ...){
+run.streambugs.catch <- function(y.names.par.catch, tout, return.res.add = F, name.run, dir.output, run.C = T, write.plot.results = F, ...){
     
     cat("\nRunning streambugs for:\n", 
         y.names.par.catch$list.metadata.catch$Catchment, 
         "with",  length(y.names.par.catch$Invertebrates) ,"taxa in",
         length(y.names.par.catch$y.names$reaches), "reaches\n\n")
-    # res.add <- T
+    # return.res.add <- T
     # y.names.par.catch <- list.variables.par.catch[[1]]
     y.names <- y.names.par.catch$y.names
     par.fixc <- y.names.par.catch$par.fixc
@@ -344,33 +375,41 @@ run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run,
 
       cat("Running Streambugs for reach:", reach,"\n")
       
-      res.i <- run.streambugs(y.names = y.names$y.names[ind.reach],
-                              times   = tout,
-                              par     = par.fixc,
-                              inp     = NA, # ecr modified this for this application
-                              C       = run.C,
-                              # method = "euler",
-                              return.res.add = res.add, # takes time, set to false if we only want simulations without additional output
-                              # file.def = paste("output/Toss/streambugs_modelstruct_",name.run,".dat",sep=""),
-                              # file.res = paste("output/Toss/streambugs_results_",name.run,".dat",sep=""),
-                              # file.add = paste(dir.output, "/add_output_", name.run, ".dat", sep=""),
-                              verbose = F #,
-                              # atol = 1e-08,
-                              # rtol = 1e-08
-                              # ...
-                              )$res
+      all.res.i <- run.streambugs(y.names = y.names$y.names[ind.reach],
+                                  times   = tout,
+                                  par     = par.fixc,
+                                  inp     = NA, # ecr modified this for this application
+                                  C       = run.C,
+                                  method = method,
+                                  return.res.add = return.res.add, # takes time, set to false if we only want simulations without additional output
+                                  # file.def = paste("output/Toss/streambugs_modelstruct_",name.run,".dat",sep=""),
+                                  # file.res = paste(dir.output, "streambugs_results_", reach, "_", name.run,".dat",sep=""),
+                                  # file.add = paste(dir.output, "add_output_", reach, "_", name.run, ".dat", sep=""),
+                                  verbose = F #,
+                                  # atol = 1e-08,
+                                  # rtol = 1e-08
+                                  # ...
+                                  )
+      res.i <- all.res.i$res
+      res.add.i <- all.res.i$res.add
 
       # check if NA or not in results
       if(any(is.na(res.i))){ 
-        
         # if there are any NA in results, write warning in metadata.file to be printed
         vect.na.reaches <- append(vect.na.reaches, reach)
         na.taxa <- gsub(paste0(reach, "_random_"), "", names(which(colSums(is.na(res.i))>0)))
-        na.warning <- paste0("WARNING: NA in results for reach ", reach)
+        na.time <- res.i[min(which(rowSums(is.na(res.i))>0)),"time"]
+        na.warning <- paste0("WARNING: NA in results for reach ", reach, 
+                             " at time ", na.time,
+                             " and for variables:")
+        na.warning <- paste(c(na.warning, na.taxa), collapse = " ")
         # list.warnings[[reach]] <- list(na.warning, "Taxa" = na.taxa)
         list.warnings[[reach]] <- na.warning
         cat("\n", na.warning, "\n")
-          
+        
+      }
+      
+      if(any(is.na(res.i)) && !any(grepl("POM", na.taxa))){
         # remove reach from parameters (update y.names below)
         ind.reach.par <- which(grepl(reach, names(par.fixc)))
         par.fixc.update <- par.fixc[-ind.reach.par]
@@ -382,13 +421,15 @@ run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run,
         y.names.par.catch$env.data <- env.data.update # overwrite env.data in global y.names.par variable
         
       } else {
-        # if no NA, bind results together
+        # if no NA or just for FPOM, bind results together
         if(!exists("res")){ # test if object "res" already exists
           res <- res.i
+          if(return.res.add){ res.add <- res.add.i }
         } else{
           # can't use "left_join" because res is class "streambugs"
           # res <- left_join(res, res.i, by = "time")
           res <- cbind(res,res.i) # original code, advantage use base package, but can't join results with NAs
+          if(return.res.add){ res.add <- cbind(res.add,res.add.i) }# original code, advantage use base package, but can't join results with NAs
         }  
       }
     }
@@ -402,7 +443,7 @@ run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run,
     cat(duration,"\n")
     
     # if reaches with NA, update y.names without reaches causing problems/NAs
-    if(length(vect.na.reaches) > 0) {
+    if(length(vect.na.reaches) > 0 && !any(grepl("POM", na.taxa))) {
       # recover elements of y.names for this catchment
       POM <- y.names$taxa[1:2]
       Algae <- y.names$taxa[3]
@@ -427,7 +468,7 @@ run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run,
     #                       inp     = NA, # ecr modified this for this application
     #                       C       = run.C,
     #                       # method = "euler",
-    #                       return.res.add = res.add, # takes time, set to false if we only want simulations without additional output
+    #                       return.res.add = return.res.add, # takes time, set to false if we only want simulations without additional output
     #                       # file.def = paste("output/Toss/streambugs_modelstruct_",name.run,".dat",sep=""),
     #                       # file.res = paste("output/Toss/streambugs_results_",name.run,".dat",sep=""),
     #                       # file.add = paste(dir.output, "/add_output_", name.run, ".dat", sep=""),
@@ -436,7 +477,7 @@ run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run,
     # 
     # print("Streambugs simulation finished.")
 
-    if(res.add){ print("Calculating additional results.")}
+    if(return.res.add){ print("Calculating additional results.")}
     if(write.plot.results){
         
         # # plot simulation results as time series
@@ -454,6 +495,7 @@ run.streambugs.catch <- function(y.names.par.catch, tout, res.add = F, name.run,
     }
     
     y.names.par.catch[["res"]] <- res
+    if(return.res.add){ y.names.par.catch[["res.add"]] <- res.add }
     y.names.par.catch$list.metadata.catch[["simulation_time"]] <- duration
     y.names.par.catch$list.metadata.catch[["warnings"]] <- list.warnings
     

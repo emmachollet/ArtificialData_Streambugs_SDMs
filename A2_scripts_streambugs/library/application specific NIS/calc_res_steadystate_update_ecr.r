@@ -70,7 +70,9 @@ calc.res.steadystate.update <- function(res, times, par, y.names, ratio.tail = 1
                                        paste(colnames(D.mod)[c.ind],
                                              "\n")) 
     vect.warnings <- colnames(D.mod)[c.ind]
-    }
+  } else {
+    vect.warnings <- NA
+  }
   
   return(list("D.mean.mod" = D.mean.mod, "Warnings" = vect.warnings))
 }
