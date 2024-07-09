@@ -46,6 +46,7 @@ library("keras")
 # reticulate::install_python(version = '<version>')
 
 # caret has to be loaded at the end to not cache function 'train'
+if (!require("mgcv")){install.packages("mgcv"); library("mgcv")}
 if (!require("caret")){install.packages("caret"); library("caret")}
 
 
@@ -59,9 +60,9 @@ dir.utilities           <- "../00_utilities/"
 # dir.create(dir.output)
 
 # define files
-name.streambugs.run     <- "10Catch_3081Sites_update.traits.hybrid_rk4Met_50Yea_18251Steps"
-file.input.data         <- paste0(name.streambugs.run, "_WideData_ResultsThreshPresAbs.csv")
-file.prev.taxa          <- paste0(name.streambugs.run, "_PrevalenceTaxonomy_ThreshPresAbs.csv")
+name.streambugs.run     <- "10Catch_3081Sites_update.traits.hybrid_rk4Met_10Yea_3651Steps"
+file.input.data         <- paste0(name.streambugs.run, "_WideData_ResultsSamplePresAbs.csv")
+file.prev.taxa          <- paste0(name.streambugs.run, "_PrevalenceTaxonomy_SamplePresAbs.csv")
 file.selected.taxa      <- "selected_taxa_analysis.csv"
 
 
@@ -130,9 +131,11 @@ scales::show_col(vect.col.pres.abs)
 # sdms training options
 number.split            <- 3
 split.criterion         <- "ReachID"
-number.sample           <- 1000
+number.sample           <- 3000
 sdm.models              <- list("GLM" = "glm",
+                                # "GAM" = "gam",
                                 "GAM" = "gamLoess",
+                                
                                 "RF"  = "rf")#,
                                 # "ann")
 no.models <- length(sdm.models)
@@ -155,7 +158,7 @@ list.noise <- list(
   #                         "target"     = "Occurrence.Gammaridae",
   #                         "amount"     = 0.1,
   #                         "parameters" = NULL)#,
-  # 
+  # # 
   # "noise.add.fact" = list("type"       = "add_factor",
   #                         "target"     = "random1", # new factor name
   #                         "amount"     = NULL,
@@ -241,57 +244,57 @@ for (taxon in taxa.colnames) {
   data.input[,taxon] = as.factor(data.input[,taxon])
 }
 
-# make long dataframe for analysis
-long.df.input.taxa <- gather(data.input, key = Taxon, value = Observation, all_of(taxa.colnames))
-long.df.input.taxa$Taxon <- gsub("Occurrence.", "", long.df.input.taxa$Taxon)
-long.df.input.env.taxa <- gather(long.df.input.taxa, key = Factor, value = Value, all_of(env.factor))
+# # make long dataframe for analysis
+# long.df.input.taxa <- gather(data.input, key = Taxon, value = Observation, all_of(taxa.colnames))
+# long.df.input.taxa$Taxon <- gsub("Occurrence.", "", long.df.input.taxa$Taxon)
+# long.df.input.env.taxa <- gather(long.df.input.taxa, key = Factor, value = Value, all_of(env.factor))
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Prevalence analysis ####
 
-# plot bars pres/abs/NA
-plot.data <- long.df.input.taxa
-plot.data$Observation <- factor(plot.data$Observation, levels=c("Present", NA, "Absent"))
-temp.taxa <- unique(plot.data$Taxon)
-temp.catch <- unique(plot.data$Watershed)
-
-# analyze distribution of prevalence and NAs across catchments
-p <- ggplot(plot.data, aes(x = Taxon, fill = Observation))
-p <- p + geom_bar(stat="count", position='stack')
-p <- p + facet_wrap(~ Watershed, scales = "free_y")
-p <- p + scale_fill_manual(values=vect.col.pres.abs)
-p <- p + theme_bw()
-p <- p + scale_x_discrete(limits = temp.taxa)
-p <- p + theme(axis.text.x = element_text(angle=90))
-p
-
-# analyze distribution of prevalence and NAs across taxa
-q <- ggplot(plot.data, aes(x = Watershed, fill = Observation))
-q <- q + geom_bar(stat = "count", position = "stack")
-q <- q + facet_wrap(~ Taxon, scales = "free_y")
-q <- q + scale_fill_manual(values=vect.col.pres.abs)
-q <- q + theme_bw()
-q <- q + scale_x_discrete(limits = temp.catch)
-q <- q + theme(axis.text.x = element_text(angle=90))
-q
-
-# print plots in pdf
-file.name <- "GeomBar_PresAbs_TaxaCatch"
-print.pdf.plots(list.plots = list(q,p), width = 12, height = 9, dir.output = dir.experiment, info.file.name = "", file.name = file.name, 
-                png = F)
-
-plot.data <- filter(plot.data, Taxon %in% "Gammaridae")
-q <- ggplot(plot.data, aes(x = Watershed, fill = Observation))
-q <- q + geom_bar(stat = "count", position = "stack")
-q <- q + scale_fill_manual(values=vect.col.pres.abs)
-q <- q + theme_bw()
-q <- q + scale_x_discrete(limits = temp.catch)
-q <- q + theme(axis.text.x = element_text(angle=90))
-q
-file.name <- "GeomBar_PresAbs_GammaridaeCatch"
-print.pdf.plots(list.plots = list(q), width = 7, height = 5, dir.output = dir.experiment, info.file.name = "", file.name = file.name, 
-                png = F)
+# # plot bars pres/abs/NA
+# plot.data <- long.df.input.taxa
+# plot.data$Observation <- factor(plot.data$Observation, levels=c("Present", NA, "Absent"))
+# temp.taxa <- unique(plot.data$Taxon)
+# temp.catch <- unique(plot.data$Watershed)
+# 
+# # analyze distribution of prevalence and NAs across catchments
+# p <- ggplot(plot.data, aes(x = Taxon, fill = Observation))
+# p <- p + geom_bar(stat="count", position='stack')
+# p <- p + facet_wrap(~ Watershed, scales = "free_y")
+# p <- p + scale_fill_manual(values=vect.col.pres.abs)
+# p <- p + theme_bw()
+# p <- p + scale_x_discrete(limits = temp.taxa)
+# p <- p + theme(axis.text.x = element_text(angle=90))
+# p
+# 
+# # analyze distribution of prevalence and NAs across taxa
+# q <- ggplot(plot.data, aes(x = Watershed, fill = Observation))
+# q <- q + geom_bar(stat = "count", position = "stack")
+# q <- q + facet_wrap(~ Taxon, scales = "free_y")
+# q <- q + scale_fill_manual(values=vect.col.pres.abs)
+# q <- q + theme_bw()
+# q <- q + scale_x_discrete(limits = temp.catch)
+# q <- q + theme(axis.text.x = element_text(angle=90))
+# q
+# 
+# # print plots in pdf
+# file.name <- "GeomBar_PresAbs_TaxaCatch"
+# print.pdf.plots(list.plots = list(q,p), width = 12, height = 9, dir.output = dir.experiment, info.file.name = "", file.name = file.name, 
+#                 png = F)
+# 
+# plot.data <- filter(plot.data, Taxon %in% "Gammaridae")
+# q <- ggplot(plot.data, aes(x = Watershed, fill = Observation))
+# q <- q + geom_bar(stat = "count", position = "stack")
+# q <- q + scale_fill_manual(values=vect.col.pres.abs)
+# q <- q + theme_bw()
+# q <- q + scale_x_discrete(limits = temp.catch)
+# q <- q + theme(axis.text.x = element_text(angle=90))
+# q
+# file.name <- "GeomBar_PresAbs_GammaridaeCatch"
+# print.pdf.plots(list.plots = list(q), width = 7, height = 5, dir.output = dir.experiment, info.file.name = "", file.name = file.name, 
+#                 png = F)
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Split and standardize data ####
@@ -341,13 +344,13 @@ preprocessed.data.fit <- preprocess.data(data=data.input,
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Cross-validation ####
 
-models.cv <- lapply(sdm.models, FUN = apply.caret.model, 
-                    preprocessed.data.cv, split.type = "CV", 
-                    taxa.colnames, env.factor, list.noise)
-
-save.models(models=models.cv,
-            path=dir.experiment,
-            split.type="CV")
+# models.cv <- lapply(sdm.models, FUN = apply.caret.model, 
+#                     preprocessed.data.cv, split.type = "CV", 
+#                     taxa.colnames, env.factor, list.noise)
+# 
+# save.models(models=models.cv,
+#             path=dir.experiment,
+#             split.type="CV")
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Fit entire dataset ####
@@ -432,22 +435,57 @@ dev.off()
 
 ## Fig. 3 : ICE ----
 
+# recover Streambugs data for ICE
+data.base.ice       <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
+data.base.ice$tempmaxC2 <- data.base.ice$tempmaxC^2
+data.base.ice$currentms2 <- data.base.ice$currentms^2
+name.ice.streambugs <- "10Catch_50Sites_ICE_30Steps_update.traits.hybrid_rk4Met_10Yea_3651Steps_"
+ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
+                                       "WideData_ResultsProbObs.csv"), sep = ";")
+no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
+no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_update")[2])
 
-model.fit <- models.fit$GLM$entire_dataset$training$Baetisalpinus$model
-pdp::partial(model.fit, pred.var = "tempmaxC", plot = TRUE, rug = TRUE)
+dir.exp.ice <- paste0(dir.experiment, "ICE/")
+dir.create(dir.exp.ice)
+preprocessed.data.ice <- preprocess.data(data=data.base.ice,
+                                         env.fact=env.factor,
+                                         dir=dir.exp.ice,
+                                         split.type="FIT")
+std.const.ice   <- readRDS(file=paste0(dir.exp.ice, "standardization_constant_FIT.rds"))
 
 
+# select.env.fact <- "temperature"
+select.env.fact <- "tempmaxC"
 
 list.plots <- list()
 
 for(taxon.under.obs in names(taxa.colnames)){
   
   cat("Plotting ICE for:", taxon.under.obs)
-  
-  # select.env.fact <- "temperature"
-  select.env.fact <- "tempmaxC"
-  
+
   # taxon.under.obs <- names(taxa.colnames)[1]
+  
+  pred.ice.streamb <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
+    mutate(observation_number = rep(1:no.sites, each = no.steps),
+           column_label = 1,
+           model = "Streambugs") %>%
+    rename(pred = paste0("Occurrence.", taxon.under.obs))
+  
+  env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
+  
+  pred.ice.mean <- pred.ice.streamb %>%
+    group_by_at(select.env.fact[1]) %>%
+    summarize(avg = median(na.omit(pred))) %>%
+    mutate(model = "Streambugs")
+  pred.ice.mean.bounds  <- pred.ice.mean %>%
+    # group_by(model) %>%
+    summarize(x.mean=max(select.env.fact),
+              y.mean.min=min(avg),
+              y.mean.max=max(avg)) %>%
+    mutate(model = "Streambugs")
+
+  # plot.data <- pred.ice.streamb
+  
   
   # input.env.factors <- get.input.env.factors(experiment.name)
   input.env.factors <- env.factor
@@ -455,23 +493,27 @@ for(taxon.under.obs in names(taxa.colnames)){
   ice.dfs <- plot.ice(models.performance=models.fit,
                       select.env.fact=select.env.fact,
                       taxa=taxon.under.obs,
-                      standardization.constant=std.const.fit[[1]],
-                      observations = preprocessed.data.fit[["Entire dataset"]][,input.env.factors],
-                      nb.sample=100,
-                      resolution=200,
+                      standardization.constant=std.const.ice[[1]],
+                      observations = preprocessed.data.ice[["Entire dataset"]][,input.env.factors],
+                      nb.sample=50,
+                      resolution=30,
                       input.env.factors=input.env.factors)
   
-  observations              <- ice.dfs[["observations"]]
-  env.factor.sampled        <- ice.dfs[["env.factor.sampled"]]
-  observations.mean         <- observations %>%
+  pred.models              <- ice.dfs[["observations"]]
+  env.factor.sampled       <- ice.dfs[["env.factor.sampled"]]
+  pred.models.mean         <- pred.models %>%
     group_by(across(all_of(select.env.fact)), model) %>%
     summarise(avg = mean(pred))
-  observations.mean.bounds  <- observations.mean %>% group_by(model) %>%
+  pred.models.mean.bounds  <- pred.models.mean %>% group_by(model) %>%
     summarise(x.mean=max(across(all_of(select.env.fact))),
               y.mean.min=min(avg),
               y.mean.max=max(avg))
-  
-  plot.data <- observations
+  # colnames(pred.ice.streamb)
+  # colnames(pred.models)
+  col.names <- c(select.env.fact, "pred", "observation_number", "column_label", "model")
+  plot.data <- rbind(pred.ice.streamb[,col.names], pred.models[,col.names] )
+  plot.data.mean  <- rbind(pred.ice.mean, pred.models.mean)       
+  plot.data.mean.bounds  <- rbind(pred.ice.mean.bounds, pred.models.mean.bounds)
   # plot.data$model <- factor(plot.data$model, levels=c("GLM", "GAM", "RF"))
   
   fig3 <- ggplot(data=plot.data) +
@@ -480,7 +522,7 @@ for(taxon.under.obs in names(taxa.colnames)){
                   group=observation_number, 
                   color=as.character(observation_number)),
               show.legend = FALSE) +
-    geom_line(data=observations.mean,
+    geom_line(data=plot.data.mean,
               aes(x=.data[[select.env.fact]], y=avg),
               size=1.5) +
     geom_rug(data = env.factor.sampled,
@@ -488,17 +530,18 @@ for(taxon.under.obs in names(taxa.colnames)){
              color="grey20",
              alpha=0.7,
              inherit.aes=F) + 
-    geom_segment(data=observations.mean.bounds,
-                 inherit.aes = FALSE,
-                 lineend="round",
-                 linejoin="round",
-                 aes(x=x.mean,
-                     y=y.mean.min,
-                     xend=x.mean,
-                     yend=y.mean.max),
-                 arrow=arrow(length = unit(0.3, "cm"),
-                             ends = "both")) +
-    facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
+    scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
+    # geom_segment(data=plot.data.mean.bounds,
+    #              inherit.aes = FALSE,
+    #              lineend="round",
+    #              linejoin="round",
+    #              aes(x=x.mean,
+    #                  y=y.mean.min,
+    #                  xend=x.mean,
+    #                  yend=y.mean.max),
+    #              arrow=arrow(length = unit(0.3, "cm"),
+    #                          ends = "both")) +
+    facet_wrap(~factor(model, levels = c("Streambugs", "GLM", "GAM", "RF")), ncol = 4) +
     theme_bw() +
     theme(strip.background = element_rect(fill = "white"),
           legend.title = element_text(size=24),
@@ -506,15 +549,16 @@ for(taxon.under.obs in names(taxa.colnames)){
     labs(title = taxon.under.obs,
          x = "Temperature",
          y = "Predicted probability of occurrence")
+  # fig3
   
   list.plots[[taxon.under.obs]] <- fig3
   
-  pdf(paste0(dir.experiment, "ice_", experiment.name, taxon.under.obs, ".pdf"))
-  print(fig3)
-  dev.off()
+  # pdf(paste0(dir.experiment, "ice_", experiment.name, taxon.under.obs, ".pdf"))
+  # print(fig3)
+  # dev.off()
 }  
 
-file.name <- paste0("ice_alltaxa")
+file.name <- paste0("ice_alltaxa_4x1")
 print.pdf.plots(list.plots = list.plots, width = 10, height = 5, 
                 dir.output = dir.experiment, info.file.name = experiment.name, file.name = file.name, 
                 png = F)
@@ -575,89 +619,11 @@ model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Li
                      # 'Null'          = 'black')         # Null Model
 
 # select taxon and env. factor
-taxon.under.obs <- "Baetisalpinus" # names(taxa.colnames)[7]
+taxon.under.obs <- names(taxa.colnames)[7]
 select.env.fact <- env.factor[1]
 name.select.env.fact <- names(select.env.fact)
 # name.select.env.fact <- names(env.factor)
 # set.seed(97)
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-## Recover Streambugs response shape ----
-
-data.base.ICE <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_100Sites.csv"), sep = ";")
-ice.df.streambugs <- read.csv(paste0(dir.input.data, 
-                                     "10Catch_2000Sites_ICE_Prev0.15_10Yea_3651Steps_WideData_ResultsProbObs.csv"), sep = ";")
-
-rind.na <- which(is.na(ice.df.streambugs$Occurrence.Gammaridae))
-sites.na <- ice.df.streambugs[rind.na, c("ReachID", env.factor[1:8])]
-
-list.plots <- list()
-
-for(taxon.under.obs in names(taxa.colnames)){
-  
-  # taxon.under.obs <- names(taxa.colnames)[4]
-  
-  pred.ice.streamb <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
-    mutate(observation_number = rep(1:100, each = 20),
-           column_label = 1,
-           model = "Streambugs") %>%
-    rename(pred = paste0("Occurrence.", taxon.under.obs))
-  
-  env.factor.sampled <- data.frame(variable = data.base.ICE[,select.env.fact])
-  
-  pred.ice.mean <- pred.ice.streamb %>%
-    group_by_at(select.env.fact[1]) %>%
-    summarize(avg = median(na.omit(pred)))
-  # pred.ice.mean.bounds  <- pred.ice.mean %>% 
-  #   # group_by(model) %>%
-  #   summarize(x.mean=max(select.env.fact),
-  #             y.mean.min=min(avg),
-  #             y.mean.max=max(avg))
-  
-  plot.data <- pred.ice.streamb
-  # plot.data$model <- factor(plot.data$model, levels=c("GLM", "GAM", "RF"))
-  
-  fig3 <- ggplot(data=plot.data) +
-    geom_line(aes(x=.data[[select.env.fact]],
-                  y=pred,
-                  group=observation_number, 
-                  color=as.character(observation_number)),
-              show.legend = FALSE) +
-    geom_line(data=pred.ice.mean,
-              aes(x=.data[[name.select.env.fact]], y=avg),
-              size=1.5) +
-    geom_rug(data = env.factor.sampled,
-             aes(x=variable), 
-             color="grey20",
-             alpha=0.7,
-             inherit.aes=F) + 
-    # geom_segment(data=pred.ice.mean.bounds,
-    #              inherit.aes = FALSE,
-    #              lineend="round",
-    #              linejoin="round",
-    #              aes(x=x.mean,
-    #                  y=y.mean.min,
-    #                  xend=x.mean,
-    #                  yend=y.mean.max),
-    #              arrow=arrow(length = unit(0.3, "cm"),
-    #                          ends = "both")) +
-    # facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
-  facet_wrap(~Watershed) +
-    theme_bw() +
-    theme(strip.background = element_rect(fill = "white"),
-          legend.title = element_text(size=24),
-          legend.text = element_text(size=20)) +
-    labs(title = taxon.under.obs,
-         x = "Temperature",
-         y = "Predicted probability of occurrence")
-  # fig3
-  list.plots[[taxon.under.obs]] <- fig3
-}
-
-file.name <- paste0("ice_streambugs_alltaxa")
-print.pdf.plots(list.plots = list.plots, width = 6, height = 6, 
-                dir.output = dir.output, info.file.name = "", file.name = file.name, 
-                png = F)
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Comparison different noise scenarios ----
@@ -666,7 +632,7 @@ print.pdf.plots(list.plots = list.plots, width = 6, height = 6,
 list.exp     <- list("Baseline"                            = "3000Sites_15Taxa_3SDMs_10EnvFact_",
                      "Reduce dataset size"                 = "1000Sites_15Taxa_3SDMs_10EnvFact_",
                      "Missdetection"                       = "3000Sites_15Taxa_3SDMs_10EnvFact_noise.gamm",
-                     "Absence from dispersal limitation"   = "3000Sites_15Taxa_3SDMs_10EnvFact_noise.disp")
+                     "Noise on temperature"   = "3000Sites_15Taxa_3SDMs_10EnvFact_noise.temp")
 
 # test.colors <- RColorBrewer::brewer.pal(8, "Set1")
 # print(test.colors)
@@ -708,8 +674,8 @@ multi.ice <- lapply(list.exp, FUN=function(name){
                       taxa=taxon.under.obs,
                       standardization.constant=std.const.fit[[1]],
                       observations = preprocessed.data.fit$`Entire dataset`,
-                      nb.sample=100,
-                      resolution=200,
+                      nb.sample=no.sites,
+                      resolution=no.steps,
                       input.env.factors=input.env.factors)
   
   observations              <- ice.dfs[["observations"]]
@@ -740,12 +706,22 @@ plot.data <- final.multi.ice
 plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF"))
 plot.data$column_label <- factor(plot.data$column_label, levels = unlist(names(list.exp)))
 
+pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
+  mutate(observation_number = rep(1:no.sites, each = no.steps),
+         column_label = 1) %>%
+  rename(pred = paste0("Occurrence.", taxon.under.obs)) %>%
+  group_by_at(select.env.fact[1]) %>%
+  summarize(avg = median(na.omit(pred)))
+
 fig1 <- ggplot(data=plot.data) +
   geom_line(aes(x=.data[[name.select.env.fact]],
                 y=avg,
                 group=model,
                 colour=model),
-            size=1) +
+            size=1, alpha = 0.8) +
+  geom_line(data=pred.streambugs.mean,
+            aes(x=.data[[name.select.env.fact]], y=avg),
+            size=1, color = "darkgrey", alpha = 0.8) +
   facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 4)+
   #facet_wrap(~column_label) +
   xlim(lb, hb) +
@@ -759,7 +735,7 @@ fig1 <- ggplot(data=plot.data) +
        y = "Predicted probability of occurrence",
        colour="Models")
 
-filename <- paste0("comparison_", 
+filename <- paste0("comparison_noise.temp_", 
                    length(list.exp), "exp_",
                    taxon.under.obs, "_",
                    select.env.fact)
@@ -767,7 +743,7 @@ pdf(paste0(dir.compar.plots, filename, "_pdp_per_scenario.pdf"), width = 11, hei
 print(fig1)
 dev.off()
 
-rm(fig1)
+# rm(fig1)
 
 
 
@@ -777,6 +753,9 @@ fig2 <- ggplot(data=plot.data) +
                 group=column_label,
                 colour=column_label),
             size=1) +
+  geom_line(data=pred.streambugs.mean,
+            aes(x=.data[[name.select.env.fact]], y=avg),
+            size=1, color = "darkgrey", alpha = 0.8) +
   scale_color_manual(values=color.map) +
   xlim(lb, hb) +
   # scale_y_continuous(limits = c(0,1)) +
@@ -789,11 +768,11 @@ fig2 <- ggplot(data=plot.data) +
        y = "Predicted probability of occurrence",
        colour="Scenario")
 
-pdf(paste0(dir.compar.plots, filename, "_pdp_per_model.pdf"), width = 9, height = 4)
+pdf(paste0(dir.compar.plots, filename, "_pdp_per_model.pdf"), width = 12, height = 5)
 print(fig2)
 dev.off()
 
-rm(fig2)
+# rm(fig2)
 
 
 # Fig 3: plotting the score of given taxon

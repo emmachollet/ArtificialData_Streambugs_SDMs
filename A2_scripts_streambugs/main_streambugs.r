@@ -56,9 +56,9 @@ map.inputs        <- map.inputs(directory = paste0(dir.utilities,"swiss.map.gdb"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # run simulations to produce ICE
-ICE <- T # if False, simulations run for whole dataset
-no.sites.ice <- 100
-no.steps.ice <- 100
+ICE <- F # if False, simulations run for whole dataset
+no.sites.ice <- 50
+no.steps.ice <- 30
 env.fact.ice <- "tempmaxC"
 
 # global options
@@ -87,7 +87,7 @@ inp <- NA # set NA for time-dependent input and parameters
 #           seq(10.003,n.years,by=1/365)) # t steadystate:170-200
 
 # continuous output times of same timesteps length
-n.years       <- 50 # number of years
+n.years       <- 10 # number of years
 n.days.appart <- 1  # number of days from one time step to another (can be smaller than one day, e.g., 0.5)
 tout          <- c(seq(0, n.years, by = n.days.appart/365)) # set up time vector of [n.years*365/n.days.appart] steps
 
@@ -106,7 +106,7 @@ catch.variable <- "Watershed"
 # tune parameters to get stronger presence/absence response to environmental factors, necessary for our application
 # if Flag True, then Value is applied to the tuned parameter
 par.adjust <- list("round.inv.traits"    = list("Flag" = F, "Value" = 0.1),  # round current and temperature preference if trait below Value (e.g., 0.1), to get stronger taxa (pres/abs) response
-                   "curve.curr.temp"     = list("Flag" = T, "Value" = -5),  # assign Value (e.g., -10) to curve parameter of limitation factor of current and temperature, to get stronger (pres/abs) taxa
+                   "curve.curr.temp"     = list("Flag" = F, "Value" = -5),  # assign Value (e.g., -10) to curve parameter of limitation factor of current and temperature, to get stronger (pres/abs) taxa
                    "curve.orgmic.sapro"  = list("Flag" = F, "Value" = 10),   # assign Value (e.g., -10) to curve parameter of limitation factor of orgmicropoll and saproby, to get stronger (pres/abs) taxa
                    "interc.orgmic.sapro" = list("Flag" = F, "Value" = 4),    # assign Value (e.g., -10) to curve parameter of limitation factor of orgmicropoll and saproby, to get stronger (pres/abs) taxa
                    "sens.anal.init.cond" = list("Flag" = F, "Value" = 0.5),  # do a sensitivity analysis of results to initial conditions (initial densities, original 1gDM) multiplied by Value
@@ -804,7 +804,7 @@ threshold.min <- 6.162e-05*0.01 # 1% change in individual of the smallest invert
 threshold.max <- 3.600e-02*0.01 # 1% change in individual of the biggest invertebrate
 threshold.med <- 5.350e-04*0.01 # 1% change in individual of the median invertebrate
 threshold.mean <- 2.852e-03*0.01
-threshold.test <- 3.947e-03*0.01
+threshold.test <- 3.947e-03*0.01 # 1% change in individual of the mean of the size of all invertebrates
 threshold.select <- threshold.test
 
 # analyze results for 1 sites, 20 steps, differences in steady state parameters (tail and threshold)
@@ -1266,9 +1266,9 @@ if(ICE){
                     group=observation_number,
                     color=as.character(observation_number)))#,
                 # show.legend = FALSE) 
-    # p <- p + geom_line(data=pred.ice.mean,
-    #             aes(x=.data[[select.env.fact]], y=avg),
-    #             size=1.5) 
+    p <- p + geom_line(data=pred.ice.mean,
+                aes(x=.data[[select.env.fact]], 
+                    y=avg),size=1.5)
     p <- p + geom_rug(data = env.factor.sampled,
                aes(x=variable), 
                color="grey20",
@@ -1284,7 +1284,7 @@ if(ICE){
     #                    yend=y.mean.max),
     #                arrow=arrow(length = unit(0.3, "cm"),
     #                            ends = "both"))
-    p <- p + facet_wrap(~Watershed)
+    # p <- p + facet_wrap(~Watershed)
     p <- p + ylim(0,1)
     p <- p + theme_bw()
     # p <- p + theme(strip.background = element_rect(fill = "white"),
@@ -1299,7 +1299,7 @@ if(ICE){
   }
   
   file.name <- paste0("ice_", ifelse(no.sites.ice == 1, select.sites, no.sites.ice), "_Sites_", no.steps.ice, "Steps_", select.env.fact)
-  file.name <- paste0(file.name, "_perCatch")
+  # file.name <- paste0(file.name, "_perCatch")
   print.pdf.plots(list.plots = list.plots, width = 10, height = 10, 
                   dir.output = dir.outputs, info.file.name = name.run, file.name = file.name, 
                   png = F)
