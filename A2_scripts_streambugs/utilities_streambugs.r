@@ -72,6 +72,19 @@ map.inputs <- function(directory){
     return(list.swiss.map.inputs)
 }
 
+exp.transform <-   function(x,intercept=0,curv=0)
+{
+  #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
+  #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
+  
+  if(curv == 0)
+  { 
+    y = intercept-(intercept-1)*x
+  } else {
+    y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
+  }
+  return(y)
+}
 
 
 # small basic ggplot colors function
@@ -248,6 +261,7 @@ write.df.preferences <- function(system.def, Invertebrates, file.name, dir.outpu
     list.df.preferences <- list()
     
     for (n in 1:length(list.preferences)) {
+      # n <- 2
         env.pref <- names(list.preferences)[n]
         cat(env.pref, "classes :", list.preferences[[n]][,1], "\n",
             env.pref, "values :", list.preferences[[n]][,2], "\n")
@@ -256,10 +270,12 @@ write.df.preferences <- function(system.def, Invertebrates, file.name, dir.outpu
         taxa.pref <- parameters[which(grepl(env.pref, names(parameters)))]
         df.pref <- data.frame(Classes = classes.pref, Values = classes.val)
         for (taxon in Invertebrates) {
+          # taxon <- Invertebrates[1]
             df.pref[,taxon] <- NA
             for (c in classes.pref) {
+              # c <- classes.pref[1]
                 df.pref[which(df.pref$Classes == c), taxon] <-
-                    taxa.pref[which(grepl(taxon, names(taxa.pref)) & grepl(c, names(taxa.pref)))]
+                    taxa.pref[which(grepl(taxon, names(taxa.pref)) & grepl(paste0(c, "$"), names(taxa.pref)))] # $ Asserts that we are at the end.
             }
         }
         n.taxa <- length(Invertebrates)

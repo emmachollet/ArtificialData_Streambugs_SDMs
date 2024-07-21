@@ -28,6 +28,8 @@ if ( !require(dplyr) )
 # load streambugs core
 # --------------------
 
+# # XXX ECR: uncommented ####
+# 
 # path.core <- "library/core/"
 # 
 # source(paste(path.core,"streambugs.r",sep=""))

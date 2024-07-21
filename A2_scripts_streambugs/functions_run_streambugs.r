@@ -9,14 +9,20 @@
 
 # get the state variables for a specific catchment
 construct.variables.par.catch <- function(catch, data.env.inputs, 
-                                          list.par.update, par.adjust,
-                                          data.taxa.selection, taxa.selection, selected.taxa.analysis,
+                                          list.par.update, par.adjust, no.class.new = 20,
+                                          data.taxa.selection, taxa.selection, 
+                                          selected.taxa.analysis,
                                           sites.selection, select.taxonomy, 
                                           catch.variable,
                                           plot.foodweb = F, name.run,
                                           dir.inputs, dir.outputs){
-    # catch = vect.catch.select[4]
-    cat("\nConstructing variables and parameters for catchment:\n", 
+    # catch = vect.catch.select[1]
+    # catch <- "Prevalence"
+  
+  # extract environmental and invertebrate data ####
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+    cat("\nConstructing variables and parameters for catchment:\n",
         catch, "\n")
 
     list.metadata.catch <- list()
@@ -28,13 +34,13 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
         threshold <- 0
     } else {
         env.data <- data.env.inputs[which(data.env.inputs[,catch.variable] == catch),] # filter sites from a specific catchment
-        if(sites.selection["select.sites"] == "random"){
-            if(sites.selection["n.sites"] != "all" & as.numeric(sites.selection["n.sites"]) < dim(env.data)[1]){
-                env.data <- env.data[1:sites.selection["n.sites"],] # temporary take only few sites for trial
+        if("random" %in% sites.selection[["select.sites"]]){
+            if(sites.selection[["n.sites"]] != "all" & as.numeric(sites.selection[["n.sites"]]) < dim(env.data)[1]){
+                env.data <- env.data[1:sites.selection[["n.sites"]],] # temporary take only few sites for trial
             }
         } else {
-            rind.sites.selected <- which(grepl(sites.selection["select.sites"], env.data$ReachID))
-            if(length(rind.sites.selected) !=0 && sites.selection["n.sites"] != length(rind.sites.selected)){
+          rind.sites.selected <- which(data.env.inputs$ReachID %in% sites.selection[["select.sites"]])
+            if(length(rind.sites.selected) !=0 && sites.selection[["n.sites"]] != length(rind.sites.selected)){
                 rind.sites.selected <- c(1:(n.sites - length(rind.sites.selected)), rind.sites.selected) 
                 env.data <- env.data[rind.sites.selected,] # temporary take only few sites for trial
             }
@@ -56,6 +62,9 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     POM   <- c("FPOM","CPOM")
     Algae <- "Algae"
 
+    # construct variables and parameters ####
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     # construct variable name
     y.names <- construct.statevariables(POM=POM, Algae=Algae, Invertebrates=Invertebrates,
                                         Reaches=unique(Reaches), Habitats=unique(Habitats))
@@ -97,6 +106,12 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
                                               file.db.spear=file.db.spear,
                                               file.db.bodymass=file.db.bodymass)
     par.invtraits.orig <- par.invtraits
+    
+    # upadate parameters ####
+    # ~~~~~~~~~~~~~~~~~~~~~~~
+    
+    acronym.env.fact <- c("tempmax", "current", "sapro", "orgmicropoll")
+    
     # # extract name of traits from streambugs function
     # name.traits <- names(par.invtraits)
     # for (taxon in Invertebrates) {
@@ -104,31 +119,40 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # }
     # name.traits <- unique(name.traits)
     
-    data.par.update <- list.par.update$update
-    data.par.correc <- list.par.update$correc
+    # recover datasets used to update parameters
+    data.par.update <- list.par.update$update # dataset from Peter Vermeiren's study with updated preference traits from Bayesian inference
+    data.par.correc <- list.par.update$correc # file written manually by Emma Chollet to correct multimodal preference traits
     data.par.correc$Number <- data.par.correc$Class
     data.par.correc$Class <- "class"
     
+    ## a. from Peter Vermeiren (temp, current, sapro) ####
+    
+    # ecr/nis 18.12.23: overwrite here some preference traits from Vermeiren et al. 2021 for selected taxa
+    # see table: T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat
     if(par.adjust[["update.traits"]][["Flag"]]){
       cat("Using updated (Vermeiren's) invertebrate ecological preferences only for selected taxa.")
-      # ecr/nis 18.12.23: overwrite here some preference traits from Vermeiren et al. 2021 for selected taxa
-      # see table: T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat
       # colnames(data.par.update)[2:9]
       names.selected.taxa <- gsub("Occurrence.", "", selected.taxa.analysis)
 
       for (taxon in Invertebrates) {
-        # taxon <- data.par.update$Taxon[2]
-        # taxon <- Invertebrates[112]
-        # taxon <- "Potamophylaxcingulatus"
+        # taxon <- Invertebrates[5]
+        # updating only selected taxa
           if(taxon %in% data.par.update$Taxon && taxon %in% names.selected.taxa){
-            cat("\nUpdating temperature and current preference for taxon:", taxon)
-              for (trait in colnames(data.par.update)[2:9]) { # update only temp and current trait
-                  # trait <- colnames(data.par.update)[2]
-                  ind <- which(grepl(taxon, names(par.invtraits)) & grepl(trait, names(par.invtraits)))
-                  # ind <- 1073
-                  if(length(ind) > 0){
-                      par.invtraits[ind] <- data.par.update[which(data.par.update$Taxon == taxon), trait]
-                  }
+            cat("\nUpdating temperature, current and saprobic conditions preference for taxon:", taxon)
+              for (acro in acronym.env.fact[1:3]) { # update only temp, current and sapro traits
+                  # acro <- acronym.env.fact[1]
+                update.tax.traits <- data.par.update[data.par.update$Taxon == taxon, which(grepl(acro, colnames(data.par.update)))]
+                max.pref <- max(update.tax.traits)
+                # scale traits if the maximum preference is not equal to 1
+                if(max.pref < 1 & max.pref > 0){
+                  update.tax.traits <- update.tax.traits / max.pref
+                }
+                # replace scaled updated preference trait
+                for (name.pref in names(update.tax.traits)) {
+                  # name.pref <- names(update.tax.traits)[1]
+                  ind.tax.trait.orig <- which(grepl(taxon, names(par.invtraits)) & grepl(name.pref, names(par.invtraits)))
+                  par.invtraits[ind.tax.trait.orig] <- update.tax.traits[name.pref][1,1]
+                }
               }
           } else {
             # cat("\nFollowing taxa in our taxa list but not in the Vermeiren taxa list: ")
@@ -179,6 +203,67 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
                                  paste0(Invertebrates,"_microhabtolval_type",4))
     
     par.invtraits <- c(par.invtraits,par.invtraits.mh)
+    
+    # apply polynomial interpolation of preference traits to smooth response to environemntal factors
+    par.env.global.orig <- par.env.global
+    par.env.global.update <- par.env.global
+    # par.invtraits.orig <- par.invtraits
+    par.invtraits.update <- par.invtraits
+    
+    cat("\n\nUpdating classes with a polynomial interpolation of", 
+        no.class.new,"points between traits: ")
+    for (acro in acronym.env.fact) {
+      # acro <- acronym.env.fact[1]
+      # retrieve original classes of environmental factor
+      ind.par.env <- which(grepl(acro, names(par.env.global.update)))
+      class.env.orig <- par.env.global.update[ind.par.env]
+      name.env.par <- unique(sub("\\_.*", "",names(class.env.orig))) # remove  all characters after the 1st underscore "_"
+      no.class.orig <- length(class.env.orig)
+      
+      # do polynomial interpolation only for preferences that have more than 2 classes
+      if(no.class.orig > 3){
+        cat(name.env.par, " ")
+        # create new (more) classes
+        val.class.env.new <- round(seq(min(class.env.orig), max(class.env.orig), length.out = no.class.new), digits = 2)
+        class.env.new <- val.class.env.new
+        names.class.new <- paste("class", 1:no.class.new, sep = "")
+        names(class.env.new) <- paste(name.env.par, names.class.new, sep = "_")
+        
+        for(taxon in Invertebrates){
+          # taxon <- Invertebrates[1]  
+          # retrieve original preference trait extracted from database
+          ind.tax.env.score <- which(grepl(taxon, names(par.invtraits.update)) & grepl(acro, names(par.invtraits.update)))
+          scores.tax.env <- par.invtraits.update[ind.tax.env.score]
+          name.score <- str_split(names(scores.tax.env), "_")[[1]][2]
+          
+          # create "new" preference trait from a polynomial interpolation of the original classes and traits
+          linear.interp <- approx(class.env.orig, scores.tax.env,xout=class.env.orig,rule=2)$y
+          polynomial.interp <- pracma::pchip(class.env.orig, scores.tax.env, class.env.new)
+          
+          # # plot
+          # plot(class.env.orig, scores.tax.env, col='red', pch=13, main = paste(taxon, name.score, sep = "_"))
+          # points(class.env.new, polynomial.interp, col='blue', pch=5)
+          # lines(class.env.orig, linear.interp, col='green', lwd=1)
+          # lines(class.env.new, polynomial.interp, col='purple', lwd=1)
+          
+          scores.tax.new <- round(polynomial.interp, digits = 2)
+          names(scores.tax.new) <- paste(paste0(taxon, "_", name.score), names.class.new, sep = "_")
+          
+          # remove old scores and append new ones
+          par.invtraits.update <- par.invtraits.update[-ind.tax.env.score]
+          par.invtraits.update <- append(par.invtraits.update, scores.tax.new)
+          
+        }
+        # remove old classes and append new ones
+        par.env.global.update <- par.env.global.update[-ind.par.env]
+        par.env.global.update <- append(par.env.global.update, class.env.new)
+      }
+    }
+    cat("\n\n")
+    
+    # update parameters
+    par.env.global <- par.env.global.update
+    par.invtraits <- par.invtraits.update
     
     # other parameters
     
@@ -319,7 +404,7 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     
     
     # save results in catch folder for other use (e.g., Bayesian inference script)
-    dir.catch <- paste0(dir.outputs, catch, "_", sites.selection["n.sites"], "Sites", "/")
+    dir.catch <- paste0(dir.outputs, catch, "_", sites.selection[["n.sites"]], "Sites", "/")
     dir.create(dir.catch)
     
     if(plot.foodweb == T){
@@ -351,12 +436,14 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
 
 run.streambugs.catch <- function(y.names.par.catch, tout, return.res.add = F, name.run, dir.output, run.C = T, write.plot.results = F, ...){
     
+  # return.res.add <- T
+  # y.names.par.catch <- list.variables.par.catch[[1]]
+  
     cat("\nRunning streambugs for:\n", 
         y.names.par.catch$list.metadata.catch$Catchment, 
         "with",  length(y.names.par.catch$Invertebrates) ,"taxa in",
         length(y.names.par.catch$y.names$reaches), "reaches\n\n")
-    # return.res.add <- T
-    # y.names.par.catch <- list.variables.par.catch[[1]]
+    
     y.names <- y.names.par.catch$y.names
     par.fixc <- y.names.par.catch$par.fixc
     reaches.orig <- y.names.par.catch$y.names$reaches

@@ -26,6 +26,7 @@ if ( !require("tidyverse") ) { install.packages("tidyverse"); library("tidyverse
 if ( !require("ggplot2") ) { install.packages("ggplot2"); library("ggplot2") }         # to do nice plots
 if ( !require("plotly") ) { install.packages("plotly"); library("plotly") }            # to do nice "interactive" plots
 if ( !require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
+if ( !require("pracma") ) { install.packages("pracma"); library("pracma") }                        # to read layers for plotting maps
 
 ## Directory and file definitions ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,7 +57,7 @@ map.inputs        <- map.inputs(directory = paste0(dir.utilities,"swiss.map.gdb"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # run simulations to produce ICE
-ICE <- F # if False, simulations run for whole dataset
+ICE <- T # if False, simulations run for whole dataset
 no.sites.ice <- 50
 no.steps.ice <- 30
 env.fact.ice <- "tempmaxC"
@@ -65,6 +66,7 @@ env.fact.ice <- "tempmaxC"
 run.C            <- T # run C version of the rhs of Streambugs
 return.res.add   <- F # calculate additional output (rates, limitation factors) when running Streambugs
 plot.biomass     <- F # plot time evolution of biomass (heavier computation for dataframes and plots if many sites and many taxa)
+no.class.new     <- 20 # number of new classes/points for preference trait interpolation
 
 # has to be defined globally but is used in fct to construct parameters
 inp <- NA # set NA for time-dependent input and parameters
@@ -87,9 +89,10 @@ inp <- NA # set NA for time-dependent input and parameters
 #           seq(10.003,n.years,by=1/365)) # t steadystate:170-200
 
 # continuous output times of same timesteps length
-n.years       <- 10 # number of years
+n.years       <- 50 # number of years
 n.days.appart <- 1  # number of days from one time step to another (can be smaller than one day, e.g., 0.5)
 tout          <- c(seq(0, n.years, by = n.days.appart/365)) # set up time vector of [n.years*365/n.days.appart] steps
+# tout <- c(0, 0.001, 0.002)
 
 # select method for ode solver
 method <- "rk4"
@@ -106,7 +109,7 @@ catch.variable <- "Watershed"
 # tune parameters to get stronger presence/absence response to environmental factors, necessary for our application
 # if Flag True, then Value is applied to the tuned parameter
 par.adjust <- list("round.inv.traits"    = list("Flag" = F, "Value" = 0.1),  # round current and temperature preference if trait below Value (e.g., 0.1), to get stronger taxa (pres/abs) response
-                   "curve.curr.temp"     = list("Flag" = F, "Value" = -5),  # assign Value (e.g., -10) to curve parameter of limitation factor of current and temperature, to get stronger (pres/abs) taxa
+                   "curve.curr.temp"     = list("Flag" = F, "Value" = 0),  # assign Value (e.g., -10) to curve parameter of limitation factor of current and temperature, to get stronger (pres/abs) taxa
                    "curve.orgmic.sapro"  = list("Flag" = F, "Value" = 10),   # assign Value (e.g., -10) to curve parameter of limitation factor of orgmicropoll and saproby, to get stronger (pres/abs) taxa
                    "interc.orgmic.sapro" = list("Flag" = F, "Value" = 4),    # assign Value (e.g., -10) to curve parameter of limitation factor of orgmicropoll and saproby, to get stronger (pres/abs) taxa
                    "sens.anal.init.cond" = list("Flag" = F, "Value" = 0.5),  # do a sensitivity analysis of results to initial conditions (initial densities, original 1gDM) multiplied by Value
@@ -132,6 +135,7 @@ select.sites   <- "random"
 # select.sites <- "SynthPoint2612Aa"
 # select.sites <- "SynthPoint2533Ti"
 # select.sites <- "SynthPoint8909Rh"
+# select.sites <- c("SynthPoint88Rh", "SynthPoint21Rh") # Rhone
 # select.sites   <- "CH076ZGRe" # e.g., site with problem in Reuss (when running all reaches at once, 10 sites, 3 years)
 
 # select number of sites per catchment for simulation
@@ -140,16 +144,15 @@ if(ICE){
 } else {
   n.sites.per.catch <- "all"
   # n.sites.per.catch <- 5
-  
 }
-sites.selection      <- c("n.sites" = n.sites.per.catch, 
-                          "select.sites" = select.sites)
+sites.selection      <- list("n.sites" = n.sites.per.catch, 
+                             "select.sites" = select.sites)
 
 # specify how we select the taxa pool
 # metric: based on prevalence or number of presence points in the catchment
 # threshold: threshold above which taxa is selected
 taxa.selection <- c("metric" = "Prevalence", 
-                    "threshold" = 0.15)
+                    "threshold" = 0.5)
 # taxa.selection <- c("metric" = "NbPresPoints", 
 #                     "threshold" = 7)
 
@@ -168,10 +171,11 @@ for (i in 1:length(par.adjust)) {
 
 name.run <- paste0(
   ifelse(ICE, paste0("ICE_", no.steps.ice, "Steps_"), ""),
+  "PolyInterp", no.class.new, "_",
+  ifelse(run.C, "runC_", "runR_"),
   name.par.adjust,
-  method, "Met_",
+  # method, "Met_",
   # "CorrectPar_",
-  # ifelse(run.C, "runC_", "runR_"),
   ifelse(return.res.add, "ResAdd_", ""),
   # "Prev", taxa.selection[2], "_",
   # "Shade", correct.shade, "_",
@@ -341,8 +345,8 @@ if(ICE){
   #   }
   #   env.data <- env.data[rind.sites.selected,] # temporary take only few sites for trial
   # }
-  if(select.sites != "random"){
-    rind.select.site <- which(grepl(sites.selection["select.sites"], data.env.inputs$ReachID))
+  if(!("random" %in% sites.selection[["select.sites"]])){
+    rind.select.site <- which(data.env.inputs$ReachID %in% sites.selection[["select.sites"]])
     if(no.sites.ice != length(rind.select.site)){
       rind.ice.site <- c(sample(1:nrow(data.env.inputs), no.sites.ice - length(rind.select.site)), rind.select.site)
     } else {
@@ -363,6 +367,10 @@ if(ICE){
   vect.env.fact.ice <- seq(from=min.env.fact,
                            to=max.env.fact,
                            by=step.size)
+
+  # vect.env.fact.ice <- c(5, 8, 11)
+  # no.steps.ice <- length(vect.env.fact.ice)
+  
   data.ICE <- data.frame()
   
   for (i in 1:no.sites.ice) {
@@ -426,24 +434,24 @@ if(taxa.selection["metric"] == "Prevalence"){
 
 ### get parameters for all taxa ####
 
-# get parameters from different sources and make dataframes
-
-# clean data of updated parameters from Vermeiren et al., 2021
-for (i in 1:ncol(data.par.update)) {
-    # i <- 1
-    old.name <- colnames(data.par.update)[i]
-    new.name <- if(old.name == "X"){ "Taxon" 
-    } else if(old.name == "vco"){ "tempmaxtolval_class1"
-    } else if(old.name == "cod"){ "tempmaxtolval_class2"
-    } else if(old.name == "mod"){ "tempmaxtolval_class3"
-    } else if(old.name == "war"){ "tempmaxtolval_class4"
-    } else if(old.name == "st"){ "currenttolval_class1"
-    } else if(old.name == "slow"){ "currenttolval_class2"
-    } else if(old.name == "mod.1"){ "currenttolval_class3"
-    } else if(old.name == "high"){ "currenttolval_class4"
-    } else { old.name }
-    colnames(data.par.update)[i] <- new.name
-}
+# rename colnames (trait preference) of updated parameters from Vermeiren et al., 2021
+data.par.update <- data.par.update %>%
+  rename(
+    "Taxon" = X,
+    "tempmaxtolval_class1" = vco,
+    "tempmaxtolval_class2" = cod,
+    "tempmaxtolval_class3" = mod,
+    "tempmaxtolval_class4" = war,
+    "currenttolval_class1" = st,
+    "currenttolval_class2" = slow,
+    "currenttolval_class3" = mod.1,
+    "currenttolval_class4" = high,
+    "saprotolval_class0"   = xeno,
+    "saprotolval_class1"   = oligo,
+    "saprotolval_class2"   = beta,
+    "saprotolval_class3"   = alpha,
+    "saprotolval_class4"   = poly
+    )
 
 list.par.update <- list("update" = data.par.update, "correc" = data.par.correc)
 
@@ -460,7 +468,7 @@ if(file.exists(paste0(dir.outputs, file.rds.name))){
     vect.all.inv <- names(mass.all.inv)
 } else {
     list.par.all.taxa <- construct.variables.par.catch(catch = taxa.selection["metric"], data.env.inputs = data.env.inputs, 
-                                                       list.par.update = list.par.update, par.adjust = par.adjust,
+                                                       list.par.update = list.par.update, par.adjust = par.adjust, no.class.new = no.class.new,
                                                        data.taxa.selection = data.taxa.selection, taxa.selection = taxa.selection, selected.taxa.analysis = selected.taxa.analysis,
                                                        sites.selection = sites.selection, select.taxonomy = select.taxonomy,
                                                        catch.variable = catch.variable, name.run = name.run,
@@ -468,6 +476,8 @@ if(file.exists(paste0(dir.outputs, file.rds.name))){
     # list.par.all.taxa$par.fixc[which(grepl("Limoniidae", names(list.par.all.taxa$par.fixc)) & grepl("class", names(list.par.all.taxa$par.fixc)))]
     system.def <- streambugs.get.sys.def(y.names=list.par.all.taxa$y.names$y.names, par=list.par.all.taxa$par.fixc)
     vect.all.inv <- list.par.all.taxa$Invertebrates
+    
+    # write updated and extracted parameters in csv files for all taxa
     list.df.preferences <- write.df.preferences(system.def = system.def,
                                                 Invertebrates = vect.all.inv,
                                                 file.name = file.name,
@@ -484,6 +494,7 @@ if(file.exists(paste0(dir.outputs, file.rds.name))){
 }
 
 # make long dataframe trait preference
+exp.trans.curve <- c(-5, -10)
 long.df.trait <- data.frame()
 for (taxon in vect.all.inv) {
     # taxon <- vect.all.inv[1]
@@ -504,6 +515,11 @@ for (taxon in vect.all.inv) {
         temp.df$Pref <- df.pref[, taxon]
         temp.df$Factor <- factor
         temp.df$Taxon <- taxon
+        for (curve in exp.trans.curve) {
+          # curve <- exp.trans.curve[1]
+          temp.df[,paste0("ExpTrans_", curve)] <- exp.transform(temp.df$Pref, intercept = 0, curv = curve)
+        }
+        
         long.df.trait <- rbind(long.df.trait, temp.df)
     }
 }
@@ -512,7 +528,8 @@ for (taxon in vect.all.inv) {
 # for(taxon in vect.all.inv){
 #   # taxon <- vect.all.inv[1]
 #   temp.df.trait <- filter(long.df.trait, Taxon == taxon)
-#   p <- ggplot(temp.df.trait, aes(x = Value, y = Pref))
+#   plot.data <- gather(temp.df.trait, key = "Transformation", value = "Score", -c("Value", "Factor", "Taxon"))
+#   p <- ggplot(plot.data, aes(x = Value, y = Score, color = Transformation))
 #   p <- p + geom_point()
 #   p <- p + geom_line()
 #   p <- p + facet_wrap(. ~ Factor, scales = "free_x")
@@ -520,10 +537,10 @@ for (taxon in vect.all.inv) {
 #   p <- p + labs(title = taxon)
 #   list.plots[[taxon]] <- p
 # }
-# file.name <- paste0("PreferenceTraitAllTaxa_MixUpdateOrig_correc")
+# file.name <- paste0("PreferenceTraitAllTaxa_MixUpdateOrig_PolyInterp")
 # print.pdf.plots(list.plots = list.plots, width = 5, height = 5, dir.output = dir.outputs, info.file.name = "", file.name = file.name,
 #                 png = F)
-# 
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # SIMULATIONS ####
@@ -536,7 +553,7 @@ for (taxon in vect.all.inv) {
 # construct variables and parameters per catchment
 list.variables.par.catch <- lapply(vect.catch.select, FUN = construct.variables.par.catch,
                                    data.env.inputs = data.env.inputs, 
-                                   list.par.update = list.par.update, par.adjust = par.adjust,
+                                   list.par.update = list.par.update, par.adjust = par.adjust, no.class.new = no.class.new,
                                    data.taxa.selection = data.taxa.selection, 
                                    taxa.selection = taxa.selection, 
                                    selected.taxa.analysis = selected.taxa.analysis,
@@ -556,7 +573,8 @@ start.all <- proc.time()
 # run streambugs
 list.results <- lapply(list.variables.par.catch, FUN = run.streambugs.catch,
                        tout = tout, return.res.add = return.res.add, name.run = name.run, 
-                       dir.output = dir.outputs, write.plot.results = F,
+                       dir.output = dir.outputs, run.C = run.C,
+                       write.plot.results = F,
                        method = method
                        # atol = 1e-06,
                        # rtol = 1e-06
@@ -763,7 +781,34 @@ if(return.res.add){
                            "ftempmax",  "fselfinh", "ffoodlim"),
         "FoodFactors" = c("sum_food", "sum_food_pref"))
     fact.types <- names(list.factors.type)
-    mycolors <- sample(scales::hue_pal()(8), length(unlist(list.factors.type)), replace = T)
+    mycolors <- sample(scales::hue_pal()(20), length(unlist(list.factors.type)), replace = T)
+    mycolors <- rainbow(length(unlist(list.factors.type)))
+    mycolors <- c(
+      "Biomass" = "#1f77b4",
+      "r_basal" = "#ff7f0e",
+      "r_resp" = "#2ca02c",
+      "r_prod" = "#d62728",
+      "r_death" = "#9467bd",
+      "r_cons_tot" = "#8c564b",
+      "r_miner" = "#e377c2",
+      "fsapro" = "#7f7f7f",
+      "forgmicropoll" = "#bcbd22",
+      "flimI" = "#17becf",
+      "flimP" = "#1f77b4",
+      "flimN" = "#ff7f0e",
+      "fshade" = "#2ca02c",
+      "flimnutrients" = "#d62728",
+      "fselfshade" = "#9467bd",
+      "fmicrohab" = "#8c564b",
+      "fcurrent" = "#e377c2",
+      "ftempmax" = "#7f7f7f",
+      "fselfinh" = "#bcbd22",
+      "ffoodlim" = "#17becf",
+      "sum_food" = "#1f77b4",
+      "sum_food_pref" = "#ff7f0e"
+    )
+    
+    scales::show_col(mycolors)
     
     processed.add.res <- get.plot.data.add.res(catch.results = list.results[[1]],
                                              list.factors.type = list.factors.type)
@@ -780,7 +825,7 @@ if(return.res.add){
             filter(Taxon == taxon) # %>%
         # filter(Site != 107)
         p <- ggplot(plot.data, aes(x = time, y = Value, color = Factor))
-        p <- p + geom_line(size=1)
+        p <- p + geom_line(size=0.7, alpha = 0.7)
         p <- p + facet_grid(FactorType ~ Site, scales = "free")
         if(!grepl("Algae", taxon)){ p <- p + scale_color_manual(values = mycolors)}
         p <- p + theme_bw()
@@ -1171,9 +1216,11 @@ for (prev.output in vect.names.output[c(3,5)]) {
 
 if(ICE){
   
-  # data.base.ice <- read.csv(paste0(dir.outputs, "WideDataInputs_ICE_100Sites.csv"), sep = ";")
+  # data.base.ice <- read.csv(paste0(dir.outputs, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
   # data.results.ice <- read.csv(paste0(dir.outputs,
-  # "10Catch_2000Sites_ICE_Prev0.15_10Yea_3651Steps_WideData_ResultsProbObs.csv"), sep = ";")
+  # "10Catch_50Sites_ICE_30Steps_PolyInterp_20runC_update.traits.hybrid_10Yea_3651Steps_WideData_ResultsProbObs.csv"), sep = ";")
+  # no.sites.ice <- 2
+  # no.steps.ice <- 30
   
   data.results.ice <- list.wide.df.all.res$ProbObs
   select.env.fact <- vect.dir.env.fact[2]
@@ -1232,19 +1279,22 @@ if(ICE){
   # sites.na <- data.results.ice[rind.na, c("ReachID", env.factor[1:8])]
   
   temp.vect.taxa <- names(selected.taxa.analysis)[names(selected.taxa.analysis) %in% vect.taxa]
+  temp.vect.taxa <- list.results$Rhone$Invertebrates
   temp.occ.taxa <- paste0("Occurrence.", temp.vect.taxa)
   
   list.plots <- list()
   
   for(taxon in temp.occ.taxa){
     
-    # taxon.under.obs <- names(taxa.colnames)[4]
+    # taxon <- temp.occ.taxa[4]
     
     pred.ice.streamb <- data.results.ice[,c("ReachID","Watershed", select.env.fact, taxon)] %>%
       mutate(observation_number = rep(1:no.sites.ice, each = no.steps.ice),
              column_label = 1,
              model = "Streambugs") %>%
       rename(pred = taxon)
+    # pred.ice.streamb <- filter(pred.ice.streamb, Watershed == "Rhein", observation_number == 28)
+      
     
     env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
     
