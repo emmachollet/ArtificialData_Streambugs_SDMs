@@ -619,7 +619,7 @@ model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Li
                      # 'Null'          = 'black')         # Null Model
 
 # select taxon and env. factor
-taxon.under.obs <- names(taxa.colnames)[7]
+taxon.under.obs <- names(taxa.colnames)[1]
 select.env.fact <- env.factor[1]
 name.select.env.fact <- names(select.env.fact)
 # name.select.env.fact <- names(env.factor)
@@ -728,7 +728,8 @@ fig1 <- ggplot(data=plot.data) +
   # scale_y_continuous(limits = c(0,1)) +
   scale_color_manual(values=model.color.map) +
   theme_bw() +
-  theme(strip.background = element_rect(fill = "white")) +#,
+  theme(strip.background = element_rect(fill = "white"),
+        legend.position = "bottom") +#,
         # legend.title = element_text(size=24),
         # legend.text = element_text(size=20)) +
   labs(x = name.select.env.fact,
@@ -761,7 +762,8 @@ fig2 <- ggplot(data=plot.data) +
   # scale_y_continuous(limits = c(0,1)) +
   facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
   theme_bw() +
-  theme(strip.background = element_rect(fill = "white")) +#,
+  theme(strip.background = element_rect(fill = "white"),
+        legend.position = "bottom") +#,
   # legend.title = element_text(size=24),
   # legend.text = element_text(size=20)) +
   labs(x =name.select.env.fact,

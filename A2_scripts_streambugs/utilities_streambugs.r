@@ -489,7 +489,7 @@ get.plot.data.add.res <- function(catch.results, list.factors.type){
         temp.list <- list()
         for (site in temp.vect.sites) {
             # site <- temp.vect.sites[1]
-            c.ind2 <- which(grepl(site, colnames(temp.df)))
+            c.ind2 <- which(grepl(paste0(site, "_"), colnames(temp.df)))
             temp.df2 <- temp.df[,c(1,c.ind2)]
             c.ind3 <- which(grepl(taxon, colnames(streambugs.results)) & grepl(site, colnames(streambugs.results)))
             temp.df2$Biomass <- streambugs.results[,c.ind3]

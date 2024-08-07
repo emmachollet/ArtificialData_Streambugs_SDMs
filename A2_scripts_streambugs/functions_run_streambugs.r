@@ -43,6 +43,8 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
             if(length(rind.sites.selected) !=0 && sites.selection[["n.sites"]] != length(rind.sites.selected)){
                 rind.sites.selected <- c(1:(n.sites - length(rind.sites.selected)), rind.sites.selected) 
                 env.data <- env.data[rind.sites.selected,] # temporary take only few sites for trial
+            } else {
+              env.data <- env.data[rind.sites.selected,] # temporary take only few sites for trial
             }
         }
         threshold <- taxa.selection["threshold"]
@@ -56,6 +58,7 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # taxa pool of the catchment
     Invertebrates <- data.taxa.selection[which(data.taxa.selection$Taxonomic.level %in% select.taxonomy &
                                                     data.taxa.selection[, catch] > threshold), "Taxon"]
+    cat("For", length(Invertebrates), " taxa\n")
     list.metadata.catch[["Invertebrates"]] <- Invertebrates
     
     # Pom and algae
@@ -130,69 +133,56 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # ecr/nis 18.12.23: overwrite here some preference traits from Vermeiren et al. 2021 for selected taxa
     # see table: T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat
     if(par.adjust[["update.traits"]][["Flag"]]){
+      
       cat("Using updated (Vermeiren's) invertebrate ecological preferences only for selected taxa.")
-      # colnames(data.par.update)[2:9]
       names.selected.taxa <- gsub("Occurrence.", "", selected.taxa.analysis)
 
       for (taxon in Invertebrates) {
-        # taxon <- Invertebrates[5]
-        # updating only selected taxa
+        # taxon <- Invertebrates[4]
+        
+        # updating selected taxa with Vermeiren's data and scale traits if max not equal to 1
           if(taxon %in% data.par.update$Taxon && taxon %in% names.selected.taxa){
             cat("\nUpdating temperature, current and saprobic conditions preference for taxon:", taxon)
-              for (acro in acronym.env.fact[1:3]) { # update only temp, current and sapro traits
+            
+            # update only temp, current and sapro traits
+              for (acro in acronym.env.fact[1:3]) {
                   # acro <- acronym.env.fact[1]
                 update.tax.traits <- data.par.update[data.par.update$Taxon == taxon, which(grepl(acro, colnames(data.par.update)))]
                 max.pref <- max(update.tax.traits)
+                
                 # scale traits if the maximum preference is not equal to 1
                 if(max.pref < 1 & max.pref > 0){
                   update.tax.traits <- update.tax.traits / max.pref
                 }
+                
                 # replace scaled updated preference trait
                 for (name.pref in names(update.tax.traits)) {
                   # name.pref <- names(update.tax.traits)[1]
                   ind.tax.trait.orig <- which(grepl(taxon, names(par.invtraits)) & grepl(name.pref, names(par.invtraits)))
                   par.invtraits[ind.tax.trait.orig] <- update.tax.traits[name.pref][1,1]
                 }
+                
               }
-          } else {
-            # cat("\nFollowing taxa in our taxa list but not in the Vermeiren taxa list: ")
-            #   cat(taxon, " ")
           }
         
         # correct preference that have an irregular shape (not unimodal)
+        # see file: correction_preference_traits.csv # made manually by Emma Chollet on July 2024
         if(taxon %in% data.par.correc$Taxa){
-          cat("\nCorrecting preference for ")
+          cat("\nManually correcting preference for ")
           ind.tax <- which(data.par.correc$Taxa == taxon)
           for (i in ind.tax) {
             name.pref.problem <- paste0(paste(data.par.correc[i,c(1:3)], collapse = "_"), 
                                         data.par.correc[i, "Number"])
             name.pref.correct <- paste0(paste(data.par.correc[i,c(1:3)], collapse = "_"), 
                                         data.par.correc[i, "Number"] + 1)
-            cat(name.pref.problem)
+            cat(name.pref.problem, " ")
             par.invtraits[name.pref.problem] <- par.invtraits[name.pref.correct]
           }
         }
+        
       }
     } else {
       cat("Using original invertebrate ecological preferences.")
-    }
-    
-    # try to round low preferences to 0 to get stronger responses
-    ind.current <- which(grepl("currenttolval", names(par.invtraits)))
-    ind.temp <- which(grepl("tempmaxtolval", names(par.invtraits)))
-    if(par.adjust[["round.inv.traits"]][["Flag"]]){
-      for(i in c(ind.current, ind.temp)){
-        # print(i)
-        # i <- 780
-        # pref <- par.invtraits[i]
-        # print(par.invtraits[i])
-        thresh.round <- par.adjust[["round.inv.traits"]][["Value"]]
-        if(par.invtraits[i] < thresh.round){
-          print("COUCOU")
-          par.invtraits[i] <- 0
-          print(par.invtraits[i])
-        }
-      }
     }
 
     # set dummy values with habitat suitability 1 for all invertebrates and all types
@@ -211,7 +201,7 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     par.invtraits.update <- par.invtraits
     
     cat("\n\nUpdating classes with a polynomial interpolation of", 
-        no.class.new,"points between traits: ")
+        no.class.new, "points between traits: ")
     for (acro in acronym.env.fact) {
       # acro <- acronym.env.fact[1]
       # retrieve original classes of environmental factor
@@ -230,7 +220,7 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
         names(class.env.new) <- paste(name.env.par, names.class.new, sep = "_")
         
         for(taxon in Invertebrates){
-          # taxon <- Invertebrates[1]  
+          # taxon <- Invertebrates[4]  
           # retrieve original preference trait extracted from database
           ind.tax.env.score <- which(grepl(taxon, names(par.invtraits.update)) & grepl(acro, names(par.invtraits.update)))
           scores.tax.env <- par.invtraits.update[ind.tax.env.score]
@@ -240,14 +230,16 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
           linear.interp <- approx(class.env.orig, scores.tax.env,xout=class.env.orig,rule=2)$y
           polynomial.interp <- pracma::pchip(class.env.orig, scores.tax.env, class.env.new)
           
+          # round new score
+          scores.tax.new <- round(polynomial.interp, digits = 4)
+          names(scores.tax.new) <- paste(paste0(taxon, "_", name.score), names.class.new, sep = "_")
+          
           # # plot
           # plot(class.env.orig, scores.tax.env, col='red', pch=13, main = paste(taxon, name.score, sep = "_"))
           # points(class.env.new, polynomial.interp, col='blue', pch=5)
           # lines(class.env.orig, linear.interp, col='green', lwd=1)
           # lines(class.env.new, polynomial.interp, col='purple', lwd=1)
-          
-          scores.tax.new <- round(polynomial.interp, digits = 2)
-          names(scores.tax.new) <- paste(paste0(taxon, "_", name.score), names.class.new, sep = "_")
+          # lines(class.env.new, scores.tax.new, col='orange', lwd=1)
           
           # remove old scores and append new ones
           par.invtraits.update <- par.invtraits.update[-ind.tax.env.score]
@@ -414,9 +406,9 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
                   # "feedtypesFWB_R_",
                   #par.fix["ratio_pred_prey"],
                   ".pdf",sep=""),
-            width=9,height=5,onefile=T)
+            width=20,height=15,onefile=T)
         
-        foodweb.plot(y.names,par=par.fixc,cex=0.7,font=1,title="complete foodweb r3",ncrit=8,
+        foodweb.plot(y.names,par=par.fixc,cex=0.7,font=1,title="complete foodweb r3",ncrit=0,
                      lcrit=15,lwd=0,bg=NA,lcol=colors()[555]) #,texts=F,pointcol=T)
         
         foodweb.plot(y.names,par=par.fixc,cex=0.9,font=2,title="complete foodweb",ncrit=8,
