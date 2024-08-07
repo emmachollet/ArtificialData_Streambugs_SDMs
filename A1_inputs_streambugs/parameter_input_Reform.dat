@@ -1,0 +1,63 @@
+POM_Dini	Delta	1	# gDM/m2							
+Algae_Dini	Delta	1	# gDM/m2							
+Invertebrates_Dini	Delta	1	# gDM/m2							
+Algae_M	Delta	1.00E-07	# gDM/ind							
+Algae_Ea	Delta	0.231	#0.1155	# eV	#Lognormal	#fixed 11-12-14				
+Algae_b	Delta	0.93	#0.033	# - all. scaling exponent	#Lognormal	#fixed 11-12-14				
+Algae_i0	Delta	4150455552	#1528965720	#0	#1E+30	#131.52*86400*365.25	#48.45*86400*365.25	# J/a	#LognormalTrunc	#fixed 11-12-14
+Invertebrates_Ea	Delta	0.68642	#0.011151	# [eV]	#Lognormal	#fixed 11-12-14				
+Invertebrates_b	Delta	0.695071	#0.0070217	# [-]	#Lognormal	#fixed 11-12-14				
+Invertebrates_i0	Delta	1.10E+16	#4920000000000000	#0	#1E+30	#3.48E+8*86400*365.25	#1.56E+8*86400*365.25	# [J/a]	#LognormalTrunc	#fixed 11-12-14
+POM_kminer	Delta	0	# 1/a							
+Algae_hdens	Lognormal	1000	250	# gDM/m2						
+Algae_KI	Lognormal	62.1	15.525	# W/m2						
+Algae_KP	Lognormal	0.008	0.0025	# gP/m3						
+Algae_KN	Lognormal	0.075	0.01875	# gN/m3						
+Algae_fresp	Lognormal	1	0	# -						
+Algae_fdeath	Lognormal	0.2	0.175	# -						
+Algae_fprod	Delta	5	#0.5	# -	#Lognormal	#fixed 11-12-14				
+Invertebrates_hdens	Lognormal	1	0.25	# gDM/m2						
+Invertebrates_fresp	Delta	2.5	#0.25	# -	#Lognormal	#fixed 11-12-14				
+Invertebrates_fdeath	Lognormal	0.7	0.07	# -						
+Invertebrates_fcons	Delta	5	#0.5	# -	#Lognormal	#fixed 11-12-14				
+Invertebrates_Pref	Delta	1	# -							
+Invertebrates_Kfood	Lognormal	1	0.25	# gDM/m2						
+Invertebrates_aC	Delta	0.36	# gC/gInvertebrates							
+Invertebrates_aO	Delta	0.5	# gO/gInvertebrates							
+Invertebrates_aH	Delta	0.07	# gH/gInvertebrates							
+Invertebrates_aN	Delta	0.06	# gN/gInvertebrates							
+Invertebrates_aP	Delta	0.01	# gP/gInvertebrates							
+Algae_aC	Delta	0.36	# gC/gAlgae							
+Algae_aO	Delta	0.5	# gO/gAlgae							
+Algae_aH	Delta	0.07	# gH/gAlgae							
+Algae_aN	Delta	0.06	# gN/gAlgae							
+Algae_aP	Delta	0.01	# gP/gAlgae							
+FPOM_aC	Delta	0.36	# gC/gPOM							
+FPOM_aO	Delta	0.5	# gO/gPOM							
+FPOM_aH	Delta	0.07	# gH/gPOM							
+FPOM_aN	Delta	0.06	# gN/gPOM							
+FPOM_aP	Delta	0.01	# gP/gPOM							
+Invertebrates_EC	Lognormal	22000	2200	# J/gInvertebrates						
+Algae_EC	Lognormal	20000	2000	# J/gAlgae						
+POM_EC	Lognormal	18000	1800	# J/gPOM						
+Scra_fe	Lognormal	0.1	0.003	# gDM/gDM						
+Coll_fe	Lognormal	0.1	0.003	# gDM/gDM						
+Filt_fe	Lognormal	0.1	0.003	# gDM/gDM						
+Shred_fe	Lognormal	0.6	0.018	# gDM/gDM						
+Pred_fe	Lognormal	0.2	0.006	# gDM/gDM						
+Pierc_fe	Lognormal	0.1	0.003	# gDM/gDM						
+Organism_fgrotax	Lognormal	1	0.25	# -						
+Organism_fbasaltax	Lognormal	1	0.25	# -						
+ftempmax_intercept	LognormalTrunc	0	0.1	1.00E-20	1	# -				
+ftempmax_curv	Delta	-10	# -							
+fcurrent_intercept	LognormalTrunc	0	0.05	1.00E-20	1	# -				
+fcurrent_curv	Delta	-10	# -							
+fsapro_intercept	LognormalTrunc	4	3	1	1.00E+30	# -				
+fsapro_curv	Delta	0	# -							
+forgmicropoll_intercept	LognormalTrunc	4	3	1	1.00E+30	# -				
+forgmicropoll_curv	Delta	0	# -							
+fmicrohab_intercept	LognormalTrunc	0.15	0.15	1.00E-20	1	# -				
+fmicrohab_curv	Delta	0	# -							
+Filt_scope	Delta	0.005	#0.005	# m	#Lognormal	#fixed 11-12-14				
+Filt_Kfood	Lognormal	0.014	0.014	# gDM/m2						
+ratio_pred_prey	Delta	3	#1	#1	#5	#first test 09.02.2015				

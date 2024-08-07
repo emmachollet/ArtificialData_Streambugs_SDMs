@@ -72,6 +72,19 @@ map.inputs <- function(directory){
     return(list.swiss.map.inputs)
 }
 
+exp.transform <-   function(x,intercept=0,curv=0)
+{
+  #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
+  #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
+  
+  if(curv == 0)
+  { 
+    y = intercept-(intercept-1)*x
+  } else {
+    y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
+  }
+  return(y)
+}
 
 
 # small basic ggplot colors function
@@ -82,7 +95,7 @@ gg_color_hue <- function(n) {
 
 ## Get taxonomic level ####
 
-get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.plots){
+get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.outputs){
     # required input: 
     # data.inv = the wide-format monitoring data of the invertebrates, with taxa in columnnames starting with Occurrence_
     # data.tax = a taxonomic dictionary with all taxa in Switzerland and their taxonomic resolution
@@ -205,7 +218,7 @@ get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, v
     list.plots[[length(list.plots) + 1]] <- q
     
     file.name <- "Distribution_Prev_NbPresPoints_SelectCatch"
-    print.pdf.plots(list.plots = list.plots, width = 12, height = 8, dir.output = dir.plots, info.file.name = "", file.name = file.name, 
+    print.pdf.plots(list.plots = list.plots, width = 12, height = 8, dir.output = dir.outputs, info.file.name = "", file.name = file.name, 
                     png = F)
     
     
@@ -214,7 +227,7 @@ get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, v
 }
 
 
-write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
+write.df.preferences <- function(system.def, Invertebrates, file.name, dir.outputs){
     
     # make list with dataframes with two columns: name of env. traits and their classes
     
@@ -248,6 +261,7 @@ write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
     list.df.preferences <- list()
     
     for (n in 1:length(list.preferences)) {
+      # n <- 2
         env.pref <- names(list.preferences)[n]
         cat(env.pref, "classes :", list.preferences[[n]][,1], "\n",
             env.pref, "values :", list.preferences[[n]][,2], "\n")
@@ -256,16 +270,18 @@ write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
         taxa.pref <- parameters[which(grepl(env.pref, names(parameters)))]
         df.pref <- data.frame(Classes = classes.pref, Values = classes.val)
         for (taxon in Invertebrates) {
+          # taxon <- Invertebrates[1]
             df.pref[,taxon] <- NA
             for (c in classes.pref) {
+              # c <- classes.pref[1]
                 df.pref[which(df.pref$Classes == c), taxon] <-
-                    taxa.pref[which(grepl(taxon, names(taxa.pref)) & grepl(c, names(taxa.pref)))]
+                    taxa.pref[which(grepl(taxon, names(taxa.pref)) & grepl(paste0(c, "$"), names(taxa.pref)))] # $ Asserts that we are at the end.
             }
         }
         n.taxa <- length(Invertebrates)
-        file.name <- paste0(dir.outputs, "df_taxapref_", n.taxa, "Taxa_", env.pref, ".csv")
-        cat("Writing:", file.name, "\n")
-        write.csv(df.pref, file = file.name)
+        csv.name <- paste0(dir.outputs, file.name, n.taxa, "Taxa_", env.pref, ".csv")
+        cat("Writing:", csv.name, "\n")
+        write.csv(df.pref, file = csv.name)
         
         list.df.preferences[[env.pref]] <- df.pref
     }
@@ -456,12 +472,12 @@ get.plot.data.add.res <- function(catch.results, list.factors.type){
     
     # catch.results <- list.results$RheinabBS
     
-    df.res.add <- as.data.frame(catch.results$res$res.add)
+    df.res.add <- as.data.frame(catch.results$res.add)
     col.df.res.add <- colnames(df.res.add)
     temp.vect.taxa <- catch.results$y.names$taxa[-c(1:2)]
     temp.vect.sites <- catch.results$y.names$reaches
     y.names <- catch.results$y.names$y.names
-    streambugs.results <- as.matrix(catch.results$res$res)
+    streambugs.results <- as.matrix(catch.results$res)
     env.data <- catch.results$env.data
     
     # make list of data frames with additional results per taxon per site
@@ -675,6 +691,6 @@ get.plot.data.add.res <- function(catch.results, list.factors.type){
 #     }
 #     
 #     file.name <- "_AddRes_RatesLimFact"
-#     print.pdf.plots(list.plots = list.plots, width = 23, height = 8, dir.output = dir.plots, info.file.name = name.run, file.name = file.name, 
+#     print.pdf.plots(list.plots = list.plots, width = 23, height = 8, dir.output = dir.outputs, info.file.name = name.run, file.name = file.name, 
 #                     png = F)
 # }
