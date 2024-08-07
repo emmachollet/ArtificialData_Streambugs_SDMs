@@ -1,0 +1,1 @@
+R --vanilla <main_server.r &> usedtobeoutputtextfile.txt &
