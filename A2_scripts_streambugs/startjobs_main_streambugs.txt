@@ -1,0 +1,1 @@
+R --vanilla <main_streambugs.r &> usedtobeoutputtextfile.txt &

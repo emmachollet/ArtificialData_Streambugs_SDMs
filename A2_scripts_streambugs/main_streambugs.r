@@ -22,11 +22,13 @@ graphics.off() # Clean graphics display
 
 if ( !require("dplyr") ) { install.packages("dplyr"); library("dplyr") }               # to sort, join, merge data
 if ( !require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
-if ( !require("tidyverse") ) { install.packages("tidyverse"); library("tidyverse") }               # to sort, join, merge data
+# if ( !require("tidyverse") ) { install.packages("tidyverse"); library("tidyverse") }               # to sort, join, merge data
 if ( !require("ggplot2") ) { install.packages("ggplot2"); library("ggplot2") }         # to do nice plots
-if ( !require("plotly") ) { install.packages("plotly"); library("plotly") }            # to do nice "interactive" plots
-if ( !require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
-if ( !require("pracma") ) { install.packages("pracma"); library("pracma") }                        # to read layers for plotting maps
+# if ( !require("plotly") ) { install.packages("plotly"); library("plotly") }            # to do nice "interactive" plots
+# if ( !require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
+if ( !require("pracma") ) { install.packages("pracma"); library("pracma") }            # to do polynomial interpolation (of ecological traits)                # to read layers for plotting maps
+if ( !require("stringr") ) { install.packages("stringr"); library("stringr") }                        # to handle character vectors
+if ( !require("parallel") ) { install.packages("parallel"); library("parallel") }                        # to run things on parallel on the server
 
 ## Directory and file definitions ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,10 +53,12 @@ source("functions_run_streambugs.r")
 source("library/application specific NIS/load_library.r")
 
 # prepare inputs for plotting results on swiss maps
-map.inputs        <- map.inputs(directory = paste0(dir.utilities,"swiss.map.gdb"))
+# map.inputs        <- map.inputs(directory = paste0(dir.utilities,"swiss.map.gdb"))
 
 ## Analysis options ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+server <- T
 
 # run simulations to produce ICE
 ICE <- F # if False, simulations run for whole dataset
@@ -91,7 +95,7 @@ inp <- NA # set NA for time-dependent input and parameters
 #           seq(10.003,n.years,by=1/365)) # t steadystate:170-200
 
 # continuous output times of same timesteps length
-n.years       <- 50 # number of years
+n.years       <- 100 # number of years
 n.days.appart <- 1  # number of days from one time step to another (can be smaller than one day, e.g., 0.5)
 tout          <- c(seq(0, n.years, by = n.days.appart/365)) # set up time vector of [n.years*365/n.days.appart] steps
 # tout <- c(0, 0.001, 0.002)
@@ -121,8 +125,8 @@ par.adjust <- list("curve.curr.temp"     = list("Flag" = F, "Value" = 0),  # ass
 correct.shade        <- 0.6 # factor to correct shading (fshade) for now, otherwise algae is too limited
 
 # catchment selection for simulation (can be specific or all to analyze taxa pool and results)
-# select.catch <- "all"
-select.catch <- "Aare"
+select.catch <- "all"
+# select.catch <- "Aare"
 # select.catch <- "Doubs"
 # select.catch <- "Limmat"
 # select.catch <- "Reuss"
@@ -133,8 +137,8 @@ select.catch <- "Aare"
 # select.catch <- "Rhein"
 
 # select specific site(s) for debugging and analysis
-# select.sites   <- "random"
-select.sites <- "CH114BEAa"
+select.sites   <- "random"
+# select.sites <- "CH114BEAa"
 # select.sites <- "SynthPoint2533Ti"
 # select.sites <- "SynthPoint6969Rh"
 # select.sites <- c("SynthPoint88Rh", "SynthPoint21Rh") # Rhone
@@ -144,8 +148,8 @@ select.sites <- "CH114BEAa"
 if(ICE){
   n.sites.per.catch    <- no.sites.ice * no.steps.ice
 } else {
-  # n.sites.per.catch <- "all"
-  n.sites.per.catch <- 1
+  n.sites.per.catch <- "all"
+  # n.sites.per.catch <- 2
 }
 sites.selection      <- list("n.sites" = n.sites.per.catch, 
                              "select.sites" = select.sites)
@@ -217,6 +221,8 @@ data.env.synth$MonitoringProgram <- "SyntheticPoint" # specify "fake" monitoring
 data.env.all <- bind_rows(data.env.midat, data.env.synth)
 remove(data.env.synth) # remove entire synthetic sample points data from environement because slows down the system
 data.env.all <- filter(data.env.all, tempmaxC > 4) # remove sites with temperature bellow 4 degrees
+data.env.all$Watershed <- gsub("Doux", "Doubs", data.env.all$Watershed) # correct cute mistake
+
 
 # clean ReachID names
 data.env.all$ReachID <- gsub("CSCF_", "", data.env.all$ReachID) # remove some characters in ReachID names
@@ -528,7 +534,7 @@ for (taxon in vect.all.inv) {
     }
 }
 
-file.name <- paste0("PreferenceTraitAllTaxa_MixUpdateOrig_PolyInterp", no.class.new)
+file.name <- paste0("PreferenceTraitAllTaxa_MixUpdateOrig_PolyInterp", no.class.new, ".pdf")
 if(file.exists(paste0(dir.outputs, file.name))){
   list.plots <- list()
   for(taxon in vect.all.inv){
@@ -558,36 +564,70 @@ if(file.exists(paste0(dir.outputs, file.name))){
 ## Run streambugs ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# construct variables and parameters per catchment
-list.variables.par.catch <- lapply(vect.catch.select, FUN = construct.variables.par.catch,
-                                   data.env.inputs = data.env.inputs, 
-                                   list.par.update = list.par.update, par.adjust = par.adjust, no.class.new = no.class.new,
-                                   data.taxa.selection = data.taxa.selection, 
-                                   taxa.selection = taxa.selection, 
-                                   selected.taxa.analysis = selected.taxa.analysis,
-                                   sites.selection = sites.selection, 
-                                   select.taxonomy = select.taxonomy, 
-                                   catch.variable = catch.variable, 
-                                   plot.foodweb = T, name.run = name.run,
-                                   dir.inputs = dir.inputs, dir.outputs = dir.outputs)
-
-# streambugs.debug = 1
-# # print metadata
-# sink(file = paste0(dir.outputs, name.run, "debug.txt"))
-
 print(name.run)
 start.all <- proc.time()
 
-# run streambugs
-list.results <- lapply(list.variables.par.catch, FUN = run.streambugs.catch,
-                       tout = tout, return.res.add = return.res.add, name.run = name.run, 
-                       dir.output = dir.outputs, run.C = run.C,
-                       write.plot.results = F,
-                       method = method
-                       # atol = 1e-06,
-                       # rtol = 1e-06
-                       )# ,
-                       # hmax = 0.1)
+if (server){
+    
+    # construct variables and parameters per catchment
+    list.variables.par.catch <- mclapply(vect.catch.select, mc.cores = length(vect.catch.select), FUN = construct.variables.par.catch,
+                                       data.env.inputs = data.env.inputs, 
+                                       list.par.update = list.par.update, par.adjust = par.adjust, no.class.new = no.class.new,
+                                       data.taxa.selection = data.taxa.selection, 
+                                       taxa.selection = taxa.selection, 
+                                       selected.taxa.analysis = selected.taxa.analysis,
+                                       sites.selection = sites.selection, 
+                                       select.taxonomy = select.taxonomy, 
+                                       catch.variable = catch.variable, 
+                                       plot.foodweb = T, name.run = name.run,
+                                       dir.inputs = dir.inputs, dir.outputs = dir.outputs)
+    
+    # streambugs.debug = 1
+    # # print metadata
+    # sink(file = paste0(dir.outputs, name.run, "debug.txt"))
+    
+    # run streambugs
+    list.results <- mclapply(list.variables.par.catch, mc.cores = length(vect.catch.select), FUN = run.streambugs.catch,
+                           tout = tout, return.res.add = return.res.add, name.run = name.run, 
+                           dir.output = dir.outputs, run.C = run.C,
+                           write.plot.results = F,
+                           method = method
+                           # atol = 1e-06,
+                           # rtol = 1e-06
+    )# ,
+    # hmax = 0.1)
+} else {
+    
+    # construct variables and parameters per catchment
+    list.variables.par.catch <- lapply(vect.catch.select, FUN = construct.variables.par.catch,
+                                       data.env.inputs = data.env.inputs, 
+                                       list.par.update = list.par.update, par.adjust = par.adjust, no.class.new = no.class.new,
+                                       data.taxa.selection = data.taxa.selection, 
+                                       taxa.selection = taxa.selection, 
+                                       selected.taxa.analysis = selected.taxa.analysis,
+                                       sites.selection = sites.selection, 
+                                       select.taxonomy = select.taxonomy, 
+                                       catch.variable = catch.variable, 
+                                       plot.foodweb = T, name.run = name.run,
+                                       dir.inputs = dir.inputs, dir.outputs = dir.outputs)
+    
+    # streambugs.debug = 1
+    # # print metadata
+    # sink(file = paste0(dir.outputs, name.run, "debug.txt"))
+
+    # run streambugs
+    list.results <- lapply(list.variables.par.catch, FUN = run.streambugs.catch,
+                           tout = tout, return.res.add = return.res.add, name.run = name.run, 
+                           dir.output = dir.outputs, run.C = run.C,
+                           write.plot.results = F,
+                           method = method
+                           # atol = 1e-06,
+                           # rtol = 1e-06
+                           )# ,
+                           # hmax = 0.1)
+    
+}
+
 # sink()
 duration.all <- proc.time() - start.all
 cat(duration.all,"\n")
@@ -1025,7 +1065,7 @@ vect.analysis <- c("ReachID", "X", "Y", "MonitoringProgram", catch.variable, vec
 
 # make dataframes (wide and long) with steady state, abundance and prob of occ
 # df.generic <- data.env.res[,vect.analysis]
-df.generic <- data.env.inputs[,vect.analysis]
+df.generic <- data.env.res[,vect.analysis]
 
 df.generic[,vect.occ.inv] <- NA
 
@@ -1117,9 +1157,9 @@ for (site in data.obs$ReachID) {
             if(temp.monit.prog == "BDM"){
                 obs <- data.inv.bdm[which(data.inv.bdm$ReachID == site), which(grepl(taxon, colnames(data.inv.bdm)))]
             } else {
-                cind.taxon <- which(grepl(taxon, colnames(data.env.inputs)))
+                cind.taxon <- which(grepl(taxon, colnames(data.env.res)))
                 if(length(cind.taxon) > 0){ # if tayon exists in all monit. prog. dataset
-                    obs <- data.env.inputs[which(data.env.inputs$ReachID == site), cind.taxon]
+                    obs <- data.env.res[which(data.env.res$ReachID == site), cind.taxon]
                 } else {
                     obs <- NA
                 }
@@ -1149,7 +1189,7 @@ for (output in vect.names.output) {
 }
 
 # make long dataframe with all taxa (env. fact. and outputs stay wide)
-long.df.res.taxa <- list.long.df.res.taxa %>% reduce(merge, by = c(vect.analysis, "Taxon"))
+long.df.res.taxa <- list.long.df.res.taxa %>% purrr::reduce(merge, by = c(vect.analysis, "Taxon"))
 long.df.res.taxa$Taxon <- gsub("Occurrence.", "", long.df.res.taxa$Taxon)
 
 # make long dataframe with all taxa and env. factors (outputs stay wide)
