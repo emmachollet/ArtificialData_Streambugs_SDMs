@@ -24,7 +24,9 @@ summarize.all.results <- function(models.data, prev.taxa){
   #   - all.results: A dataframe whose columns are taxa, prevalence, 
   #                  taxonomic_level, model, dev, auc, fit_pred.
   
-  
+  # to debug
+    # models.data <- models.cv
+    
   # get dataframe 
   all.results <- data.frame(prev.taxa) 
   
@@ -32,7 +34,7 @@ summarize.all.results <- function(models.data, prev.taxa){
   # all.results <- all.results %>% select(-Missing.values) # remove useless col
   # 
   # remove useless rows
-  all.results <- all.results %>% filter(all.results$Occurrence.taxa %in% taxa.colnames)
+  all.results <- all.results %>% filter(all.results$Occurrence.taxa %in% taxa.colnames) # ! taxa.colnames not declared as function input
   
   # keep only relevant columns and give them appropriate names
   all.results <- all.results[c("Taxon", "Prevalence", "Taxonomic.level")]
@@ -50,6 +52,7 @@ summarize.all.results <- function(models.data, prev.taxa){
   
   model.names <- names(models.data)
   for (model in model.names){
+      # model <- model.names[1]
     performance <- models.data[[model]]
     
     nb.split <- length(performance)
@@ -60,9 +63,8 @@ summarize.all.results <- function(models.data, prev.taxa){
     auc.pred.sum <- list(double(nrow(all.results)))
     
     
-    
-    for (split.index in seq(nb.split)){
-      
+    for (split.index in seq(nb.split)){ # ! nb.split not declared as function input
+      # split.index <- 2
       training.perf <- performance[[split.index]][["training"]]
       
       dev.fit <- lapply(taxa.colnames,
@@ -161,7 +163,7 @@ restructure.all.results <- function(all.results){
   # returns:
   #   - fit.pred.all.results: the restructured dataframe 
   
-  model.all.results <- rbind(# extract.model.results("null", all.results),
+  model.all.results <- rbind(extract.model.results("Null", all.results),
                             extract.model.results("GLM", all.results),
                             extract.model.results("GAM", all.results),
                             extract.model.results("RF", all.results))#,

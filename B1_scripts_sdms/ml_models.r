@@ -2,6 +2,8 @@
 apply.ml.models <- function(data,
                             models=c("null", "glm", "gamloess", "rf", "ann"),
                             split.type="FIT"){
+                            # should be there: taxa.colnames, env.fact, list.noise
+    
   
   
   # This function takes as input a dataset, and what split.type was used to 
@@ -22,22 +24,56 @@ apply.ml.models <- function(data,
   # returns:
   #   - models: the trained models (glm, gamLoess, rf, ann) 
 
-  trained.null      <- if ("null" %in% models) apply.null.model(data, split.type) else NULL
-  trained.glm       <- if ("glm" %in% models) apply.caret.model(data, split.type, ENV.FACT.FULL.COLNAMES, 'glm') else NULL
-  trained.gamloess  <- if ("gamloess" %in% models) apply.caret.model(data, split.type, ENV.FACT.COLNAMES, 'gamLoess') else NULL
-  trained.rf        <- if ("rf" %in% models) apply.caret.model(data, split.type, ENV.FACT.COLNAMES, 'rf') else NULL
-  trained.ann       <- if ("ann" %in% models) apply.ann.model(data, split.type) else NULL
+    list.trained.models <- list()
+    
+    cat("Training model:\n")
+    
+    for (name.model in models) {
+        # to debug
+        # name.model <- models[2]
+        
+        cat(name.model, "\n")
+        
+        if (grepl("null", name.model)) {
+            
+            trained.model <- apply.null.model(data, split.type)
+            
+        # }  else if (grepl("null_glm", name.model)){
+        #     
+        #     trained.model <- apply.caret.model(model.name = name.model, data, split.type, taxa.colnames, env.fact = c(), list.noise)
+            
+        } else if (grepl("ann", name.model)) {
+            
+            trained.model <- apply.ann.model(data, split.type)
+            
+        } else if (grepl("glm", name.model)){
+            
+            trained.model <- apply.caret.model(model.name = name.model, data, split.type, taxa.colnames, env.fact = env.factor.full, list.noise)
+             
+        } else {
+            
+            trained.model <- apply.caret.model(model.name = name.model, data, split.type, taxa.colnames, env.fact = env.factor, list.noise)
+        }
+        
+        list.trained.models[[name.model]] <- trained.model
+    }
+  # trained.null_prev <- if ("null_prev" %in% models) apply.null.model(data, split.type) else NULL
+  # trained.null_glm  <- if ("null_glm" %in% models) apply.caret.model(data, split.type, env.fact = c(), 'glm') else NULL
+  # trained.glm       <- if ("glm" %in% models) apply.caret.model(data, split.type, ENV.FACT.FULL.COLNAMES, 'glm') else NULL
+  # trained.gamloess  <- if ("gamloess" %in% models) apply.caret.model(data, split.type, ENV.FACT.COLNAMES, 'gamLoess') else NULL
+  # trained.rf        <- if ("rf" %in% models) apply.caret.model(data, split.type, ENV.FACT.COLNAMES, 'rf') else NULL
+  # trained.ann       <- if ("ann" %in% models) apply.ann.model(data, split.type) else NULL
+  # 
+  # trained.ml.models  <- list("null"     = trained.null,
+  #                            "glm"      = trained.glm,
+  #                            "gamloess" = trained.gamloess,
+  #                            "rf"       = trained.rf,
+  #                            "ann"      = trained.ann)
+  # 
+  # # remove models == NULL
+  # trained.ml.models <- list.trained.models[!sapply(list.trained.models, is.null)]
   
-  trained.ml.models  <- list("null"     = trained.null,
-                             "glm"      = trained.glm,
-                             "gamloess" = trained.gamloess,
-                             "rf"       = trained.rf,
-                             "ann"      = trained.ann)
-  
-  # remove models == NULL
-  trained.ml.models <- trained.ml.models[!sapply(trained.ml.models, is.null)]
-  
-  return(trained.ml.models)
+  return(list.trained.models)
 }
 
 
@@ -68,7 +104,7 @@ apply.null.model <- function(data, split.type){
     
   if (split.type == 'FIT'){
     
-    training.data <- na.omit(data[["Entire dataset"]])
+    training.data <- data[["Entire dataset"]]
     
     prob <- lapply(taxa.colnames,
                    FUN=get.null.model,
@@ -90,10 +126,13 @@ apply.null.model <- function(data, split.type){
     # loop over the different splits
     for (i.split in seq(nb.split)){
       
+      # i.split <- 1
       split <- data[[i.split]]
       
-      training.data <- na.omit(split[[1]])
-      testing.data <- na.omit(split[[2]])  
+      # training.data <- na.omit(split[[1]])
+      # testing.data <- na.omit(split[[2]])
+      training.data <- split[[1]]
+      testing.data <- split[[2]]
       
       prob <- lapply(taxa.colnames,
                      FUN=get.null.model,
@@ -137,11 +176,14 @@ get.null.model  <- function(taxa, data){
   # returns:
   #   - prob.presence: the probability of occurrence of given taxon
 
+    # to debug
+    # taxa <- taxa.colnames[2]
+    # data <- training.data
     
-  taxa.column   <- data[[taxa]]
-  nb.taxa       <- nrow(data)
+  taxa.column   <- na.omit(data[[taxa]])
+  nb.points     <- length(taxa.column)
   nb.presence   <- length(which(taxa.column=="Present"))
-  prob.presence <- nb.presence/nb.taxa
+  prob.presence <- nb.presence/nb.points
   
   return(prob.presence)
 }
@@ -168,7 +210,10 @@ null.model.perf <- function(taxa, prob, data){
   # returns:
   #   - model.performance: the performance of the null model for the given taxa
   
-  
+    # to debug
+    # taxa <- taxa.colnames[2]
+    # data <- training.data
+    
   nb.sample <- nrow(data)
   taxa.prob <- prob[[gsub("Occurrence.", "", taxa)]]
 
@@ -534,10 +579,11 @@ ann.model.perf <- function(taxa, model, full.prediction.probability, data){
 # caret model ----
 apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.fact, list.noise){
   
+  # model.name <- "glm"
   # split.type <- "CV"
   # data <- preprocessed.data.cv
   # env.fact <- env.factor
-  # model.name <- "glm"
+
   cat("Applying", model.name, "to taxon:\n")
   
   # This function is used to create the different machine learning based models
@@ -737,11 +783,15 @@ train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, l
 
 caret.model.perf <- function(model, data, taxa){
   
-
   # model <- caret.model
   # data <- temp.train.data
   # taxa <- taxa.colnames[1]
-  
+    
+  # data <- testing.data
+    # taxa <- taxa.colnames[2]
+    # taxa.short <- gsub("Occurrence.", "", taxa)
+  # model <- models[[taxa.short]]
+    
   # This function returns the performance of a caret model. The performances
   # consists of : 
   #     1. Model
@@ -826,10 +876,12 @@ compute.likelihood <- function(data, taxa, prediction.probability){
   
   lev <- c("Present", "Absent")
   taxa.column <- data[,taxa]
+  rind.na <- which(is.na(taxa.column))
   likelihood <- 1:dim(data)[1]
   
   likelihood[which(taxa.column==lev[1])] <- prediction.probability[which(taxa.column==lev[1]), lev[1]]
   likelihood[which(taxa.column==lev[2])] <- prediction.probability[which(taxa.column==lev[2]), lev[2]]
+  likelihood[rind.na] <- NA
   
   # clipping value to be above threshold value
   threshold <- 1e-4
@@ -913,10 +965,20 @@ performance.wrapper <- function(model, observation, prediction, prediction.proba
   #   - performances: the performances as described above  
   
   likelihood <- compute.likelihood(observation, taxa, prediction.probability)
-  performance <- -2*sum(log(likelihood)) / nrow(observation)
+  rind.na <- which(is.na(likelihood))
+  if(length(rind.na) > 0) likelihood <- likelihood[-rind.na]
+  performance <- -2*sum(log(likelihood)) / length(likelihood)
   
-  auc <- auc(response =ifelse(observation[,taxa]=="Present", 1, 0),
-             predictor=prediction.probability[["Present"]])
+  if(length(rind.na) > 0) {
+      resp <- ifelse(observation[-rind.na,taxa]=="Present", 1, 0)
+      pred <- prediction.probability[["Present"]][-rind.na]
+  } else {
+      resp <- ifelse(observation[,taxa]=="Present", 1, 0)
+      pred <- prediction.probability[["Present"]]
+  }
+
+  auc <- auc(response = resp,
+             predictor = pred)
   
   model.performances <- list()
   

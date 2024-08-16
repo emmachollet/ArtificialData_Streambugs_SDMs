@@ -24,7 +24,7 @@ graphics.off() # Clean graphics display
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-## Libraries ####
+ ## Libraries ####
 
 if (!require("dplyr")){install.packages("dplyr"); library("dplyr")}                    # to sort, join, merge data
 if ( !require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
@@ -60,7 +60,7 @@ dir.utilities           <- "../00_utilities/"
 # dir.create(dir.output)
 
 # define files
-name.streambugs.run     <- "10Catch_3081Sites_update.traits.hybrid_rk4Met_10Yea_3651Steps"
+name.streambugs.run     <- "8Catch_3009Sites_PolyInterp30_runC_100Yea_36501Steps"
 file.input.data         <- paste0(name.streambugs.run, "_WideData_ResultsSamplePresAbs.csv")
 file.prev.taxa          <- paste0(name.streambugs.run, "_PrevalenceTaxonomy_SamplePresAbs.csv")
 file.selected.taxa      <- "selected_taxa_analysis.csv"
@@ -131,15 +131,16 @@ scales::show_col(vect.col.pres.abs)
 # sdms training options
 number.split            <- 3
 split.criterion         <- "ReachID"
-number.sample           <- 3000
-sdm.models              <- list("GLM" = "glm",
+number.sample           <- 1000
+number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample)
+sdm.models              <- c(
+                                "GLM" = "glm",
                                 # "GAM" = "gam",
                                 "GAM" = "gamLoess",
-                                
                                 "RF"  = "rf")#,
-                                # "ann")
+# "ann")
 no.models <- length(sdm.models)
-models <- append(list("null"), sdm.models)
+models <- append(c("Null" = "null"), sdm.models)
 
 # noise scenarios
 list.noise <- list(
@@ -213,7 +214,6 @@ data.input <- data.env.taxa
 data.input$tempmaxC2 <- data.input$tempmaxC^2
 data.input$currentms2 <- data.input$currentms^2
 data.input <- data.input[,c(vect.info,env.factor,taxa.colnames)] # subselect columns of interest
-data.input$Watershed <- gsub("Doux", "Doubs", data.input$Watershed) # correct cute mistake
 catch.variable <- "Watershed"
 
 # add noise
@@ -344,24 +344,34 @@ preprocessed.data.fit <- preprocess.data(data=data.input,
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Cross-validation ####
 
-# models.cv <- lapply(sdm.models, FUN = apply.caret.model, 
-#                     preprocessed.data.cv, split.type = "CV", 
+models.cv  <- apply.ml.models(data=preprocessed.data.cv,
+                              models=models,
+                              split.type="CV")
+
+save.models(models=models.cv,
+            path=dir.experiment,
+            split.type="CV")
+
+# models.cv <- lapply(sdm.models, FUN = apply.caret.model,
+#                     preprocessed.data.cv, split.type = "CV",
 #                     taxa.colnames, env.factor, list.noise)
-# 
-# save.models(models=models.cv,
-#             path=dir.experiment,
-#             split.type="CV")
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Fit entire dataset ####
 
-models.fit <- lapply(sdm.models, FUN = apply.caret.model, 
-                     preprocessed.data.fit, split.type = "FIT", 
-                     taxa.colnames, env.factor, list.noise)
+models.fit <- apply.ml.models(data=preprocessed.data.fit,
+                              models=models,
+                              split.type="FIT")
 
 save.models(models=models.fit,
             path=dir.experiment,
             split.type="FIT")
+
+
+# models.fit <- lapply(sdm.models, FUN = apply.caret.model, 
+#                      preprocessed.data.fit, split.type = "FIT", 
+#                      taxa.colnames, env.factor, list.noise)
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # PLOTS EXPERIMENT ####
@@ -380,12 +390,13 @@ prev.taxa <- data.prev.taxa
 all.results <- summarize.all.results(models.cv, prev.taxa)
 
 ggplot.all.results <- restructure.all.results(all.results)
+ggplot.all.results$model <- factor(ggplot.all.results$model, levels= names(models))
 
 color.map <- c('GLM'           = 'deepskyblue',   # Generalized Linear Model
                'GAM'      = 'green',         # Generalized Additive Model
                # 'ann'           = 'orange',        # Artificial Neural Network
-               'RF'            = 'red')#,           # Random Forest
-               # 'null'          = 'black')         # Null Model
+               'RF'            = 'red',           # Random Forest
+               'Null'          = 'black')         # Null Model
 
 
 ## Fig. 1 : boxplot perf ----
@@ -397,39 +408,48 @@ gg.plot.dev.infos <-  ggplot.all.results %>%
             median=median(dev))
 
 median.null.pred <- min((gg.plot.dev.infos %>%
-                           filter(fit_pred=="pred" & model=="null"))["median"])
+                           filter(fit_pred=="pred" & model=="Null"))["median"])
 median.best.pred <- min((gg.plot.dev.infos %>%
                            filter(fit_pred=="pred"))["median"])
 
 fig1 <- ggplot(data=ggplot.all.results,
                aes(x=model, y=dev)) +
-  geom_boxplot(aes(fill=fit_pred)) +
-  # geom_hline(aes(yintercept=median.null.pred,
-  #                color="median null model (pred)"),
-  #            linetype="dashed") + 
-  geom_hline(aes(yintercept=median.best.pred,
+    geom_boxplot(aes(fill=fit_pred)) +
+    geom_hline(aes(yintercept=median.null.pred,
+                 color="median null model (pred)"),
+             linetype="dashed") +
+    geom_hline(aes(yintercept=median.best.pred,
                  color="median best model (pred)"),
              linetype="dashed") +
-  scale_colour_manual(values = c('green','black')) +
-  theme_minimal() +
-  theme(legend.title=element_blank())
+    scale_fill_manual(values=c(fit = "#998ec3", pred = "#f1a340")) +
+    scale_colour_manual(values = c('green','black')) +
+    theme_minimal() +
+    theme(legend.title=element_blank()) +
+    labs(x = "Models",
+         y = "Standardized deviance\n ",
+         title = "")
 
-pdf(paste0(dir.experiment, "boxplot_performance.pdf"))
+pdf(paste0(dir.experiment, "boxplot_performance.pdf"), width = 8, height = 5)
 print(fig1)
 dev.off()
 
 
+
 ## Fig. 2 : bellplot ----
-fig2 <- ggplot(data=subset(ggplot.all.results, model %in% "null"),
+fig2 <- ggplot(data=subset(ggplot.all.results, model %in% "Null"),
                aes(x=prevalence, y=dev, color=model)) +
   geom_smooth(se = FALSE) + 
   geom_point(data=ggplot.all.results) +
   facet_wrap(~fit_pred) +
   scale_color_manual(values=color.map) +
   theme_minimal() + 
-  theme(legend.title=element_blank())
+  theme(legend.title=element_blank()) +
+    labs(x = "Prevalence",
+         y = "Standardized deviance\n ",
+         title = "")
 
-pdf(paste0(dir.experiment, "bellplot_performance.pdf"))
+
+pdf(paste0(dir.experiment, "bellplot_performance.pdf"), width = 8, height = 5)
 print(fig2)
 dev.off() 
 
@@ -439,11 +459,11 @@ dev.off()
 data.base.ice       <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
 data.base.ice$tempmaxC2 <- data.base.ice$tempmaxC^2
 data.base.ice$currentms2 <- data.base.ice$currentms^2
-name.ice.streambugs <- "10Catch_50Sites_ICE_30Steps_update.traits.hybrid_rk4Met_10Yea_3651Steps_"
+name.ice.streambugs <- "8Catch_50Sites_ICE_50Steps_PolyInterp30_runC_100Yea_36501Steps_"
 ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
                                        "WideData_ResultsProbObs.csv"), sep = ";")
 no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
-no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_update")[2])
+no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_Poly")[2])
 
 dir.exp.ice <- paste0(dir.experiment, "ICE/")
 dir.create(dir.exp.ice)
@@ -465,7 +485,7 @@ for(taxon.under.obs in names(taxa.colnames)){
 
   # taxon.under.obs <- names(taxa.colnames)[1]
   
-  pred.ice.streamb <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
+  pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
     mutate(observation_number = rep(1:no.sites, each = no.steps),
            column_label = 1,
            model = "Streambugs") %>%
@@ -475,7 +495,7 @@ for(taxon.under.obs in names(taxa.colnames)){
   
   pred.ice.mean <- pred.ice.streamb %>%
     group_by_at(select.env.fact[1]) %>%
-    summarize(avg = median(na.omit(pred))) %>%
+    summarize(avg = mean(na.omit(pred))) %>%
     mutate(model = "Streambugs")
   pred.ice.mean.bounds  <- pred.ice.mean %>%
     # group_by(model) %>%
@@ -495,8 +515,8 @@ for(taxon.under.obs in names(taxa.colnames)){
                       taxa=taxon.under.obs,
                       standardization.constant=std.const.ice[[1]],
                       observations = preprocessed.data.ice[["Entire dataset"]][,input.env.factors],
-                      nb.sample=50,
-                      resolution=30,
+                      nb.sample=no.sites,
+                      resolution=no.steps,
                       input.env.factors=input.env.factors)
   
   pred.models              <- ice.dfs[["observations"]]
@@ -541,7 +561,7 @@ for(taxon.under.obs in names(taxa.colnames)){
     #                  yend=y.mean.max),
     #              arrow=arrow(length = unit(0.3, "cm"),
     #                          ends = "both")) +
-    facet_wrap(~factor(model, levels = c("Streambugs", "GLM", "GAM", "RF")), ncol = 4) +
+    facet_wrap(~factor(model, levels = c("Streambugs", sdm.models)), ncol = 4) +
     theme_bw() +
     theme(strip.background = element_rect(fill = "white"),
           legend.title = element_text(size=24),
