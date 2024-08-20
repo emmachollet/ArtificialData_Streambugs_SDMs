@@ -9,7 +9,7 @@
 #                --- Andreas Scheidegger and Nele Schuwirth ---                #
 #                                                                              #
 #                      --- emma.chollet@eawag.ch ---                           #
-#                                  l                                           #
+#                                                                              #
 ###############################################################################|
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -131,7 +131,7 @@ scales::show_col(vect.col.pres.abs)
 # sdms training options
 number.split            <- 3
 split.criterion         <- "ReachID"
-number.sample           <- 1000
+number.sample           <- 3000
 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample)
 sdm.models              <- c(
                                 "GLM" = "glm",
@@ -166,9 +166,9 @@ list.noise <- list(
   #                         "parameters" = NULL),
   # 
   # "noise.rem.fact" = list("type"       = "remove_factor",
-  #                         "target"     = "temperature",
+  #                         "target"     = "currentms",
   #                         "amount"     = NULL,
-  #                         "parameters" = NULL),
+  #                         "parameters" = NULL)#,
   
 )
 
@@ -217,12 +217,14 @@ data.input <- data.input[,c(vect.info,env.factor,taxa.colnames)] # subselect col
 catch.variable <- "Watershed"
 
 # add noise
-data.input.noised        <- add.noise(data.input,
+data.input.noised        <- add.noise(data = data.input,
                                       number.sample,
-                                      list.noise,
-                                      env.factor,
-                                      env.factor.full)
-data.input <- data.input.noised$`noised data`
+                                      noise = list.noise,
+                                      env.fact = env.factor,
+                                      env.fact.full = env.factor.full)
+data.input      <- data.input.noised$`noised data`
+env.factor      <- data.input.noised$`env fact`
+env.factor.full <- data.input.noised$`env fact full`
 
 # summary(data.input$tempmaxC)
 # reduce dataset to selected number of samples
@@ -388,6 +390,10 @@ prev.taxa <- data.prev.taxa
 
 ## Variable for plots ----
 all.results <- summarize.all.results(models.cv, prev.taxa)
+
+# write summarized results in csv
+file.name <- paste0(experiment.name, "_allresults.csv")
+write.table(all.results, file = paste0(dir.experiment, file.name), sep = ";", row.names = F)
 
 ggplot.all.results <- restructure.all.results(all.results)
 ggplot.all.results$model <- factor(ggplot.all.results$model, levels= names(models))
@@ -649,10 +655,10 @@ name.select.env.fact <- names(select.env.fact)
 ## Comparison different noise scenarios ----
 
 # compare experiment dispersal noise
-list.exp     <- list("Baseline"                            = "3000Sites_15Taxa_3SDMs_10EnvFact_",
-                     "Reduce dataset size"                 = "1000Sites_15Taxa_3SDMs_10EnvFact_",
-                     "Missdetection"                       = "3000Sites_15Taxa_3SDMs_10EnvFact_noise.gamm",
-                     "Noise on temperature"   = "3000Sites_15Taxa_3SDMs_10EnvFact_noise.temp")
+list.exp     <- list("Best case scenario"                  = "3000Sites_19Taxa_3SDMs_10EnvFact_",
+                     "Reduce dataset size"                 = "1000Sites_19Taxa_3SDMs_10EnvFact_",
+                     "Remove environmental predictor"      = "3000Sites_19Taxa_3SDMs_10EnvFact_noise.rem.fact",
+                     "Noise on temperature"                = "3000Sites_19Taxa_3SDMs_10EnvFact_noise.temp")
 
 # test.colors <- RColorBrewer::brewer.pal(8, "Set1")
 # print(test.colors)
@@ -723,7 +729,7 @@ lb <- max(unlist(min.boundaries))
 hb <- min(unlist(max.boundaries))
 
 plot.data <- final.multi.ice
-plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF"))
+# plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF"))
 plot.data$column_label <- factor(plot.data$column_label, levels = unlist(names(list.exp)))
 
 pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
@@ -731,7 +737,7 @@ pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.f
          column_label = 1) %>%
   rename(pred = paste0("Occurrence.", taxon.under.obs)) %>%
   group_by_at(select.env.fact[1]) %>%
-  summarize(avg = median(na.omit(pred)))
+  summarize(avg = mean(na.omit(pred)))
 
 fig1 <- ggplot(data=plot.data) +
   geom_line(aes(x=.data[[name.select.env.fact]],
@@ -746,7 +752,7 @@ fig1 <- ggplot(data=plot.data) +
   #facet_wrap(~column_label) +
   xlim(lb, hb) +
   # scale_y_continuous(limits = c(0,1)) +
-  scale_color_manual(values=model.color.map) +
+  # scale_color_manual(values=model.color.map) +
   theme_bw() +
   theme(strip.background = element_rect(fill = "white"),
         legend.position = "bottom") +#,
@@ -780,7 +786,8 @@ fig2 <- ggplot(data=plot.data) +
   scale_color_manual(values=color.map) +
   xlim(lb, hb) +
   # scale_y_continuous(limits = c(0,1)) +
-  facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
+  facet_wrap(~model) +
+  # facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
   theme_bw() +
   theme(strip.background = element_rect(fill = "white"),
         legend.position = "bottom") +#,

@@ -322,8 +322,10 @@ plot.ice <- function(models.performance,
   #                   prediction for every model. 
   #   - env.factor.sampled: the original values of the sampled observation
   
-  # observations <- models.performance[["null"]][["entire_dataset"]][["training"]][["Simuliidae"]][["observation"]] 
-  models = lapply(models.performance,
+  models.names <- names(models.performance)
+  models <- models.performance[models.names!="null"] # remove null model from list of models
+  
+  models = lapply(models,
                   FUN=function(x){
                     lapply(x[["entire_dataset"]][["training"]],
                            FUN=function(y){y["model"]})
@@ -370,9 +372,7 @@ plot.ice <- function(models.performance,
   # 2 make prediction for every model ==========================================
   
   models.names <- names(models)
-  models.names <- models.names[models.names!="null"] # remove null model from list of models 
-  #models.names <- models.names[models.names!="gamloess"]
-  
+
   predictions <- lapply(models.names,
                         FUN=make.prediction,
                         models,
@@ -412,7 +412,7 @@ plot.ice <- function(models.performance,
 
 make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
   
-  # model.name <- models.names[2]
+  # model.name <- models.names[1]
   # obs <- sampled.observations
   
   # This is a helper function used by the plot.ice function. It uses a model
@@ -432,6 +432,7 @@ make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
   
   taxa.short <- gsub("Occurrence.", "", taxa)
   model <- models[[model.name]][[taxa.short]]
+  input.env.factors <- model$model$coefnames
   
   if(model.name == "ann"){
     

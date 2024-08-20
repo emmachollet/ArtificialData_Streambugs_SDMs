@@ -93,6 +93,7 @@ add.noise <- function(data, number.sample, noise, env.fact, env.fact.full){
   noised.data <- data
   
   for (n in noise){
+    # n <- noise[[1]]
     if (n[["type"]]=="gaussian"){
       noised.data <- noised.data %>% 
         add.gaussian.noise(col.name=n[["target"]],
@@ -123,6 +124,9 @@ add.noise <- function(data, number.sample, noise, env.fact, env.fact.full){
       
       env.fact <- env.fact[!grepl(target_factor, env.fact)]
       env.fact.full <- env.fact.full[!grepl(target_factor, env.fact.full)]
+      cind.fact.remove <- which(grepl(target_factor, colnames(data)))
+      noised.data <- noised.data[,-cind.fact.remove]
+      
     }
   }
 

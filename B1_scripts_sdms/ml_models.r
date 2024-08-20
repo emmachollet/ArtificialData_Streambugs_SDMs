@@ -1,6 +1,6 @@
 # machine learning model ----
 apply.ml.models <- function(data,
-                            models=c("null", "glm", "gamloess", "rf", "ann"),
+                            models=c("null", "glm", "gamLoess", "rf", "ann"),
                             split.type="FIT"){
                             # should be there: taxa.colnames, env.fact, list.noise
     
@@ -28,36 +28,39 @@ apply.ml.models <- function(data,
     
     cat("Training model:\n")
     
-    for (name.model in models) {
+    for (i in 1:length(models)) {
         # to debug
-        # name.model <- models[2]
+        # i <- 1
+        name.model <- names(models)[i]
+        name.algo <- models[i]
         
         cat(name.model, "\n")
         
-        if (grepl("null", name.model)) {
+        if (grepl("null", name.algo)) {
             
             trained.model <- apply.null.model(data, split.type)
             
-        # }  else if (grepl("null_glm", name.model)){
+        # }  else if (grepl("null_glm", name.algo)){
         #     
-        #     trained.model <- apply.caret.model(model.name = name.model, data, split.type, taxa.colnames, env.fact = c(), list.noise)
+        #     trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = c(), list.noise)
             
-        } else if (grepl("ann", name.model)) {
+        } else if (grepl("ann", name.algo)) {
             
             trained.model <- apply.ann.model(data, split.type)
             
-        } else if (grepl("glm", name.model)){
+        } else if (grepl("glm", name.algo)){
             
-            trained.model <- apply.caret.model(model.name = name.model, data, split.type, taxa.colnames, env.fact = env.factor.full, list.noise)
+            trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = env.factor.full, list.noise)
              
         } else {
             
-            trained.model <- apply.caret.model(model.name = name.model, data, split.type, taxa.colnames, env.fact = env.factor, list.noise)
+            trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = env.factor, list.noise)
         }
         
         list.trained.models[[name.model]] <- trained.model
     }
-  # trained.null_prev <- if ("null_prev" %in% models) apply.null.model(data, split.type) else NULL
+  
+    # trained.null_prev <- if ("null_prev" %in% models) apply.null.model(data, split.type) else NULL
   # trained.null_glm  <- if ("null_glm" %in% models) apply.caret.model(data, split.type, env.fact = c(), 'glm') else NULL
   # trained.glm       <- if ("glm" %in% models) apply.caret.model(data, split.type, ENV.FACT.FULL.COLNAMES, 'glm') else NULL
   # trained.gamloess  <- if ("gamloess" %in% models) apply.caret.model(data, split.type, ENV.FACT.COLNAMES, 'gamLoess') else NULL
