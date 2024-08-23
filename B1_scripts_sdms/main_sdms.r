@@ -27,11 +27,17 @@ graphics.off() # Clean graphics display
  ## Libraries ####
 
 if (!require("dplyr")){install.packages("dplyr"); library("dplyr")}                    # to sort, join, merge data
-if ( !require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
+if (!require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
+if (!require("ggplot")){install.packages("ggplot"); library("ggplot")}                    # to sort, join, merge data
 if (!require("readr")){install.packages("readr"); library("readr")}
 if (!require("jsonlite")){install.packages("jsonlite"); library("jsonlite")}
 if (!require("pROC")){install.packages("pROC"); library("pROC")}  # to compute AUC                  
-if ( !require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
+if (!require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
+# if (!require("ggpattern")){install.packages("ggpattern"); library("ggpattern")}        # to add patterns in boxplots
+
+# install.packages("remotes")                    # Install remotes package
+# remotes::install_github("coolbutuseless/ggpattern")
+# library("ggpattern")                           # Load ggpattern package
 
 # specific for Neural Network
 if (!require("reticulate")){install.packages("reticulate"); library("reticulate")}
@@ -131,13 +137,14 @@ scales::show_col(vect.col.pres.abs)
 # sdms training options
 number.split            <- 3
 split.criterion         <- "ReachID"
-number.sample           <- 3000
+number.sample           <- 100
 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample)
 sdm.models              <- c(
                                 "GLM" = "glm",
                                 # "GAM" = "gam",
                                 "GAM" = "gamLoess",
-                                "RF"  = "rf")#,
+                                "RF"  = "rf",
+                                "ANN" = "ann")#,
 # "ann")
 no.models <- length(sdm.models)
 models <- append(c("Null" = "null"), sdm.models)
@@ -516,7 +523,7 @@ for(taxon.under.obs in names(taxa.colnames)){
   # input.env.factors <- get.input.env.factors(experiment.name)
   input.env.factors <- env.factor
   
-  ice.dfs <- plot.ice(models.performance=models.fit,
+  ice.dfs <- plot.ice(models.performance = models.fit,
                       select.env.fact=select.env.fact,
                       taxa=taxon.under.obs,
                       standardization.constant=std.const.ice[[1]],
@@ -567,7 +574,7 @@ for(taxon.under.obs in names(taxa.colnames)){
     #                  yend=y.mean.max),
     #              arrow=arrow(length = unit(0.3, "cm"),
     #                          ends = "both")) +
-    facet_wrap(~factor(model, levels = c("Streambugs", sdm.models)), ncol = 4) +
+    facet_wrap(~factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 4) +
     theme_bw() +
     theme(strip.background = element_rect(fill = "white"),
           legend.title = element_text(size=24),
@@ -656,7 +663,7 @@ name.select.env.fact <- names(select.env.fact)
 
 # compare experiment dispersal noise
 list.exp     <- list("Best case scenario"                  = "3000Sites_19Taxa_3SDMs_10EnvFact_",
-                     "Reduce dataset size"                 = "1000Sites_19Taxa_3SDMs_10EnvFact_",
+                     "Reduce dataset size"                 = "100Sites_19Taxa_3SDMs_10EnvFact_",
                      "Remove environmental predictor"      = "3000Sites_19Taxa_3SDMs_10EnvFact_noise.rem.fact",
                      "Noise on temperature"                = "3000Sites_19Taxa_3SDMs_10EnvFact_noise.temp")
 
@@ -687,11 +694,14 @@ names(color.map) <- names(list.exp)
 
 multi.ice <- lapply(list.exp, FUN=function(name){
   
-  # name <- list.exp[[1]]
+  # name <- list.exp[[2]]
   dir.experiment          <- paste0(dir.output, name, "/")
+  cat("\nLoading models and computing ICE for taxon", taxon.under.obs, "and experiment:", name, "\n")
   
   models.fit      <- load.models(path=dir.experiment, split.type="FIT")
   std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
+  correct.names <- names(models)[which(names(models.fit) %in% models | names(models.fit) %in% names(models))]
+  names(models.fit) <- correct.names
   
   input.env.factors <- env.factor
   
@@ -729,7 +739,7 @@ lb <- max(unlist(min.boundaries))
 hb <- min(unlist(max.boundaries))
 
 plot.data <- final.multi.ice
-# plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF"))
+plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF"))
 plot.data$column_label <- factor(plot.data$column_label, levels = unlist(names(list.exp)))
 
 pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
@@ -752,7 +762,7 @@ fig1 <- ggplot(data=plot.data) +
   #facet_wrap(~column_label) +
   xlim(lb, hb) +
   # scale_y_continuous(limits = c(0,1)) +
-  # scale_color_manual(values=model.color.map) +
+  scale_color_manual(values=model.color.map) +
   theme_bw() +
   theme(strip.background = element_rect(fill = "white"),
         legend.position = "bottom") +#,
@@ -760,19 +770,21 @@ fig1 <- ggplot(data=plot.data) +
         # legend.text = element_text(size=20)) +
   labs(x = name.select.env.fact,
        y = "Predicted probability of occurrence",
-       colour="Models")
+       colour="Models",
+       title = taxon.under.obs)
+# fig1
 
-filename <- paste0("comparison_noise.temp_", 
-                   length(list.exp), "exp_",
-                   taxon.under.obs, "_",
-                   select.env.fact)
-pdf(paste0(dir.compar.plots, filename, "_pdp_per_scenario.pdf"), width = 11, height = 4)
+file.name.exp <- paste0("comparison_100points_rem.FV_noise.temp_", 
+                        length(list.exp), "exp_")
+file.name.tax <- paste0(file.name.exp,
+                       taxon.under.obs, "_",
+                       select.env.fact)
+
+pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_scenario.pdf"), width = 11, height = 4)
 print(fig1)
 dev.off()
 
 # rm(fig1)
-
-
 
 fig2 <- ggplot(data=plot.data) +
   geom_line(aes(x=.data[[name.select.env.fact]],
@@ -793,26 +805,42 @@ fig2 <- ggplot(data=plot.data) +
         legend.position = "bottom") +#,
   # legend.title = element_text(size=24),
   # legend.text = element_text(size=20)) +
-  labs(x =name.select.env.fact,
+  labs(x = name.select.env.fact,
        y = "Predicted probability of occurrence",
-       colour="Scenario")
+       colour="Scenario", 
+       title = taxon.under.obs)
+# fig2
 
-pdf(paste0(dir.compar.plots, filename, "_pdp_per_model.pdf"), width = 12, height = 5)
+pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_model.pdf"), width = 12, height = 5)
 print(fig2)
 dev.off()
 
 # rm(fig2)
 
-
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Fig 3: plotting the score of given taxon
+
+# load and process all results
 multi.all.results <- lapply(list.exp, FUN=function(name){
   
+    # name <- list.exp[[2]]
   dir.experiment <- paste0(dir.output, name, "/")
-  models.cv      <- load.models(path=dir.experiment, split.type="CV")
+  # models.cv      <- load.models(path=dir.experiment, split.type="CV")
+  file.name <- paste0(dir.experiment, name, "_allresults.csv")
   
-  all.results    <- summarize.all.results(models.cv, data.prev.taxa)
+  all.results <- read.table(file.name, header = T, sep = ";")
+  for(i in 1:ncol(all.results)){
+      # i <- 1
+      correct.name <- gsub(models[1], names(models)[1],
+                           gsub(models[2], names(models)[2],
+                                gsub(models[3], names(models)[3],
+                                     gsub(models[4], names(models)[4],
+                                     colnames(all.results)[i]))))
+      colnames(all.results)[i] <- correct.name
+  }
+  # all.results    <- summarize.all.results(models.cv, data.prev.taxa)
   
-  rm(models.cv) 
+  # rm(models.cv) 
   
   all.results <- restructure.all.results(all.results)
   
@@ -824,7 +852,7 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
 final.multi.all.results <- bind_rows(multi.all.results, .id = "column_label")
 
 filtered.multi.all.results <- final.multi.all.results %>%
-  filter(taxa == taxon)
+  filter(taxa == taxon.under.obs)
 
 fig3 <- ggplot(data=filtered.multi.all.results) +
   geom_point(aes(x=column_label,
@@ -836,36 +864,135 @@ fig3 <- ggplot(data=filtered.multi.all.results) +
   scale_x_discrete(limits=names(list.exp)) +
   scale_color_manual(values=model.color.map) +
   labs(x="Scenario",
-       y="Standardized deviance") +
+       y="Standardized deviance",
+       title = taxon.under.obs) +
   #facet_wrap(~fit_pred) + 
   theme_minimal() +
-  theme(legend.title=element_blank())
+  theme(legend.title=element_blank(),
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
-pdf(paste0(dir.compar.plots, filename, "_taxa_score.pdf"))
+pdf(paste0(dir.compar.plots, file.name.tax, "_taxa_score.pdf"))
 print(fig3)
 dev.off()
 
 rm(fig3)
 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Fig 6: multi-scenario bellplots ----
+
+plot.data <- final.multi.all.results %>%
+    filter(fit_pred == "pred")
+
+fig6 <- ggplot(data=plot.data,
+               aes(x=prevalence, y=dev, color=column_label)) + 
+    geom_point() +
+    facet_wrap(~model)  +
+    scale_color_manual(values=color.map) + 
+    scale_y_continuous(limits = c(0,2)) +
+    labs(x = "Prevalence",
+         y = "Standardized deviance") +
+    # scale_x_discrete(names(taxa.colnames)) +
+    theme_minimal() + 
+    theme(legend.title=element_blank())
+# fig6
+
+pdf(paste0(dir.compar.plots, file.name.exp, "_bellplot_pred_per_scenario.pdf"), height = 6, width = 10)
+print(fig6)
+dev.off() 
+
+fig7 <- ggplot(data=plot.data,
+               aes(x=prevalence, y=dev, color=model)) + 
+    geom_point() +
+    facet_wrap(~column_label)  +
+    scale_color_manual(values=model.color.map) + 
+    scale_y_continuous(limits = c(0,2)) +
+    labs(x = "Prevalence",
+         y = "Standardized deviance") +
+    # scale_x_discrete(names(taxa.colnames)) +
+    theme_minimal() + 
+    theme(legend.title=element_blank())
+
+# fig7
+
+pdf(paste0(dir.compar.plots, file.name.exp, "_bellplot_pred_per_model.pdf"), height = 6, width = 10)
+print(fig7)
+dev.off() 
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Fig 5: multi box plot ----
+
+plot.data <- final.multi.all.results
+plot.data$model <- factor(plot.data$model, levels= names(models))
+plot.data$pattern <- ifelse(plot.data$fit_pred == "fit", "task1", "task2")
+
+fig5 <- ggplot(data=plot.data, aes(x=column_label, y=dev)) +
+    # geom_boxplot(aes(x=column_label,
+    #                  y=dev,
+    #                  fill=model)) +
+    # ggpattern::geom_col_pattern(aes(fill = model, pattern = task, pattern_fill = task), pattern_density = 0.35, outlier.shape = NA) +
+    scale_x_discrete(limits=names(list.exp)) +
+    scale_y_continuous(limits = c(0, 2)) +
+    facet_wrap(~fit_pred, nrow = 2) + 
+    theme_minimal() +
+    scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
+    theme(legend.title=element_blank(),
+          axis.text.x = element_text(angle = 15, # vjust = 0.5, 
+                                     hjust=1)) +
+    labs(x="Scenario",
+         y="Standardized deviance")
+fig5
+
+
+pdf(paste0(dir.compar.plots, file.name.exp, "_boxplot_per_scenario.pdf"), width = 12, height = 9)
+print(fig5)
+dev.off() 
+
+# rm(fig5)
+
+fig6 <- ggplot(data=plot.data) +
+    geom_boxplot(aes(x=model,
+                     y=dev,
+                     fill=column_label)) +
+    scale_x_discrete(limits=names(models))+
+    scale_y_continuous(limits = c(0, 2)) +
+    facet_wrap(~fit_pred, nrow = 2) + 
+    theme_minimal() +
+    scale_fill_manual(values = color.map) +
+    theme(legend.title=element_blank()) +
+    labs(x="Model",
+         y="Standardized deviance")
+# fig6
+
+
+pdf(paste0(dir.compar.plots, file.name.general, "_boxplot_per_model.pdf"), width = 12, height = 8)
+print(fig6)
+dev.off() 
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Fig 4: dual ICE ----
-exp.baseline <- list.exp[[1]]
-exp.extreme  <- list.exp[[length(list.exp)]]
+# exp.baseline <- list.exp[[1]]
+# # exp.extreme  <- list.exp[[length(list.exp)]]
+# no.select.exp <- 3
+# exp.extreme  <- list.exp[[no.select.exp]]
 
+list.dual.exp <- list.exp[c(1,3)]
 
-taxon.under.obs <- paste0("Occurrence.", taxon.under.obs)
+# taxon.under.obs <- paste0("Occurrence.", taxon.under.obs)
 
-list.dual.exp <- list("Baseline" = exp.baseline,
-                      "Dispersal limitation"  = exp.extreme)
+# list.dual.exp <- list("Baseline" = exp.baseline,
+#                       names(list.exp)[no.select.exp] = exp.extreme)
 
 dual.ice <- lapply(list.dual.exp, FUN=function(name){
   
+    # name <- list.dual.exp[[1]]
   dir.experiment          <- paste0(dir.output, name, "/")
-  
+  print(dir.experiment)
   models.fit      <- load.models(path=dir.experiment, split.type="FIT")
   std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
+  correct.names <- names(models)[which(names(models.fit) %in% models | names(models.fit) %in% names(models))]
+  names(models.fit) <- correct.names
   
   # input.env.factors <- get.input.env.factors(exp.name=name)
   input.env.factors <- input.env.factors
@@ -875,17 +1002,17 @@ dual.ice <- lapply(list.dual.exp, FUN=function(name){
                       taxa=taxon.under.obs,
                       standardization.constant=std.const.fit[[1]],
                       observations = preprocessed.data.fit$`Entire dataset`,
-                      nb.sample=100,
-                      resolution=200,
+                      nb.sample=no.sites,
+                      resolution=no.steps,
                       input.env.factors=input.env.factors)
   
   return(ice.dfs)
 })
 
-obs1      <- dual.ice[["Baseline"]][["observations"]]
-env.fact1 <- dual.ice[["Baseline"]][["env.factor.sampled"]]
-obs2      <- dual.ice[["Dispersal limitation"]][["observations"]]
-env.fact2 <- dual.ice[["Dispersal limitation"]][["env.factor.sampled"]]
+obs1      <- dual.ice[[1]][["observations"]]
+env.fact1 <- dual.ice[[1]][["env.factor.sampled"]]
+obs2      <- dual.ice[[2]][["observations"]]
+env.fact2 <- dual.ice[[2]][["env.factor.sampled"]]
 
 merged.obs       <- bind_rows(list(obs1, obs2),
                               .id = "column_label")
@@ -914,13 +1041,17 @@ max.boundaries <- lapply(list.obs.mean, FUN=function(ice){
 lb <- max(unlist(min.boundaries))
 hb <- min(unlist(max.boundaries))
 
-merged.obs["column_label"] <- ifelse(merged.obs[["column_label"]]==1, "Baseline", "High noise") 
-observations.mean["column_label"] <- ifelse(observations.mean[["column_label"]]==1, "Baseline", "High noise")
-merged.env.fact["column_label"] <- ifelse(merged.env.fact[["column_label"]]==1, "Baseline", "High noise")
-observations.mean.bounds["column_label"] <- ifelse(observations.mean.bounds[["column_label"]]==1, "Baseline", "High noise")
+names.scenarios <- names(list.dual.exp)
 
+merged.obs["column_label"] <- ifelse(merged.obs[["column_label"]]==1, names.scenarios[1], names.scenarios[2]) 
+observations.mean["column_label"] <- ifelse(observations.mean[["column_label"]]==1, names.scenarios[1], names.scenarios[2])
+merged.env.fact["column_label"] <- ifelse(merged.env.fact[["column_label"]]==1, names.scenarios[1], names.scenarios[2])
+observations.mean.bounds["column_label"] <- ifelse(observations.mean.bounds[["column_label"]]==1, names.scenarios[1], names.scenarios[2])
 
-fig4 <- ggplot(data=merged.obs) +
+plot.data <- merged.obs
+plot.data$model <- factor(plot.data$model, levels= names(models))
+
+fig4 <- ggplot(data=plot.data) +
   geom_line(aes(x=.data[[select.env.fact]],
                 y=pred,
                 group=observation_number, 
@@ -952,7 +1083,9 @@ fig4 <- ggplot(data=merged.obs) +
   # legend.title = element_text(size=24),
   # legend.text = element_text(size=20)) +
   labs(x =name.select.env.fact,
-       y = "Predicted probability of occurrence")
+       y = "Predicted probability of occurrence", 
+       title = taxon.under.obs)
+# fig4
 
 pdf(paste0(dir.compar.plots, filename, "_ice.pdf"))
 print(fig4)
@@ -1010,41 +1143,41 @@ for (model.name in c("GLM", "GAM", "RF")){ # c("glm", "gamloess", "rf", "ann")){
   
 }
 
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# Fig 5: multi box plot ----
-multi.all.results <- lapply(list.exp, FUN=function(name){
-  
-  dir.experiment <- paste0(dir.output, name, "/")
-  models.cv      <- load.models(path=dir.experiment, split.type="CV")
-  
-  all.results    <- summarize.all.results(models.cv, data.prev.taxa)
-  
-  rm(models.cv) 
-  
-  all.results <- restructure.all.results(all.results)
-  
-  all.results["noise"] <- name
-  
-  return(all.results)
-})
-
-final.multi.all.results <- bind_rows(multi.all.results, .id = "column_label")
-
-fig5 <- ggplot(data=final.multi.all.results) +
-  geom_boxplot(aes(x=column_label,
-                   y=dev,
-                   fill=fit_pred)) +
-  scale_x_discrete(limits=names(list.exp)) +
-  facet_wrap(~model) + 
-  theme_minimal() +
-  theme(legend.title=element_blank())
-
-
-pdf(paste0(dir.compar.plots, filename, "_boxplot.pdf"))
-print(fig5)
-dev.off() 
-
-rm(fig5)
+# # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# # Fig 5: multi box plot ---
+# multi.all.results <- lapply(list.exp, FUN=function(name){
+#   
+#   dir.experiment <- paste0(dir.output, name, "/")
+#   models.cv      <- load.models(path=dir.experiment, split.type="CV")
+#   
+#   all.results    <- summarize.all.results(models.cv, data.prev.taxa)
+#   
+#   rm(models.cv) 
+#   
+#   all.results <- restructure.all.results(all.results)
+#   
+#   all.results["noise"] <- name
+#   
+#   return(all.results)
+# })
+# 
+# final.multi.all.results <- bind_rows(multi.all.results, .id = "column_label")
+# 
+# fig5 <- ggplot(data=final.multi.all.results) +
+#   geom_boxplot(aes(x=column_label,
+#                    y=dev,
+#                    fill=fit_pred)) +
+#   scale_x_discrete(limits=names(list.exp)) +
+#   facet_wrap(~model) + 
+#   theme_minimal() +
+#   theme(legend.title=element_blank())
+# 
+# 
+# pdf(paste0(dir.compar.plots, filename, "_boxplot.pdf"))
+# print(fig5)
+# dev.off() 
+# 
+# rm(fig5)
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

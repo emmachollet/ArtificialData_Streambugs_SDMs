@@ -323,14 +323,13 @@ plot.ice <- function(models.performance,
   #   - env.factor.sampled: the original values of the sampled observation
   
   models.names <- names(models.performance)
-  models <- models.performance[models.names!="null"] # remove null model from list of models
+  models.sdm <- models.performance[which(models.names!="Null" & models.names!="null")] # remove null model from list of models
   
-  models = lapply(models,
-                  FUN=function(x){
-                    lapply(x[["entire_dataset"]][["training"]],
-                           FUN=function(y){y["model"]})
-                  })
-  
+  models.trained = lapply(models.sdm,
+                          FUN=function(x){
+                            lapply(x[["entire_dataset"]][["training"]],
+                                   FUN=function(y){y["model"]})
+                          })
   
   # 1 generate df_ext ==========================================================
   
@@ -371,11 +370,11 @@ plot.ice <- function(models.performance,
   
   # 2 make prediction for every model ==========================================
   
-  models.names <- names(models)
-
+  models.names <- names(models.trained)
+  
   predictions <- lapply(models.names,
                         FUN=make.prediction,
-                        models,
+                        models.trained,
                         sampled.observations,
                         taxa,
                         input.env.factors)

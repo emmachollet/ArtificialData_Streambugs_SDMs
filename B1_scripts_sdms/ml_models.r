@@ -1,6 +1,10 @@
 # machine learning model ----
 apply.ml.models <- function(data,
-                            models=c("null", "glm", "gamLoess", "rf", "ann"),
+                            models=c("Null" = "null", 
+                                     "GLM" = "glm", 
+                                     "GAM" = "gamLoess", 
+                                     "RF" = "rf",
+                                     "ANN" = "ann"),
                             split.type="FIT"){
                             # should be there: taxa.colnames, env.fact, list.noise
     
@@ -649,6 +653,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
       
       # i.split <- 1
       split <- data[[i.split]]
+      cat("\nTraining models on split", i.split, "\n")
       
       # see explanation above for test of dispersal limitation noise
       if("noise.disp" %in% names(list.noise)){
