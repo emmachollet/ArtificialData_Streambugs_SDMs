@@ -5,7 +5,10 @@ apply.ml.models <- function(data,
                                      "GAM" = "gamLoess", 
                                      "RF" = "rf",
                                      "ANN" = "ann"),
-                            split.type="FIT"){
+                            split.type="FIT",
+                            taxa.colnames,
+                            env.factor,
+                            env.factor.full){
                             # should be there: taxa.colnames, env.fact, list.noise
     
   
@@ -24,6 +27,7 @@ apply.ml.models <- function(data,
   #   - data: the dataset used to train the models
   #   - models: what models need to be applied  
   #   - split.type: how the dataset has been split
+  #   - TO BE COMPLETED
   #
   # returns:
   #   - models: the trained models (glm, gamLoess, rf, ann) 
@@ -34,7 +38,7 @@ apply.ml.models <- function(data,
     
     for (i in 1:length(models)) {
         # to debug
-        # i <- 1
+        # i <- 2
         name.model <- names(models)[i]
         name.algo <- models[i]
         
@@ -42,7 +46,7 @@ apply.ml.models <- function(data,
         
         if (grepl("null", name.algo)) {
             
-            trained.model <- apply.null.model(data, split.type)
+            trained.model <- apply.null.model(data, split.type, taxa.colnames)
             
         # }  else if (grepl("null_glm", name.algo)){
         #     
@@ -50,7 +54,7 @@ apply.ml.models <- function(data,
             
         } else if (grepl("ann", name.algo)) {
             
-            trained.model <- apply.ann.model(data, split.type)
+            trained.model <- apply.ann.model(data, split.type, taxa.colnames, env.fact = env.factor)
             
         } else if (grepl("glm", name.algo)){
             
@@ -85,7 +89,7 @@ apply.ml.models <- function(data,
 
 
 # null model ----
-apply.null.model <- function(data, split.type){
+apply.null.model <- function(data, split.type, taxa.colnames){
   
 
   # This function create the null model and returns its performance. The null 
@@ -133,7 +137,8 @@ apply.null.model <- function(data, split.type){
     # loop over the different splits
     for (i.split in seq(nb.split)){
       
-      # i.split <- 1
+      # i.split <- 2
+        cat("Split number:", i.split, "\n")
       split <- data[[i.split]]
       
       # training.data <- na.omit(split[[1]])
@@ -219,12 +224,18 @@ null.model.perf <- function(taxa, prob, data){
   
     # to debug
     # taxa <- taxa.colnames[2]
-    # data <- training.data
+    # data <- testing.data
     
   nb.sample <- nrow(data)
   taxa.prob <- prob[[gsub("Occurrence.", "", taxa)]]
 
   binary.prediction <- rbinom(n=nb.sample, size=1, prob=taxa.prob)
+  while(sum(binary.prediction) == length(binary.prediction)) {
+      cat("Resampling pres/abs for null model and taxon",taxa, "\n")
+      binary.prediction <- rbinom(n=nb.sample, size=1, prob=taxa.prob)
+      print(sum(binary.prediction))
+      print(length(binary.prediction))
+  }
   prediction <- as.factor(ifelse(binary.prediction>0.5, "Present", "Absent"))
   prediction.probability <- data.frame("Absent" = rep(1 - taxa.prob, nb.sample),
                                        "Present" = rep(taxa.prob, nb.sample))
@@ -240,7 +251,7 @@ null.model.perf <- function(taxa, prob, data){
 
 
 # ann model ----
-apply.ann.model <- function(data, split.type){
+apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
   
   
   # This function create the Artificial Neural Network (ANN) model and returns
@@ -265,12 +276,14 @@ apply.ann.model <- function(data, split.type){
     
     # Get training set
     training.data <- na.omit(data[["Entire dataset"]])
-    X.train         <- as.matrix(training.data[ ,ENV.FACT.COLNAMES])
+    # training.data <- data[["Entire dataset"]]
+    
+    X.train         <- as.matrix(training.data[ ,env.fact])
     Y.train         <- as.matrix(training.data[ ,taxa.colnames])
     encoded.Y.train <- as.matrix(ifelse(Y.train == 'Absent', 0, 1))
     
     # Get hyperparameters
-    hyperparameters <- get.best.hyperparameters(data=training.data)
+    hyperparameters <- get.best.hyperparameters(data=training.data, taxa.colnames, env.fact)
     
     # train model
     ann <- train.ann.model(hyperparameters,
@@ -300,24 +313,29 @@ apply.ann.model <- function(data, split.type){
     # loop over the different splits
     for (i.split in seq(nb.split)){
       
+        # i.split <- 2
+        cat("Split number:", i.split, "\n")
       # Open datasets (Training and testing)
       split <- data[[i.split]]
       
       # Get training set
       training.data <- na.omit(split[[1]])
-      X.train         <- as.matrix(training.data[ ,ENV.FACT.COLNAMES])
+      # training.data <- split[[1]]
+      
+      X.train         <- as.matrix(training.data[ ,env.fact])
       Y.train         <- as.matrix(training.data[ ,taxa.colnames])
       encoded.Y.train <- as.matrix(ifelse(Y.train == 'Absent', 0, 1))
       
       # Get testing set
       testing.data <- na.omit(split[[2]])
-      X.test <- as.matrix(testing.data[ ,ENV.FACT.COLNAMES])
+      # testing.data <- split[[2]]
+      X.test <- as.matrix(testing.data[ ,env.fact])
       Y.test <- as.matrix(testing.data[ ,taxa.colnames])
       encoded.Y.test <- ifelse(Y.test == 'Absent', 0, 1)
       
       
       # Get hyperparameters
-      hyperparameters <- get.best.hyperparameters(data=training.data)
+      hyperparameters <- get.best.hyperparameters(data=training.data, taxa.colnames, env.fact)
       
       # Train model
       ann <- train.ann.model(hyperparameters,
@@ -361,7 +379,7 @@ apply.ann.model <- function(data, split.type){
   return(ann.model)
 }
 
-get.best.hyperparameters <- function(data){
+get.best.hyperparameters <- function(data, taxa.colnames, env.fact){
   
   
   # The function is used to find the best hyperparameters for the ANN. It 
@@ -385,42 +403,45 @@ get.best.hyperparameters <- function(data){
   
   # Get a list of all permutation of hyperparameters
   tune.grid <- TUNE.GRID[['ann']]
-  nb.folds  <- 3
   
-  folds <- groupKFold(data$ReachID, nb.folds)
-  
-  sum.losses <- list(double(nrow(tune.grid)))
-  
-  for (fold.index in seq(nb.folds)){
-    
-    train <- data[folds[[fold.index]],]
-    test  <- data[-folds[[fold.index]],]
-    
-    
-    X.train         <- as.matrix(train[ ,ENV.FACT.COLNAMES])
-    Y.train         <- as.matrix(train[ ,taxa.colnames])
-    encoded.Y.train <- as.matrix(ifelse(Y.train == 'Absent', 0, 1))
-    
-    X.test          <- as.matrix(test[ ,ENV.FACT.COLNAMES])
-    Y.test          <- as.matrix(test[ ,taxa.colnames])
-  
-    # Get the corresponding ann models
-    models <- apply(tune.grid, MARGIN=1, FUN=train.ann.model, X.train, encoded.Y.train)
-    # Compute corresponding standard deviances
-    losses <- lapply(models, FUN=get.loss.score, X.test, Y.test)
-    sum.losses <- mapply(sum, sum.losses, losses, SIMPLIFY=FALSE)
+  if(nrow(tune.grid) > 1){ # if there are more than one hyperparameters combination
+      nb.folds  <- 3
+      folds <- groupKFold(data$ReachID, nb.folds)
+      sum.losses <- list(double(nrow(tune.grid)))
+      
+      for (fold.index in seq(nb.folds)){
+          
+          train <- data[folds[[fold.index]],]
+          test  <- data[-folds[[fold.index]],]
+          
+          
+          X.train         <- as.matrix(train[ ,env.fact])
+          Y.train         <- as.matrix(train[ ,taxa.colnames])
+          encoded.Y.train <- as.matrix(ifelse(Y.train == 'Absent', 0, 1))
+          
+          X.test          <- as.matrix(test[ ,env.fact])
+          Y.test          <- as.matrix(test[ ,taxa.colnames])
+          
+          # Get the corresponding ann models
+          models <- apply(tune.grid, MARGIN=1, FUN=train.ann.model, X.train, encoded.Y.train)
+          # Compute corresponding standard deviances
+          losses <- lapply(models, FUN=get.loss.score, X.test, Y.test, taxa.colnames)
+          sum.losses <- mapply(sum, sum.losses, losses, SIMPLIFY=FALSE)
+      }
+      
+      # loss is average over all split
+      losses = lapply(sum.losses, FUN=function(x){x/3})
+      # Get hyperparameter leading to smallest score
+      index.lowest.loss <- which.min(losses)
+      hyperparameters <- tune.grid[index.lowest.loss,]
+  } else {
+      hyperparameters <- tune.grid[1,]
   }
-  
-  # loss is average over all split
-  losses = lapply(sum.losses, FUN=function(x){x/3})
-  # Get hyperparameter leading to smallest score
-  index.lowest.loss <- which.min(losses)
-  hyperparameters <- tune.grid[index.lowest.loss,]
   
   return(hyperparameters)
 }
 
-get.loss.score <- function(model, X, Y){
+get.loss.score <- function(model, X, Y, taxa.colnames){
 
   
   # For a neural network model given as argument, this function compute the loss
@@ -591,7 +612,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
   # data <- preprocessed.data.cv
   # env.fact <- env.factor
 
-  cat("Applying", model.name, "to taxon:\n")
+  # cat("Applying", model.name, "to taxon:\n")
   
   # This function is used to create the different machine learning based models
   # and returns their performances.The models are created using the Caret
@@ -653,7 +674,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
       
       # i.split <- 1
       split <- data[[i.split]]
-      cat("\nTraining models on split", i.split, "\n")
+      cat("Split number:", i.split, "\n")
       
       # see explanation above for test of dispersal limitation noise
       if("noise.disp" %in% names(list.noise)){
@@ -700,7 +721,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
 
 train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, list.noise){
   
-  cat(taxa, "\n")
+  # cat(taxa, "\n")
   # taxa <- taxa.colnames[1]
   # train.data <- training.data
   # folds.train
@@ -986,7 +1007,8 @@ performance.wrapper <- function(model, observation, prediction, prediction.proba
   }
 
   auc <- auc(response = resp,
-             predictor = pred)
+             predictor = pred,
+             quiet = TRUE)
   
   model.performances <- list()
   

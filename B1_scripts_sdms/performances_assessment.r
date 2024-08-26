@@ -149,7 +149,7 @@ get.metric <- function(taxa, performance, metric.name){
   return(metric)
 }
 
-restructure.all.results <- function(all.results){
+restructure.all.results <- function(all.results, models){
   
   # This function takes as input a dataframe where there is one different column
   # for every model, for every metric and for fitting and predicting, e.g. there
@@ -163,11 +163,19 @@ restructure.all.results <- function(all.results){
   # returns:
   #   - fit.pred.all.results: the restructured dataframe 
   
-  model.all.results <- rbind(extract.model.results("Null", all.results),
-                            extract.model.results("GLM", all.results),
-                            extract.model.results("GAM", all.results),
-                            extract.model.results("RF", all.results))#,
-                            # extract.model.results("ann", all.results))
+  name.models <- names(models)
+    
+  model.all.results <- data.frame()
+  for (name.model in name.models) {
+      # name.model <- name.models[1]
+      model.all.results <- rbind(model.all.results,
+          extract.model.results(name.model, all.results))
+  }
+  # model.all.results <- rbind(extract.model.results("Null", all.results),
+  #                            extract.model.results("GLM", all.results),
+  #                            extract.model.results("GAM", all.results),
+  #                            extract.model.results("RF", all.results))#,
+  #                           # extract.model.results("ann", all.results))
   
   model.all.results <- model.all.results[c("taxa",
                                            "prevalence",
@@ -411,9 +419,11 @@ plot.ice <- function(models.performance,
 
 make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
   
-  # model.name <- models.names[1]
+  # model.name <- models.names[4]
   # obs <- sampled.observations
-  
+  # models <- models.trained
+  # models.orig <- models
+    
   # This is a helper function used by the plot.ice function. It uses a model
   # passed as argument, to make the prediction corresponding to the observations
   # passed as argument for a given taxa.
@@ -431,9 +441,9 @@ make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
   
   taxa.short <- gsub("Occurrence.", "", taxa)
   model <- models[[model.name]][[taxa.short]]
-  input.env.factors <- model$model$coefnames
+  # input.env.factors <- model$model$coefnames
   
-  if(model.name == "ann"){
+  if(model.name == "ANN"){
     
     obs.matrix  <- as.matrix(obs[ ,input.env.factors])
     predictions <- model[[1]] %>% predict(obs.matrix)

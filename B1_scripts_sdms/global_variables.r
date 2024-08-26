@@ -12,31 +12,45 @@
 #                             "Temperature2"                     = "temperature2",
 #                             "Velocity2"                        = "velocity2")
 
-ENV.FACT.MAP <- c("Temperature"      = "tempmaxC", 
-                  "Flow velocity"    = "currentms", 
-                  "Toxic units"      = "orgmicropollTU", 
-                  "Saproby"          = "saprowqclass")
 
-TAXA.COLNAMES <- c(
-  "Metanoeaflavipennis" = "Occurrence.Metanoeaflavipennis",
-  "Habroleptoidesconfusa" = "Occurrence.Habroleptoidesconfusa",
-  "Leuctranigra" = "Occurrence.Leuctranigra",
-  "Baetisalpinus" = "Occurrence.Baetisalpinus",
-  "Cordulegastridae" = "Occurrence.Cordulegastridae",
-  "Baetismuticus" = "Occurrence.Baetismuticus",
-  "Nemouraflexuosa" = "Occurrence.Nemouraflexuosa",
-  "Isoperlagrammatica" = "Occurrence.Isoperlagrammatica",
-  "Hydropsychesiltalai" = "Occurrence.Hydropsychesiltalai",
-  "Ecclisopteryxmadida" = "Occurrence.Ecclisopteryxmadida",
-  "Simuliidae" = "Occurrence.Simuliidae",
-  "Scirtidae" = "Occurrence.Scirtidae",
-  "Potamophylaxcingulatus" = "Occurrence.Potamophylaxcingulatus",
-  "Ceratopogonidae" = "Occurrence.Ceratopogonidae",
-  "Baetislutheri" = "Occurrence.Baetislutheri",
-  "Gammaridae" = "Occurrence.Gammaridae",
-  "Ecdyonurusvenosus" = "Occurrence.Ecdyonurusvenosus",
-  "Limoniidae" = "Occurrence.Limoniidae"
-)
+# # environmental factors used for streambugs
+# vect.dir.env.fact <- c("Temperature"      = "tempmaxC", 
+#                        "Flow velocity"    = "currentms", 
+#                        "Toxic units"      = "orgmicropollTU", 
+#                        "Saproby"          = "saprowqclass")
+# vect.indir.env.fact <- c("Shade"          = "shade", 
+#                          "Litter input"   = "Lit_Inp" ,        
+#                          "Phosphorus"     = "C_P", 
+#                          "Nitrate"        = "C_N")
+# env.factor <- c(vect.dir.env.fact, vect.indir.env.fact, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
+# env.factor.full <- env.factor
+# ENV.FACT.COLNAMES <- env.factor
+
+# ENV.FACT.MAP <- c("Temperature"      = "tempmaxC", 
+#                   "Flow velocity"    = "currentms", 
+#                   "Toxic units"      = "orgmicropollTU", 
+#                   "Saproby"          = "saprowqclass")
+
+# TAXA.COLNAMES <- c(
+#   "Metanoeaflavipennis" = "Occurrence.Metanoeaflavipennis",
+#   "Habroleptoidesconfusa" = "Occurrence.Habroleptoidesconfusa",
+#   "Leuctranigra" = "Occurrence.Leuctranigra",
+#   "Baetisalpinus" = "Occurrence.Baetisalpinus",
+#   "Cordulegastridae" = "Occurrence.Cordulegastridae",
+#   "Baetismuticus" = "Occurrence.Baetismuticus",
+#   "Nemouraflexuosa" = "Occurrence.Nemouraflexuosa",
+#   "Isoperlagrammatica" = "Occurrence.Isoperlagrammatica",
+#   "Hydropsychesiltalai" = "Occurrence.Hydropsychesiltalai",
+#   "Ecclisopteryxmadida" = "Occurrence.Ecclisopteryxmadida",
+#   "Simuliidae" = "Occurrence.Simuliidae",
+#   "Scirtidae" = "Occurrence.Scirtidae",
+#   "Potamophylaxcingulatus" = "Occurrence.Potamophylaxcingulatus",
+#   "Ceratopogonidae" = "Occurrence.Ceratopogonidae",
+#   "Baetislutheri" = "Occurrence.Baetislutheri",
+#   "Gammaridae" = "Occurrence.Gammaridae",
+#   "Ecdyonurusvenosus" = "Occurrence.Ecdyonurusvenosus",
+#   "Limoniidae" = "Occurrence.Limoniidae"
+# )
 
 
 # ENV.FACT.MAP            <- c("Temperature"                      = "temperature",       # Temp

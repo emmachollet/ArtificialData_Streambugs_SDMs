@@ -28,28 +28,30 @@ graphics.off() # Clean graphics display
 
 if (!require("dplyr")){install.packages("dplyr"); library("dplyr")}                    # to sort, join, merge data
 if (!require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
-if (!require("ggplot")){install.packages("ggplot"); library("ggplot")}                    # to sort, join, merge data
+if (!require("ggplot2")){install.packages("ggplot2"); library("ggplot2")}                    # to sort, join, merge data
 if (!require("readr")){install.packages("readr"); library("readr")}
 if (!require("jsonlite")){install.packages("jsonlite"); library("jsonlite")}
 if (!require("pROC")){install.packages("pROC"); library("pROC")}  # to compute AUC                  
 if (!require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
-# if (!require("ggpattern")){install.packages("ggpattern"); library("ggpattern")}        # to add patterns in boxplots
-
-# install.packages("remotes")                    # Install remotes package
-# remotes::install_github("coolbutuseless/ggpattern")
-# library("ggpattern")                           # Load ggpattern package
+if (!require("ggpattern")){install.packages("ggpattern"); library("ggpattern")}        # to add patterns in boxplots
 
 # specific for Neural Network
 if (!require("reticulate")){install.packages("reticulate"); library("reticulate")}
-#install_miniconda()              # run this the very first time reticulate is installed
-#install.packages("tensorflow")
+# install_miniconda()              # run this the very first time reticulate is installed
+# install.packages("tensorflow")
 library("tensorflow")
-#install_tensorflow()             # run this line only when opening new R session
-#install.packages("keras")
+# virtualenv_install("C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow", "tensorflow==2.16")
+# install_tensorflow(envname = "C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow")
+# virtualenv_remove("r-tensorflow")
+install_tensorflow()             # run this line only when opening new R session
+# install.packages("keras")
 library("keras")
-#install_keras()                  # run this line only when opening new R session
-#use_condaenv()
+install_keras()                  # run this line only when opening new R session
+# use_condaenv()
 # reticulate::install_python(version = '<version>')
+# path <-"C:/Users/cholleem/AppData/Local/r-miniconda/envs/r-reticulate/python.exe"
+# Sys.setenv(RETICULATE_PYTHON = path)
+virtualenv_create("r-tensorflow")
 
 # caret has to be loaded at the end to not cache function 'train'
 if (!require("mgcv")){install.packages("mgcv"); library("mgcv")}
@@ -72,7 +74,6 @@ file.prev.taxa          <- paste0(name.streambugs.run, "_PrevalenceTaxonomy_Samp
 file.selected.taxa      <- "selected_taxa_analysis.csv"
 
 
-
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Load data and functions ####
 
@@ -87,6 +88,7 @@ source("data_noising.r")
 source("performances_assessment.r")
 source("training_pipeline.r")
 source("ml_models.r")
+source("global_variables.r")
 source("plotting.r")
 
 # prepare inputs for plotting results on swiss maps
@@ -110,8 +112,8 @@ print(vect.info)
 
 # environmental factors selected for sdms
 # env.factor <- vect.dir.env.fact
-env.factor <- c(vect.dir.env.fact, vect.indir.env.fact, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
-env.factor.full <- env.factor
+env.factor <- c(vect.dir.env.fact, vect.indir.env.fact)
+env.factor.full <- c(env.factor, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
 no.env.fact <- length(env.factor)
 
 # taxa list full
@@ -121,13 +123,27 @@ names(vect.taxa.full) <- gsub("Occurrence.", "", vect.taxa.full)
 no.taxa.full <- length(vect.taxa.full)
 print(vect.taxa.full)
 
+# update number of NAs in input data
+for (taxon in vect.taxa.full) {
+    # taxon <- vect.taxa.full[1]
+    data.prev.taxa[which(data.prev.taxa$Occurrence.taxa == taxon), "Missing.values"] <- sum(is.na(data.env.taxa[,taxon]))
+}
+summary(data.prev.taxa$Missing.values)
+
 # taxa list selected for analysis and above prevalence threshold
 prev.threshold <- 0.1
-temp.occ.taxa <- data.prev.taxa[which(data.prev.taxa$Prevalence > prev.threshold), "Occurrence.taxa"]
+na.threshold <- 1000
+temp.occ.taxa <- data.prev.taxa[which(data.prev.taxa$Prevalence.NoDisp > prev.threshold
+                                      & data.prev.taxa$Prevalence.NoDisp < 1 -prev.threshold
+                                      & data.prev.taxa$Missing.values < na.threshold), "Occurrence.taxa"]
+
 selected.taxa.analysis <- data.selected.taxa$Occurrence.taxa
-taxa.colnames <- selected.taxa.analysis[which(selected.taxa.analysis %in% temp.occ.taxa)]
+# taxa.colnames <- selected.taxa.analysis[which(selected.taxa.analysis %in% temp.occ.taxa)]
+taxa.colnames <- temp.occ.taxa
+
 names(taxa.colnames) <- gsub("Occurrence.", "", taxa.colnames)
 no.taxa <- length(taxa.colnames)
+print(no.taxa)
 print(taxa.colnames)
 
 # select colors for present/absent plots
@@ -137,7 +153,7 @@ scales::show_col(vect.col.pres.abs)
 # sdms training options
 number.split            <- 3
 split.criterion         <- "ReachID"
-number.sample           <- 100
+number.sample           <- 300
 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample)
 sdm.models              <- c(
                                 "GLM" = "glm",
@@ -220,7 +236,7 @@ write(metadata.json, dir.metadata)
 data.input <- data.env.taxa
 data.input$tempmaxC2 <- data.input$tempmaxC^2
 data.input$currentms2 <- data.input$currentms^2
-data.input <- data.input[,c(vect.info,env.factor,taxa.colnames)] # subselect columns of interest
+data.input <- data.input[,c(vect.info,env.factor.full,taxa.colnames)] # subselect columns of interest
 catch.variable <- "Watershed"
 
 # add noise
@@ -308,31 +324,6 @@ for (taxon in taxa.colnames) {
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Split and standardize data ####
 
-# Example for Johanna
-# ~~~~~~~~~~~~~~~~~~~
-
-# # define number of splits from the beginning and use it in all functions and loops (to avoid "magic numbers")
-# no.splits <- 5
-# 
-# # make list of 5 equal folds based on column "ReachID", with no interescting indices
-# list.folds <- createFolds(data.input$ReachID, no.splits) 
-# 
-# # make empty list of splits and name them, that we fill later in a loop
-# list.splits <- vector(mode = "list", length = no.splits)
-# names(list.splits) <- paste0("Split", 1:no.splits)
-# 
-# # make a loop over splits to make and insert training and testing datasets
-# for (n in 1:no.splits) {
-#   # n <- 1 # useful to have a commented indices to go through the loop line by line once to be sure it does what you want
-#   rind.test <- list.folds[[n]] # extract the row indices from the folds list
-#   
-#   temp.test <- data.input[rind.test,] # take the row indices of fold for a temporary test set
-#   temp.train <- data.input[-rind.test,] # take all other row indices for a temporary train set
-#   
-#   list.splits[[n]][["Training data"]] <- temp.train # insert your training set as Training data in the nth split
-#   list.splits[[n]][["Testing data"]] <- temp.test # insert your test set as Testing data in the nth split
-# }
-
 preprocessed.data.cv  <- preprocess.data(data=data.input,
                                          env.fact=env.factor,
                                          dir=dir.experiment,
@@ -345,6 +336,15 @@ preprocessed.data.fit <- preprocess.data(data=data.input,
                                          dir=dir.experiment,
                                          split.type="FIT")
 
+# # check balance presence/absence
+# for(i.split in 1:number.split){
+#     cat("Split number:", i.split, "\n")
+#     for (taxon in taxa.colnames) {
+#         cat(taxon)
+#         print(summary(preprocessed.data.cv[[i.split]][["Training data"]][,taxon]))
+#     }
+# }
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # APPLY MODELS ####
@@ -355,7 +355,8 @@ preprocessed.data.fit <- preprocess.data(data=data.input,
 
 models.cv  <- apply.ml.models(data=preprocessed.data.cv,
                               models=models,
-                              split.type="CV")
+                              split.type="CV", 
+                              taxa.colnames, env.factor, env.factor.full)
 
 save.models(models=models.cv,
             path=dir.experiment,
@@ -370,7 +371,8 @@ save.models(models=models.cv,
 
 models.fit <- apply.ml.models(data=preprocessed.data.fit,
                               models=models,
-                              split.type="FIT")
+                              split.type="FIT",
+                              taxa.colnames, env.factor, env.factor.full)
 
 save.models(models=models.fit,
             path=dir.experiment,
@@ -394,23 +396,25 @@ save.models(models=models.fit,
 std.const.cv    <- readRDS(file=paste0(dir.experiment, "standardization_constant_CV.rds"))
 std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
 prev.taxa <- data.prev.taxa
+prev.taxa$Prevalence.DispLim <- prev.taxa$Prevalence
+prev.taxa$Prevalence <- prev.taxa$Prevalence.NoDisp
 
 ## Variable for plots ----
 all.results <- summarize.all.results(models.cv, prev.taxa)
 
 # write summarized results in csv
-file.name <- paste0(experiment.name, "_allresults.csv")
+file.name <- paste0(experiment.name, "allresults.csv")
 write.table(all.results, file = paste0(dir.experiment, file.name), sep = ";", row.names = F)
 
-ggplot.all.results <- restructure.all.results(all.results)
+ggplot.all.results <- restructure.all.results(all.results, models)
 ggplot.all.results$model <- factor(ggplot.all.results$model, levels= names(models))
 
 color.map <- c('GLM'           = 'deepskyblue',   # Generalized Linear Model
-               'GAM'      = 'green',         # Generalized Additive Model
-               # 'ann'           = 'orange',        # Artificial Neural Network
+               'GAM'           = 'green',         # Generalized Additive Model
+               'ANN'           = 'orange',        # Artificial Neural Network
                'RF'            = 'red',           # Random Forest
                'Null'          = 'black')         # Null Model
-
+scales::show_col(color.map)
 
 ## Fig. 1 : boxplot perf ----
 gg.plot.dev.infos <-  ggplot.all.results %>%
@@ -517,9 +521,6 @@ for(taxon.under.obs in names(taxa.colnames)){
               y.mean.max=max(avg)) %>%
     mutate(model = "Streambugs")
 
-  # plot.data <- pred.ice.streamb
-  
-  
   # input.env.factors <- get.input.env.factors(experiment.name)
   input.env.factors <- env.factor
   
@@ -647,9 +648,10 @@ dir.create(dir.compar.plots)
 
 model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Linear Model
                      'GAM'     = "#00BA38", # 'green',         # Generalized Additive Model
-                     # 'ANN'           = 'orange',        # Artificial Neural Network
+                     'ANN'           = 'orange',        # Artificial Neural Network
                      'RF'      = "#F8766D") # 'red')#,           # Random Forest
                      # 'Null'          = 'black')         # Null Model
+scales::show_col(model.color.map)
 
 # select taxon and env. factor
 taxon.under.obs <- names(taxa.colnames)[1]
@@ -681,6 +683,14 @@ color.map <- c('1'            = 'deepskyblue',
 
 color.map <- color.map[1:length(list.exp)]
 names(color.map) <- names(list.exp)
+scales::show_col(color.map)
+
+# create file names for saving plots
+file.name.exp <- paste0("comparison_100points_rem.FV_noise.temp_", 
+                        length(list.exp), "exp_")
+file.name.tax <- paste0(file.name.exp,
+                        taxon.under.obs, "_",
+                        select.env.fact)
 
 
 # create.comparison.plots("gauss_temp", list.exp.gauss, 
@@ -774,12 +784,6 @@ fig1 <- ggplot(data=plot.data) +
        title = taxon.under.obs)
 # fig1
 
-file.name.exp <- paste0("comparison_100points_rem.FV_noise.temp_", 
-                        length(list.exp), "exp_")
-file.name.tax <- paste0(file.name.exp,
-                       taxon.under.obs, "_",
-                       select.env.fact)
-
 pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_scenario.pdf"), width = 11, height = 4)
 print(fig1)
 dev.off()
@@ -842,7 +846,7 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
   
   # rm(models.cv) 
   
-  all.results <- restructure.all.results(all.results)
+  all.results <- restructure.all.results(all.results, models)
   
   all.results["noise"] <- name
   
@@ -924,27 +928,49 @@ dev.off()
 
 plot.data <- final.multi.all.results
 plot.data$model <- factor(plot.data$model, levels= names(models))
-plot.data$pattern <- ifelse(plot.data$fit_pred == "fit", "task1", "task2")
+plot.data$pattern <- ifelse(plot.data$fit_pred == "fit", "Training", "Testing")
+plot.data$pattern <- factor(plot.data$pattern, levels= c("Training", "Testing"))
 
-fig5 <- ggplot(data=plot.data, aes(x=column_label, y=dev)) +
+
+fig5 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
     # geom_boxplot(aes(x=column_label,
     #                  y=dev,
-    #                  fill=model)) +
-    # ggpattern::geom_col_pattern(aes(fill = model, pattern = task, pattern_fill = task), pattern_density = 0.35, outlier.shape = NA) +
-    scale_x_discrete(limits=names(list.exp)) +
+    #                  fill=model,
+    #                  alpha = pattern)) +
+    geom_boxplot_pattern(aes(fill = model, pattern = pattern),
+                         pattern_colour = 'black',
+                         pattern_fill = 'black',
+                         pattern_density = 0.1,
+                         # pattern_spacing = 0.01,
+                         pattern_key_scale_factor = 1.5
+                         # pattern = 'stripe', 
+                         # pattern_size = 0.2
+                         ) +
+    # geom_boxplot_pattern(aes(fill = model, pattern = pattern, pattern_fill = pattern)) +
+                         # , pattern_density = 0.35, outlier.shape = NA) +
+    # scale_x_discrete(limits=rev(names(models))) +
+    scale_x_discrete(limits=names(models)) +
+    
     scale_y_continuous(limits = c(0, 2)) +
-    facet_wrap(~fit_pred, nrow = 2) + 
+    facet_wrap(~column_label, ncol = 3) +
+               # , strip.position="left") +
     theme_minimal() +
+    # scale_alpha_manual(values = c("fit" = 0.3, "pred" = 1)) +
+    scale_pattern_manual(values= c("Training" = "stripe", "Testing" = "none")) + #,
+                         # guide = guide_legend(reverse = TRUE)) + # manually assign pattern
+    # scale_pattern_continuous(limits = c("fit" = "Training", "pred" = "Testing")) +
     scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
-    theme(legend.title=element_blank(),
-          axis.text.x = element_text(angle = 15, # vjust = 0.5, 
-                                     hjust=1)) +
-    labs(x="Scenario",
-         y="Standardized deviance")
+    theme(legend.title=element_blank()) +
+          # axis.text.y = element_blank()) + #,
+          # axis.text.x = element_text(angle = 15, # vjust = 0.5, 
+          #                            hjust=1)) +
+    labs(x = "Model",
+         y = "Standardized deviance",
+         fill = "")
 fig5
 
 
-pdf(paste0(dir.compar.plots, file.name.exp, "_boxplot_per_scenario.pdf"), width = 12, height = 9)
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels_stripesfit_1x3scenarios.pdf"), width = 15, height = 7)
 print(fig5)
 dev.off() 
 
@@ -1154,7 +1180,7 @@ for (model.name in c("GLM", "GAM", "RF")){ # c("glm", "gamloess", "rf", "ann")){
 #   
 #   rm(models.cv) 
 #   
-#   all.results <- restructure.all.results(all.results)
+#   all.results <- restructure.all.results(all.results, models)
 #   
 #   all.results["noise"] <- name
 #   
@@ -1191,7 +1217,7 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
   
   rm(models.cv) 
   
-  all.results <- restructure.all.results(all.results)
+  all.results <- restructure.all.results(all.results, models)
   
   all.results["noise"] <- name
   
