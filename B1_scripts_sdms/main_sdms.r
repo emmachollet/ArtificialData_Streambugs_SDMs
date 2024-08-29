@@ -36,22 +36,22 @@ if (!require("sf") ) { install.packages("sf"); library("sf") }                  
 if (!require("ggpattern")){install.packages("ggpattern"); library("ggpattern")}        # to add patterns in boxplots
 
 # specific for Neural Network
-if (!require("reticulate")){install.packages("reticulate"); library("reticulate")}
-# install_miniconda()              # run this the very first time reticulate is installed
+if (!require("reticulate")){install.packages("reticulate"); library("reticulate")}    # links R to python
+# install_miniconda()              # run this the very first time reticulate is installed # makes a separeta python installation
 # install.packages("tensorflow")
 library("tensorflow")
 # virtualenv_install("C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow", "tensorflow==2.16")
 # install_tensorflow(envname = "C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow")
 # virtualenv_remove("r-tensorflow")
-install_tensorflow()             # run this line only when opening new R session
+# install_tensorflow()             # run this line only when opening new R session
 # install.packages("keras")
 library("keras")
-install_keras()                  # run this line only when opening new R session
+# install_keras()                  # run this line only when opening new R session
 # use_condaenv()
 # reticulate::install_python(version = '<version>')
 # path <-"C:/Users/cholleem/AppData/Local/r-miniconda/envs/r-reticulate/python.exe"
 # Sys.setenv(RETICULATE_PYTHON = path)
-virtualenv_create("r-tensorflow")
+# virtualenv_create("r-tensorflow")
 
 # caret has to be loaded at the end to not cache function 'train'
 if (!require("mgcv")){install.packages("mgcv"); library("mgcv")}
@@ -59,7 +59,7 @@ if (!require("caret")){install.packages("caret"); library("caret")}
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-## Directories, files and functions ####
+## Directories and files ####
 
 # define directories
 dir.input.data          <- "../A3_outputs_streambugs/"
@@ -153,12 +153,12 @@ scales::show_col(vect.col.pres.abs)
 # sdms training options
 number.split            <- 3
 split.criterion         <- "ReachID"
-number.sample           <- 300
+number.sample           <- 3000
 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample)
 sdm.models              <- c(
                                 "GLM" = "glm",
                                 # "GAM" = "gam",
-                                "GAM" = "gamLoess",
+                                "GAM" = "gamSpline",
                                 "RF"  = "rf",
                                 "ANN" = "ann")#,
 # "ann")
@@ -175,13 +175,14 @@ list.noise <- list(
 
   # "noise.temp"     = list("type"       = "gaussian",
   #                         "target"     = "tempmaxC",
-  #                         "amount"     = 1,
+  #                         "amount"     = 3,
   #                         "parameters" = list("min"=0, "max"=30)) #,
   # # 
   # "noise.gamm"     = list("type"       = "missdetection",
   #                         "target"     = "Occurrence.Gammaridae",
   #                         "amount"     = 0.1,
   #                         "parameters" = NULL)#,
+  
   # # 
   # "noise.add.fact" = list("type"       = "add_factor",
   #                         "target"     = "random1", # new factor name
@@ -194,16 +195,81 @@ list.noise <- list(
   #                         "parameters" = NULL)#,
   
 )
-
 name.list.noise <- paste(names(list.noise), collapse = "_")
+
+p <- 0.1 # probability at which a presence is turned into an absence
+
+list.noise <- lapply(taxa.colnames, FUN=function(taxon){
+    noise_taxon <- list("type"       = "missdetection",
+                        "target"     = taxon,
+                        "amount"     = p,
+                        "parameters" = NULL)
+
+    return(noise_taxon)
+})
+name.list.noise <- paste0("misdetection.all.taxa", p)
   
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# PREPROCESS DATA ####
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+## Add noise ####
+
+# preprocess input dataset
+data.input <- data.env.taxa
+data.input$tempmaxC2 <- data.input$tempmaxC^2
+data.input$currentms2 <- data.input$currentms^2
+data.input <- data.input[,c(vect.info,env.factor.full,taxa.colnames)] # subselect columns of interest
+catch.variable <- "Watershed"
+
+# add noise
+data.input.noised        <- add.noise(data = data.input,
+                                      number.sample,
+                                      noise = list.noise,
+                                      env.fact = env.factor,
+                                      env.fact.full = env.factor.full)
+data.input      <- data.input.noised$`noised data`
+env.factor      <- data.input.noised$`env fact`
+env.factor.full <- data.input.noised$`env fact full`
+no.env.fact <- length(env.factor)
+
+# reduce dataset to selected number of samples
+rind.select <- runif(n=number.sample, min=1, max=dim(data.input)[1])
+data.input <- data.input[rind.select,]
+
+# sanity check of NAs
+sum(is.na(data.input[,c(vect.info,env.factor)])) # should be zero 
+sum(is.na(data.input[,c(taxa.colnames)])) # could have a lot, decide to replace by zero or not
+
+# replace NAs by 0 to simulate noise due to dispersal limitation
+if("noise.disp" %in% names(list.noise)){
+  data.input[is.na(data.input)] <- 0 # replace NAs by 0
+}
+
+# replace 0/1 by absent/present
+for (taxon in taxa.colnames) {
+  data.input[which(data.input[,taxon] == 0),taxon] <- "Absent"
+  data.input[which(data.input[,taxon] == 1),taxon] <- "Present"
+  data.input[,taxon] = as.factor(data.input[,taxon])
+}
+
+# # make long dataframe for analysis
+# long.df.input.taxa <- gather(data.input, key = Taxon, value = Observation, all_of(taxa.colnames))
+# long.df.input.taxa$Taxon <- gsub("Occurrence.", "", long.df.input.taxa$Taxon)
+# long.df.input.env.taxa <- gather(long.df.input.taxa, key = Factor, value = Value, all_of(env.factor))
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+## Write metadata ####
+
 # define experiment name
 experiment.name <- paste0(
-  number.sample, "Sites_",
-  no.taxa, "Taxa_",
-  no.models, "SDMs_",
-  no.env.fact, "EnvFact_",
-  name.list.noise
+    number.sample, "Sites_",
+    no.taxa, "Taxa_",
+    no.models, "SDMs_",
+    no.env.fact, "EnvFact_",
+    name.list.noise
 )
 print(experiment.name)
 
@@ -226,54 +292,6 @@ metadata.list           <- list("input_data"       = file.input.data,
 
 metadata.json           <- toJSON(metadata.list)
 write(metadata.json, dir.metadata)
-
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# PREPROCESS DATA ####
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-# preprocess input dataset
-data.input <- data.env.taxa
-data.input$tempmaxC2 <- data.input$tempmaxC^2
-data.input$currentms2 <- data.input$currentms^2
-data.input <- data.input[,c(vect.info,env.factor.full,taxa.colnames)] # subselect columns of interest
-catch.variable <- "Watershed"
-
-# add noise
-data.input.noised        <- add.noise(data = data.input,
-                                      number.sample,
-                                      noise = list.noise,
-                                      env.fact = env.factor,
-                                      env.fact.full = env.factor.full)
-data.input      <- data.input.noised$`noised data`
-env.factor      <- data.input.noised$`env fact`
-env.factor.full <- data.input.noised$`env fact full`
-
-# summary(data.input$tempmaxC)
-# reduce dataset to selected number of samples
-rind.select <- runif(n=number.sample, min=1, max=dim(data.input)[1])
-data.input <- data.input[rind.select,]
-
-# sanity check of NAs
-sum(is.na(data.input[,c(vect.info,env.factor)])) # should be zero 
-sum(is.na(data.input[,c(taxa.colnames)])) # could have a lot, decide to replace by zero or not
-
-if("noise.disp" %in% names(list.noise)){
-  data.input[is.na(data.input)] <- 0 # replace NAs by 0
-}
-
-# replace 0/1 by absent/present
-for (taxon in taxa.colnames) {
-  data.input[which(data.input[,taxon] == 0),taxon] <- "Absent"
-  data.input[which(data.input[,taxon] == 1),taxon] <- "Present"
-  data.input[,taxon] = as.factor(data.input[,taxon])
-}
-
-# # make long dataframe for analysis
-# long.df.input.taxa <- gather(data.input, key = Taxon, value = Observation, all_of(taxa.colnames))
-# long.df.input.taxa$Taxon <- gsub("Occurrence.", "", long.df.input.taxa$Taxon)
-# long.df.input.env.taxa <- gather(long.df.input.taxa, key = Factor, value = Value, all_of(env.factor))
-
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Prevalence analysis ####
@@ -336,15 +354,17 @@ preprocessed.data.fit <- preprocess.data(data=data.input,
                                          dir=dir.experiment,
                                          split.type="FIT")
 
-# # check balance presence/absence
-# for(i.split in 1:number.split){
-#     cat("Split number:", i.split, "\n")
-#     for (taxon in taxa.colnames) {
-#         cat(taxon)
-#         print(summary(preprocessed.data.cv[[i.split]][["Training data"]][,taxon]))
-#     }
-# }
-
+# check balance presence/absence
+for(i.split in 1:number.split){
+    cat("Split number:", i.split, "\n")
+    for (taxon in taxa.colnames) {
+        cat(taxon)
+        print(summary(preprocessed.data.cv[[i.split]][["Training data"]][,taxon]))
+    }
+}
+print(summary(preprocessed.data.cv[[1]][["Training data"]][,"Occurrence.Baetisalpinus"]))
+# Absent Present 
+# 1149     836
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # APPLY MODELS ####
@@ -648,26 +668,53 @@ dir.create(dir.compar.plots)
 
 model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Linear Model
                      'GAM'     = "#00BA38", # 'green',         # Generalized Additive Model
-                     'ANN'           = 'orange',        # Artificial Neural Network
+                     'ANN'     = 'orange',        # Artificial Neural Network
                      'RF'      = "#F8766D") # 'red')#,           # Random Forest
                      # 'Null'          = 'black')         # Null Model
 scales::show_col(model.color.map)
 
 # select taxon and env. factor
-taxon.under.obs <- names(taxa.colnames)[1]
+taxon.under.obs <- names(taxa.colnames)[5]
 select.env.fact <- env.factor[1]
 name.select.env.fact <- names(select.env.fact)
 # name.select.env.fact <- names(env.factor)
 # set.seed(97)
 
+# width and height of an A4 page in inches
+width.a4 = 8.3
+height.a4 = 11.7
+
+mytheme <- theme_bw() +
+    theme(text = element_text(size = 14),
+        title = element_text(size = 14),
+          # plot.title = element_text(face = "bold"),
+          # strip.text = element_text(size = 14), #, face = "bold"),
+          strip.background = element_rect(fill = "white"),
+          # axis.title = element_text(size = 14), #, face = "bold"),
+          # axis.text.x = element_text(vjust = 10),
+          # axis.text.y = element_text(hjust = 10),
+          # axis.title.x.bottom = element_text(vjust = -15),
+          # axis.title.x = element_text(margin = margin(t = 0, r = 0, b = -30, l = 0)), # put some space between the axis title and the numbers
+          axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+          legend.position="bottom"
+          # legend.text = element_text(size = 14),
+          # legend.title = element_text(size = 14) #, face= "bold") #,
+          # panel.grid.major = element_line(colour = NA),
+          # panel.grid.minor = element_line(colour = NA)
+    )
+
+theme_set(mytheme)
+
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Comparison different noise scenarios ----
 
 # compare experiment dispersal noise
-list.exp     <- list("Best case scenario"                  = "3000Sites_19Taxa_3SDMs_10EnvFact_",
-                     "Reduce dataset size"                 = "100Sites_19Taxa_3SDMs_10EnvFact_",
-                     "Remove environmental predictor"      = "3000Sites_19Taxa_3SDMs_10EnvFact_noise.rem.fact",
-                     "Noise on temperature"                = "3000Sites_19Taxa_3SDMs_10EnvFact_noise.temp")
+list.exp     <- list("Best case scenario"                  = "3000Sites_45Taxa_4SDMs_8EnvFact_",
+                     "Reduce dataset size"                 = "300Sites_45Taxa_4SDMs_8EnvFact_",
+                     "Remove environmental predictor"      = "3000Sites_45Taxa_4SDMs_7EnvFact_noise.rem.fact",
+                     "Noise on temperature"                = "3000Sites_45Taxa_4SDMs_8EnvFact_noise.temp",
+                     "Misdetection"                        = "3000Sites_45Taxa_4SDMs_8EnvFact_misdetection.all.taxa0.1",
+                     "Noise dispersal limitation"          = "3000Sites_45Taxa_4SDMs_8EnvFact_noise.disp")
 
 # test.colors <- RColorBrewer::brewer.pal(8, "Set1")
 # print(test.colors)
@@ -676,22 +723,25 @@ list.exp     <- list("Best case scenario"                  = "3000Sites_19Taxa_3
 # color.map <- RColorBrewer::brewer.pal(length(list.exp), "Dark2")
 # scales::show_col(color.map)
 
-color.map <- c('1'            = 'deepskyblue',
-               '2'            = 'green',
-               '3'            = 'orange',
-               '4'            = 'red')
+color.map <- c('1'            = '#4daf4a',
+               '2'            = '#377eb8',
+               '3'            = '#984ea3',
+               '4'            = '#e41a1c',
+               '5'            = '#ff7f00',
+               '6'            = '#ffd92f')
 
 color.map <- color.map[1:length(list.exp)]
 names(color.map) <- names(list.exp)
 scales::show_col(color.map)
 
 # create file names for saving plots
-file.name.exp <- paste0("comparison_100points_rem.FV_noise.temp_", 
+file.name.exp <- paste0("comparison_300points_rem.FV_noise.temp_misdet_disp.lim_", 
                         length(list.exp), "exp_")
+print(file.name.exp)
 file.name.tax <- paste0(file.name.exp,
                         taxon.under.obs, "_",
                         select.env.fact)
-
+print(file.name.tax)
 
 # create.comparison.plots("gauss_temp", list.exp.gauss, 
 #                         file.prev.taxa="8Catch_1416Sites_curve.curr.temp-10_interc.orgmic.sapro4_10Yea_3651Steps_PrevalenceTaxonomy_ThreshPresAbs.csv",
@@ -704,7 +754,7 @@ file.name.tax <- paste0(file.name.exp,
 
 multi.ice <- lapply(list.exp, FUN=function(name){
   
-  # name <- list.exp[[2]]
+  # name <- list.exp[[3]]
   dir.experiment          <- paste0(dir.output, name, "/")
   cat("\nLoading models and computing ICE for taxon", taxon.under.obs, "and experiment:", name, "\n")
   
@@ -712,8 +762,10 @@ multi.ice <- lapply(list.exp, FUN=function(name){
   std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
   correct.names <- names(models)[which(names(models.fit) %in% models | names(models.fit) %in% names(models))]
   names(models.fit) <- correct.names
+  file.metadata <- "metadata.json"
+  metadata.exp <- fromJSON(paste(readLines(paste0(dir.experiment, file.metadata)), collapse=""))
   
-  input.env.factors <- env.factor
+  input.env.factors <- metadata.exp$env_factor
   
   ice.dfs <- plot.ice(models.performance=models.fit,
                       select.env.fact=select.env.fact,
@@ -749,7 +801,7 @@ lb <- max(unlist(min.boundaries))
 hb <- min(unlist(max.boundaries))
 
 plot.data <- final.multi.ice
-plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF"))
+plot.data$model <- factor(plot.data$model, levels = names(sdm.models))
 plot.data$column_label <- factor(plot.data$column_label, levels = unlist(names(list.exp)))
 
 pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
@@ -768,23 +820,19 @@ fig1 <- ggplot(data=plot.data) +
   geom_line(data=pred.streambugs.mean,
             aes(x=.data[[name.select.env.fact]], y=avg),
             size=1, color = "darkgrey", alpha = 0.8) +
-  facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 4)+
+  facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 3)+
   #facet_wrap(~column_label) +
   xlim(lb, hb) +
-  # scale_y_continuous(limits = c(0,1)) +
+  scale_y_continuous(limits = c(0,1)) +
   scale_color_manual(values=model.color.map) +
-  theme_bw() +
-  theme(strip.background = element_rect(fill = "white"),
-        legend.position = "bottom") +#,
-        # legend.title = element_text(size=24),
-        # legend.text = element_text(size=20)) +
+    # theme(axis.text.x = element_text(hjust = -1)) +
   labs(x = name.select.env.fact,
        y = "Predicted probability of occurrence",
        colour="Models",
        title = taxon.under.obs)
 # fig1
 
-pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_scenario.pdf"), width = 11, height = 4)
+pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_scenario_2x3.pdf"), width = width.a4, height = height.a4/2)
 print(fig1)
 dev.off()
 
@@ -804,9 +852,9 @@ fig2 <- ggplot(data=plot.data) +
   # scale_y_continuous(limits = c(0,1)) +
   facet_wrap(~model) +
   # facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
-  theme_bw() +
-  theme(strip.background = element_rect(fill = "white"),
-        legend.position = "bottom") +#,
+  # theme_bw() +
+  # theme(strip.background = element_rect(fill = "white"),
+  #       legend.position = "bottom") +#,
   # legend.title = element_text(size=24),
   # legend.text = element_text(size=20)) +
   labs(x = name.select.env.fact,
@@ -815,7 +863,7 @@ fig2 <- ggplot(data=plot.data) +
        title = taxon.under.obs)
 # fig2
 
-pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_model.pdf"), width = 12, height = 5)
+pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_model.pdf"), width = width.a4, height = height.a4*2/3)
 print(fig2)
 dev.off()
 
@@ -830,7 +878,7 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
     # name <- list.exp[[2]]
   dir.experiment <- paste0(dir.output, name, "/")
   # models.cv      <- load.models(path=dir.experiment, split.type="CV")
-  file.name <- paste0(dir.experiment, name, "_allresults.csv")
+  file.name <- paste0(dir.experiment, name, "allresults.csv")
   
   all.results <- read.table(file.name, header = T, sep = ";")
   for(i in 1:ncol(all.results)){
@@ -854,6 +902,8 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
 })
 
 final.multi.all.results <- bind_rows(multi.all.results, .id = "column_label")
+final.multi.all.results$model <- factor(final.multi.all.results$model, levels= names(models))
+final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = names(list.exp))
 
 filtered.multi.all.results <- final.multi.all.results %>%
   filter(taxa == taxon.under.obs)
@@ -869,14 +919,16 @@ fig3 <- ggplot(data=filtered.multi.all.results) +
   scale_color_manual(values=model.color.map) +
   labs(x="Scenario",
        y="Standardized deviance",
-       title = taxon.under.obs) +
+       title = taxon.under.obs,
+       color = "Model",
+       shape = "")
   #facet_wrap(~fit_pred) + 
-  theme_minimal() +
-  theme(legend.title=element_blank(),
-        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+  # theme_minimal() +
+  # theme(legend.title=element_blank(),
+  #       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 
-pdf(paste0(dir.compar.plots, file.name.tax, "_taxa_score.pdf"))
+pdf(paste0(dir.compar.plots, file.name.tax, "_taxa_score.pdf"), width = width.a4*1.5, height = height.a4/2)
 print(fig3)
 dev.off()
 
@@ -912,14 +964,15 @@ fig7 <- ggplot(data=plot.data,
     scale_color_manual(values=model.color.map) + 
     scale_y_continuous(limits = c(0,2)) +
     labs(x = "Prevalence",
-         y = "Standardized deviance") +
+         y = "Standardized deviance",
+         color = "Model")# +
     # scale_x_discrete(names(taxa.colnames)) +
-    theme_minimal() + 
-    theme(legend.title=element_blank())
+    # theme_minimal() + 
+    # theme(legend.title=element_blank())
 
 # fig7
 
-pdf(paste0(dir.compar.plots, file.name.exp, "_bellplot_pred_per_model.pdf"), height = 6, width = 10)
+pdf(paste0(dir.compar.plots, file.name.exp, "_bellplot_pred_per_model.pdf"), height = height.a4/2, width = width.a4)
 print(fig7)
 dev.off() 
 
@@ -927,7 +980,7 @@ dev.off()
 # Fig 5: multi box plot ----
 
 plot.data <- final.multi.all.results
-plot.data$model <- factor(plot.data$model, levels= names(models))
+# plot.data$model <- factor(plot.data$model, levels= names(models))
 plot.data$pattern <- ifelse(plot.data$fit_pred == "fit", "Training", "Testing")
 plot.data$pattern <- factor(plot.data$pattern, levels= c("Training", "Testing"))
 
@@ -954,23 +1007,24 @@ fig5 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
     scale_y_continuous(limits = c(0, 2)) +
     facet_wrap(~column_label, ncol = 3) +
                # , strip.position="left") +
-    theme_minimal() +
+    # theme_minimal() +
     # scale_alpha_manual(values = c("fit" = 0.3, "pred" = 1)) +
     scale_pattern_manual(values= c("Training" = "stripe", "Testing" = "none")) + #,
                          # guide = guide_legend(reverse = TRUE)) + # manually assign pattern
     # scale_pattern_continuous(limits = c("fit" = "Training", "pred" = "Testing")) +
     scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
-    theme(legend.title=element_blank()) +
+    # theme(legend.title=element_blank()) +
           # axis.text.y = element_blank()) + #,
           # axis.text.x = element_text(angle = 15, # vjust = 0.5, 
           #                            hjust=1)) +
     labs(x = "Model",
          y = "Standardized deviance",
-         fill = "")
+         fill = "",
+         pattern = "")
 fig5
 
 
-pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels_stripesfit_1x3scenarios.pdf"), width = 15, height = 7)
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels_stripesfit_2x3scenarios.pdf"), width = width.a4*1.2, height = height.a4*2/3)
 print(fig5)
 dev.off() 
 

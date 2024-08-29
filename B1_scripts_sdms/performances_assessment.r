@@ -419,7 +419,7 @@ plot.ice <- function(models.performance,
 
 make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
   
-  # model.name <- models.names[4]
+  # model.name <- models.names[1]
   # obs <- sampled.observations
   # models <- models.trained
   # models.orig <- models
@@ -450,7 +450,7 @@ make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
     
     colnames(predictions) <- taxa.colnames
     
-    single.taxa.prediction <- predictions[,taxa]
+    single.taxa.prediction <- predictions[,paste0("Occurrence.", taxa.short)]
     
   } else {
     
