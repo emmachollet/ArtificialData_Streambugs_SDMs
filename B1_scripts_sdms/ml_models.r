@@ -493,6 +493,10 @@ train.ann.model <- function(hyperparameters, X, Y){
   # returns:
   #   - ann.model: the trained ANN 
   
+    # # to debug
+    # X <- X.train
+    # Y <- encoded.Y.train
+    
   # get I/O size
   input.size      <- ncol(X)
   output.size     <- ncol(Y)
@@ -538,10 +542,35 @@ get.ann.model <- function(input.size, output.size, num.units, num.layers, learni
   #   - ann.model: the untrained neural network
   
   
-  # input layer
+    # # Create a Sequential model
+    # model <- tf$keras$models$Sequential()
+    # 
+    # # model <- keras_model_sequential()
+    # # input.size <- 8  # Define input size as an integer
+    # # num.units <- 128  # Number of units
+    # # 
+    # # Add layers with LeakyReLU as a separate layer
+    # model$add(tf$keras$layers$Dense(units = as.integer(num.units), input_shape = c(as.integer(input.size))))
+    # model$add(tf$keras$layers$LeakyReLU(alpha = 0.3))  # LeakyReLU with alpha = 0.3
+    # 
+    # # Add output layer
+    # model$add(tf$keras$layers$Dense(units = 10, activation = 'softmax'))
+    # 
+    # # Compile the model
+    # model$compile(
+    #     optimizer = 'adam',
+    #     loss = 'categorical_crossentropy',
+    #     metrics = list('accuracy')
+    # )
   model <- keras_model_sequential() %>% 
-    layer_dense(units=num.units, input_shape=input.size) %>% 
+    layer_dense(units = num.units, input_shape = input.size) %>% 
     layer_activation_leaky_relu()
+  # model <- keras_model_sequential() %>% 
+  #     layer_dense(units = 4, input_shape = 8) %>% 
+  #     layer_activation_leaky_relu(alpha = 0.3)
+  # model <- keras_model_sequential() %>%
+  #     layer_dense(units = 128, activation = 'relu', input_shape = c(784)) %>%
+  #     layer_dense(units = 10, activation = 'softmax')
   
   # hidden layers
   if (num.layers>1){
@@ -1053,8 +1082,10 @@ save.models <- function(models, path, split.type){
       
       # save ANN to file
       ann.path = paste0(path, "/ann_", split.type)
-      save_model_tf(ann, ann.path)
-    
+      # save_model_tf(ann, ann.path)
+      # Save the model in HDF5 format
+      save_model_hdf5(ann, paste0(ann.path, ".h5"))
+      
     }
     # save models list
     saveRDS(models.copy, file=models.path)
@@ -1084,9 +1115,8 @@ save.models <- function(models, path, split.type){
         # save ann of current split
         current.ann.path = paste0(path, "/ann_", split.type, "_", split)
         
-        
-        save_model_tf(current.ann, current.ann.path)
-        
+        # save_model_tf(current.ann, current.ann.path)
+        save_model_hdf5(current.ann, paste0(current.ann.path, ".h5"))
         
       }
     }
@@ -1113,7 +1143,8 @@ load.models <- function(path, split.type){
     # load ann and copy it back in list if it exists
     if(dir.exists(ann.path)){
     
-      ann <- load_model_tf(ann.path)
+      # ann <- load_model_tf(ann.path)
+      ann <- load_model_hdf5(paste0(ann.path, ".h5"))
       taxa.list = names(models.list[["ANN"]][["entire_dataset"]][["training"]])
       
       for (taxon in taxa.list){
@@ -1139,7 +1170,9 @@ load.models <- function(path, split.type){
       # load current split's ann model and copy it back in list if it exists
       if(dir.exists(current.ann.path)){
         
-        current.ann <- load_model_tf(current.ann.path)
+        # current.ann <- load_model_tf(current.ann.path)
+        current.ann <- load_model_hdf5(paste0(current.ann.path, ".h5"))
+        
         taxa.list = names(models.list[["ANN"]][[split]][["training"]])
         
         for (taxon in taxa.list){

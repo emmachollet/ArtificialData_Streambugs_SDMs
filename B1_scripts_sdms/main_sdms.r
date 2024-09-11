@@ -31,25 +31,46 @@ if (!require("tidyr") ) { install.packages("tidyr"); library("tidyr") }         
 if (!require("ggplot2")){install.packages("ggplot2"); library("ggplot2")}                    # to sort, join, merge data
 if (!require("readr")){install.packages("readr"); library("readr")}
 if (!require("jsonlite")){install.packages("jsonlite"); library("jsonlite")}
-if (!require("pROC")){install.packages("pROC"); library("pROC")}  # to compute AUC                  
+if (!require("pROC")){install.packages("pROC"); library("pROC")}  # to compute AUC    
+if (!require("vtable") ) { install.packages("vtable"); library("vtable") }               # to do tables of summary statistics
 if (!require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
 if (!require("ggpattern")){install.packages("ggpattern"); library("ggpattern")}        # to add patterns in boxplots
 
 # specific for Neural Network
 if (!require("reticulate")){install.packages("reticulate"); library("reticulate")}    # links R to python
 # install_miniconda()              # run this the very first time reticulate is installed # makes a separeta python installation
+# reticulate::install_python(version = '3.12')
+
+# reticulate::install_python(version = '3.8')
 # install.packages("tensorflow")
+# remove.packages("tensorflow")
+# virtualenv_list()
+# virtualenv_exists(envname = NULL)
+# virtualenv_create("r-tensorflow", python = "python3.8")  # or python3.9
+# conda_create("r-tensorflow", python_version = "3.8")
 library("tensorflow")
+# use_condaenv("r-tensorflow", required = TRUE)
+# tensorflow::tf_config()
+# conda_list()
+# virtualenv_list()
+# virtualenv_remove("r-tensorflow") 
+# install_tensorflow(method = "conda", envname = "r-tensorflow")
+# path <-"C:/Users/cholleem/AppData/Local/r-miniconda/envs/r-reticulate/python.exe"
+# tensorflow::tf_config() # Check if TensorFlow is installed and accessible
 # virtualenv_install("C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow", "tensorflow==2.16")
 # install_tensorflow(envname = "C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow")
 # virtualenv_remove("r-tensorflow")
-# install_tensorflow()             # run this line only when opening new R session
+# install_tensorflow(method = "conda")             # run this line only when opening new R session
+# install_tensorflow()
+# install_tensorflow(envname = "C:/Users/ClientAdmin/Documents/.virtualenvs/r-tensorflow")
 # install.packages("keras")
+# remove.packages("keras")
 library("keras")
-# install_keras()                  # run this line only when opening new R session
+install_keras()
+# install_keras(method = "conda")                  # run this line only when opening new R session
+# install_tensorflow(method = "conda", envname = "r-tensorflow")
 # use_condaenv()
 # reticulate::install_python(version = '<version>')
-# path <-"C:/Users/cholleem/AppData/Local/r-miniconda/envs/r-reticulate/python.exe"
 # Sys.setenv(RETICULATE_PYTHON = path)
 # virtualenv_create("r-tensorflow")
 
@@ -156,10 +177,10 @@ split.criterion         <- "ReachID"
 number.sample           <- 3000
 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample)
 sdm.models              <- c(
-                                "GLM" = "glm",
-                                # "GAM" = "gam",
-                                "GAM" = "gamSpline",
-                                "RF"  = "rf",
+                                # "GLM" = "glm",
+                                # # "GAM" = "gam",
+                                # "GAM" = "gamSpline",
+                                # "RF"  = "rf",
                                 "ANN" = "ann")#,
 # "ann")
 no.models <- length(sdm.models)
@@ -197,17 +218,17 @@ list.noise <- list(
 )
 name.list.noise <- paste(names(list.noise), collapse = "_")
 
-p <- 0.1 # probability at which a presence is turned into an absence
-
-list.noise <- lapply(taxa.colnames, FUN=function(taxon){
-    noise_taxon <- list("type"       = "missdetection",
-                        "target"     = taxon,
-                        "amount"     = p,
-                        "parameters" = NULL)
-
-    return(noise_taxon)
-})
-name.list.noise <- paste0("misdetection.all.taxa", p)
+# p <- 0.1 # probability at which a presence is turned into an absence
+# 
+# list.noise <- lapply(taxa.colnames, FUN=function(taxon){
+#     noise_taxon <- list("type"       = "missdetection",
+#                         "target"     = taxon,
+#                         "amount"     = p,
+#                         "parameters" = NULL)
+# 
+#     return(noise_taxon)
+# })
+# name.list.noise <- paste0("misdetection.all.taxa", p)
   
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -354,6 +375,16 @@ preprocessed.data.fit <- preprocess.data(data=data.input,
                                          dir=dir.experiment,
                                          split.type="FIT")
 
+# recover Streambugs data for ICE
+data.base.ice       <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
+data.base.ice$tempmaxC2 <- data.base.ice$tempmaxC^2
+data.base.ice$currentms2 <- data.base.ice$currentms^2
+name.ice.streambugs <- "8Catch_50Sites_ICE_50Steps_PolyInterp30_runC_100Yea_36501Steps_"
+ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
+                                       "WideData_ResultsProbObs.csv"), sep = ";")
+no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
+no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_Poly")[2])
+
 # check balance presence/absence
 for(i.split in 1:number.split){
     cat("Split number:", i.split, "\n")
@@ -376,7 +407,9 @@ print(summary(preprocessed.data.cv[[1]][["Training data"]][,"Occurrence.Baetisal
 models.cv  <- apply.ml.models(data=preprocessed.data.cv,
                               models=models,
                               split.type="CV", 
-                              taxa.colnames, env.factor, env.factor.full)
+                              taxa.colnames = taxa.colnames, 
+                              env.factor = env.factor, 
+                              env.factor.full = env.factor.full)
 
 save.models(models=models.cv,
             path=dir.experiment,
@@ -492,15 +525,6 @@ dev.off()
 
 ## Fig. 3 : ICE ----
 
-# recover Streambugs data for ICE
-data.base.ice       <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
-data.base.ice$tempmaxC2 <- data.base.ice$tempmaxC^2
-data.base.ice$currentms2 <- data.base.ice$currentms^2
-name.ice.streambugs <- "8Catch_50Sites_ICE_50Steps_PolyInterp30_runC_100Yea_36501Steps_"
-ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
-                                       "WideData_ResultsProbObs.csv"), sep = ";")
-no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
-no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_Poly")[2])
 
 dir.exp.ice <- paste0(dir.experiment, "ICE/")
 dir.create(dir.exp.ice)
@@ -660,12 +684,15 @@ print.pdf.plots(list.plots = list.plots, width = 10, height = 5,
 # PLOTS COMPARISON ####
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-# options for plots comparison
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+## Options for plots comparison ----
 
 # create directory for comparison plots
 dir.compar.plots <- paste0(dir.output, "comparison_plots/")
 dir.create(dir.compar.plots)
 
+# set color map for models
 model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Linear Model
                      'GAM'     = "#00BA38", # 'green',         # Generalized Additive Model
                      'ANN'     = 'orange',        # Artificial Neural Network
@@ -677,38 +704,10 @@ scales::show_col(model.color.map)
 taxon.under.obs <- names(taxa.colnames)[5]
 select.env.fact <- env.factor[1]
 name.select.env.fact <- names(select.env.fact)
-# name.select.env.fact <- names(env.factor)
-# set.seed(97)
+print(taxon.under.obs)
+print(select.env.fact)
 
-# width and height of an A4 page in inches
-width.a4 = 8.3
-height.a4 = 11.7
-
-mytheme <- theme_bw() +
-    theme(text = element_text(size = 14),
-        title = element_text(size = 14),
-          # plot.title = element_text(face = "bold"),
-          # strip.text = element_text(size = 14), #, face = "bold"),
-          strip.background = element_rect(fill = "white"),
-          # axis.title = element_text(size = 14), #, face = "bold"),
-          # axis.text.x = element_text(vjust = 10),
-          # axis.text.y = element_text(hjust = 10),
-          # axis.title.x.bottom = element_text(vjust = -15),
-          # axis.title.x = element_text(margin = margin(t = 0, r = 0, b = -30, l = 0)), # put some space between the axis title and the numbers
-          axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
-          legend.position="bottom"
-          # legend.text = element_text(size = 14),
-          # legend.title = element_text(size = 14) #, face= "bold") #,
-          # panel.grid.major = element_line(colour = NA),
-          # panel.grid.minor = element_line(colour = NA)
-    )
-
-theme_set(mytheme)
-
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-## Comparison different noise scenarios ----
-
-# compare experiment dispersal noise
+# select experiments to compare
 list.exp     <- list("Best case scenario"                  = "3000Sites_45Taxa_4SDMs_8EnvFact_",
                      "Reduce dataset size"                 = "300Sites_45Taxa_4SDMs_8EnvFact_",
                      "Remove environmental predictor"      = "3000Sites_45Taxa_4SDMs_7EnvFact_noise.rem.fact",
@@ -734,6 +733,32 @@ color.map <- color.map[1:length(list.exp)]
 names(color.map) <- names(list.exp)
 scales::show_col(color.map)
 
+# set options for plots
+# width and height of an A4 page in inches
+width.a4 = 8.3
+height.a4 = 11.7
+
+mytheme <- theme_bw() +
+    theme(text = element_text(size = 14),
+          title = element_text(size = 14),
+          # plot.title = element_text(face = "bold"),
+          # strip.text = element_text(size = 14), #, face = "bold"),
+          strip.background = element_rect(fill = "white"),
+          # axis.title = element_text(size = 14), #, face = "bold"),
+          # axis.text.x = element_text(vjust = 10),
+          # axis.text.y = element_text(hjust = 10),
+          # axis.title.x.bottom = element_text(vjust = -15),
+          # axis.title.x = element_text(margin = margin(t = 0, r = 0, b = -30, l = 0)), # put some space between the axis title and the numbers
+          axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+          legend.position="bottom"
+          # legend.text = element_text(size = 14),
+          # legend.title = element_text(size = 14) #, face= "bold") #,
+          # panel.grid.major = element_line(colour = NA),
+          # panel.grid.minor = element_line(colour = NA)
+    )
+
+theme_set(mytheme)
+
 # create file names for saving plots
 file.name.exp <- paste0("comparison_300points_rem.FV_noise.temp_misdet_disp.lim_", 
                         length(list.exp), "exp_")
@@ -749,12 +774,12 @@ print(file.name.tax)
 #                         env.fact="tempmaxC")
 
 
-## Fig 1 & Fig 2: PDP comparison ----
+## ICE and PDP data ----
 
 
 multi.ice <- lapply(list.exp, FUN=function(name){
   
-  # name <- list.exp[[3]]
+  # name <- list.exp[[1]]
   dir.experiment          <- paste0(dir.output, name, "/")
   cat("\nLoading models and computing ICE for taxon", taxon.under.obs, "and experiment:", name, "\n")
   
@@ -777,23 +802,42 @@ multi.ice <- lapply(list.exp, FUN=function(name){
                       input.env.factors=input.env.factors)
   
   observations              <- ice.dfs[["observations"]]
+  
   observations.mean         <- observations %>%
     group_by(across(all_of(select.env.fact)), model) %>%
     summarise(avg = mean(pred))
   
   observations.mean["noise"] <- name
+  observations["noise"]      <- name
   
-  return(observations.mean)
+  return(list(observations, observations.mean))
 })
 
-final.multi.ice <- bind_rows(multi.ice, .id = "column_label")
+long.multi.ice <- bind_rows(lapply(multi.ice, "[[", 1), .id = "column_label_noise")
+long.multi.ice$model <- factor(long.multi.ice$model, levels = names(sdm.models))
+long.multi.ice$column_label_noise <- factor(long.multi.ice$column_label_noise, levels = unlist(names(list.exp)))
+
+multi.mean <- lapply(multi.ice, "[[", 2)
+final.multi.ice <- bind_rows(multi.mean, .id = "column_label")
+final.multi.ice$model <- factor(final.multi.ice$model, levels = names(sdm.models))
+final.multi.ice$column_label <- factor(final.multi.ice$column_label, levels = unlist(names(list.exp)))
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Fig 0: ICE comparison
+
+plot.data <- long.multi.ice
+
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Fig 1 & Fig 2: PDP comparison
+
 
 # compute boundaries
-min.boundaries <- lapply(multi.ice, FUN=function(ice){
+min.boundaries <- lapply(multi.mean, FUN=function(ice){
   min(ice[[name.select.env.fact]])
 })
 
-max.boundaries <- lapply(multi.ice, FUN=function(ice){
+max.boundaries <- lapply(multi.mean, FUN=function(ice){
   max(ice[[name.select.env.fact]])
 })
 
@@ -801,8 +845,6 @@ lb <- max(unlist(min.boundaries))
 hb <- min(unlist(max.boundaries))
 
 plot.data <- final.multi.ice
-plot.data$model <- factor(plot.data$model, levels = names(sdm.models))
-plot.data$column_label <- factor(plot.data$column_label, levels = unlist(names(list.exp)))
 
 pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
   mutate(observation_number = rep(1:no.sites, each = no.steps),
@@ -891,17 +933,34 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
       colnames(all.results)[i] <- correct.name
   }
   # all.results    <- summarize.all.results(models.cv, data.prev.taxa)
-  
   # rm(models.cv) 
   
-  all.results <- restructure.all.results(all.results, models)
+  restr.all.results <- restructure.all.results(all.results, models)
+  restr.all.results["noise"] <- name
   
-  all.results["noise"] <- name
-  
-  return(all.results)
+  return(list(all.results, restr.all.results))
 })
 
-final.multi.all.results <- bind_rows(multi.all.results, .id = "column_label")
+select.results <- c("dev_pred", "auc_pred", "likelihood_ratio")
+summary.metric <- "median"
+table.summary.metrics <- bind_rows(lapply(names(list.exp), FUN = function(name, multi.all.results, select.results, summary.metric){
+
+    # name <- names(list.exp)[1]
+    temp.res <- multi.all.results[[name]][[1]]
+    temp.names <- apply(expand.grid(names(models), select.results), 1, paste, collapse="_")
+    temp.summary <- temp.res[, temp.names] %>%
+        summarise_if(is.numeric, summary.metric, na.rm = TRUE) %>%
+        mutate(scenario = name) %>% 
+        mutate(across(is.numeric, round, digits=2))
+    return(temp.summary)
+    
+    }, multi.all.results, select.results, summary.metric), .id = "id")
+
+# write summarized results in csv
+file.name <- paste0(file.name.exp, summary.metric, "_results.csv")
+write.table(table.summary.metrics, file = paste0(dir.compar.plots, file.name), sep = ",", row.names = F)
+
+final.multi.all.results <- bind_rows(lapply(multi.all.results, "[[", 2), .id = "column_label")
 final.multi.all.results$model <- factor(final.multi.all.results$model, levels= names(models))
 final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = names(list.exp))
 
@@ -1003,7 +1062,6 @@ fig5 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
                          # , pattern_density = 0.35, outlier.shape = NA) +
     # scale_x_discrete(limits=rev(names(models))) +
     scale_x_discrete(limits=names(models)) +
-    
     scale_y_continuous(limits = c(0, 2)) +
     facet_wrap(~column_label, ncol = 3) +
                # , strip.position="left") +
