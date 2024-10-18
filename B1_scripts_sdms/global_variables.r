@@ -138,20 +138,25 @@ TUNE.GRID.GAMLOESS     <- NULL # add tuning parameters for GamLoess here
 TUNE.GRID.RF           <- NULL
 # TUNE.GRID.RF           <- expand.grid(mtry                      = c(1,2,4,8))
 
-#TUNE.GRID.ANN          <- expand.grid(num.units                 = c(4, 8, 32),
-#                                      num.layers                = c(3, 5, 10),
-#                                      learning.rate             = c(0.1, 0.01),
-#                                      num.epochs                = c(50, 100),
-#                                      batch.size                = c(16, 64))
+TUNE.GRID.ANN          <- expand.grid(num.units                 = c(4, 8, 32),
+                                     num.layers                = c(3, 5, 10),
+                                     learning.rate             = c(0.1, 0.01),
+                                     num.epochs                = c(50, 100),
+                                     batch.size                = c(16, 64))
 
-# simplified tune grid for precessing speed increase
-TUNE.GRID.ANN          <- expand.grid(num.units                 = c(4),
-                                      num.layers                = c(5),
+TUNE.GRID.ANN          <- expand.grid(num.units                 = c(4, 8),
+                                      num.layers                = c(3, 5),
                                       learning.rate             = c(0.01),
-                                      num.epochs                = c(50),
+                                      num.epochs                = c(50, 100),
                                       batch.size                = c(64))
+# simplified tune grid for precessing speed increase
+# TUNE.GRID.ANN          <- expand.grid(num.units                 = c(4),
+#                                       num.layers                = c(5),
+#                                       learning.rate             = c(0.01),
+#                                       num.epochs                = c(50),
+#                                       batch.size                = c(64))
 
-TUNE.GRID              <- list("glm"                            = TUNE.GRID.GLM,
-                               "gamloess"                       = TUNE.GRID.GAMLOESS,
-                               "rf"                             = TUNE.GRID.RF,
-                               "ann"                            = TUNE.GRID.ANN)
+# TUNE.GRID              <- list("glm"                            = TUNE.GRID.GLM,
+#                                "gamloess"                       = TUNE.GRID.GAMLOESS,
+#                                "rf"                             = TUNE.GRID.RF,
+#                                "ann"                            = TUNE.GRID.ANN)

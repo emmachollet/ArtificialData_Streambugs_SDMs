@@ -200,6 +200,8 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     # par.invtraits.orig <- par.invtraits
     par.invtraits.update <- par.invtraits
     
+    ## b. apply polynomial interpolation ####
+    
     cat("\n\nUpdating classes with a polynomial interpolation of", 
         no.class.new, "points between traits: ")
     for (acro in acronym.env.fact) {

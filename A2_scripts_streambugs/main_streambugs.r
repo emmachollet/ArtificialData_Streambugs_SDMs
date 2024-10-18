@@ -148,8 +148,8 @@ select.sites   <- "random"
 if(ICE){
   n.sites.per.catch    <- no.sites.ice * no.steps.ice
 } else {
-  n.sites.per.catch <- "all"
-  # n.sites.per.catch <- 2
+  # n.sites.per.catch <- "all"
+  n.sites.per.catch <- 2
 }
 sites.selection      <- list("n.sites" = n.sites.per.catch, 
                              "select.sites" = select.sites)
@@ -535,7 +535,7 @@ for (taxon in vect.all.inv) {
 }
 
 file.name <- paste0("PreferenceTraitAllTaxa_MixUpdateOrig_PolyInterp", no.class.new, ".pdf")
-if(file.exists(paste0(dir.outputs, file.name))){
+if(!file.exists(paste0(dir.outputs, file.name))){
   list.plots <- list()
   for(taxon in vect.all.inv){
     # taxon <- vect.all.inv[5]

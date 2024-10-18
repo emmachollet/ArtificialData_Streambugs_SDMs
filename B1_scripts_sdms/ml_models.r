@@ -8,7 +8,8 @@ apply.ml.models <- function(data,
                             split.type="FIT",
                             taxa.colnames,
                             env.factor,
-                            env.factor.full){
+                            env.factor.full,
+                            hyperparameters){
                             # should be there: taxa.colnames, env.fact, list.noise
     
   
@@ -54,7 +55,7 @@ apply.ml.models <- function(data,
             
         } else if (grepl("ann", name.algo)) {
             
-            trained.model <- apply.ann.model(data, split.type, taxa.colnames, env.fact = env.factor)
+            trained.model <- apply.ann.model(data, split.type, taxa.colnames, env.fact = env.factor, hyperparameters)
             
         } else if (grepl("glm", name.algo)){
             
@@ -251,7 +252,7 @@ null.model.perf <- function(taxa, prob, data){
 
 
 # ann model ----
-apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
+apply.ann.model <- function(data, split.type, taxa.colnames, env.fact, hyperparameters){
   
   
   # This function create the Artificial Neural Network (ANN) model and returns
@@ -282,13 +283,15 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
     Y.train         <- as.matrix(training.data[ ,taxa.colnames])
     encoded.Y.train <- as.matrix(ifelse(Y.train == 'Absent', 0, 1))
     
-    # Get hyperparameters
-    hyperparameters <- get.best.hyperparameters(data=training.data, taxa.colnames, env.fact)
+    # # Get hyperparameters
+    # hyperparameters <- get.best.hyperparameters(data=training.data, taxa.colnames, env.fact, split.name = split.type)
     
     # train model
-    ann <- train.ann.model(hyperparameters,
-                           X.train,
-                           encoded.Y.train)
+    trained.ann <- train.ann.model(hyperparameters,
+                                   X.train,
+                                   encoded.Y.train)
+    ann <- trained.ann[["ann"]]
+    history <- trained.ann[["history"]]
     
     # makes prediction
     prediction.probability <- ann %>% predict(X.train)
@@ -301,7 +304,7 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
                                  prediction.probability,
                                  training.data)
 
-    ann.model <- list("entire_dataset" = list("training" = model.performances))
+    ann.model <- list("entire_dataset" = list("training" = model.performances, "history" = history))
     
   } 
   else if (split.type == 'CV'){
@@ -313,7 +316,7 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
     # loop over the different splits
     for (i.split in seq(nb.split)){
       
-        # i.split <- 2
+        # i.split <- 1
         cat("Split number:", i.split, "\n")
       # Open datasets (Training and testing)
       split <- data[[i.split]]
@@ -333,14 +336,15 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
       Y.test <- as.matrix(testing.data[ ,taxa.colnames])
       encoded.Y.test <- ifelse(Y.test == 'Absent', 0, 1)
       
-      
-      # Get hyperparameters
-      hyperparameters <- get.best.hyperparameters(data=training.data, taxa.colnames, env.fact)
+      # # Get hyperparameters
+      # hyperparameters <- get.best.hyperparameters(data=training.data, taxa.colnames, env.fact, split.name = paste0(split.type, i.split))
       
       # Train model
-      ann <- train.ann.model(hyperparameters,
-                             X.train,
-                             encoded.Y.train)
+      trained.ann <- train.ann.model(hyperparameters,
+                                     X.train,
+                                     encoded.Y.train)
+      ann <- trained.ann[["ann"]]
+      history <- trained.ann[["history"]]
       
       # Makes prediction for training
       train.prediction.probability <- ann %>% predict(X.train)
@@ -365,7 +369,8 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
                                          testing.data)
       
       ann.model[[i.split]] <- list("training" = train.model.performances,
-                                   "testing"  = test.model.performances)
+                                   "testing"  = test.model.performances,
+                                   "history"  = history)
       }
   }
   else if (split.type == 'ODG'){
@@ -379,7 +384,7 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact){
   return(ann.model)
 }
 
-get.best.hyperparameters <- function(data, taxa.colnames, env.fact){
+get.best.hyperparameters <- function(data, taxa.colnames, env.fact, split.name = "test"){
   
   
   # The function is used to find the best hyperparameters for the ANN. It 
@@ -400,7 +405,9 @@ get.best.hyperparameters <- function(data, taxa.colnames, env.fact){
   #   - hyperparameters: the hyperparameters leading to the lowest standard
   #                      deviance
   
-  
+  # to debug
+  # data=training.data
+    
   # Get a list of all permutation of hyperparameters
   tune.grid <- TUNE.GRID[['ann']]
   
@@ -408,12 +415,13 @@ get.best.hyperparameters <- function(data, taxa.colnames, env.fact){
       nb.folds  <- 3
       folds <- groupKFold(data$ReachID, nb.folds)
       sum.losses <- list(double(nrow(tune.grid)))
+      # list.history <- list()
       
       for (fold.index in seq(nb.folds)){
           
+          # fold.index <- 1
           train <- data[folds[[fold.index]],]
           test  <- data[-folds[[fold.index]],]
-          
           
           X.train         <- as.matrix(train[ ,env.fact])
           Y.train         <- as.matrix(train[ ,taxa.colnames])
@@ -423,7 +431,10 @@ get.best.hyperparameters <- function(data, taxa.colnames, env.fact){
           Y.test          <- as.matrix(test[ ,taxa.colnames])
           
           # Get the corresponding ann models
-          models <- apply(tune.grid, MARGIN=1, FUN=train.ann.model, X.train, encoded.Y.train)
+          list.models.history <- apply(tune.grid, MARGIN=1, FUN=train.ann.model, X.train, encoded.Y.train)
+          models <- lapply(list.models.history, "[[", 1)
+          # histories <- lapply(list.models.history, "[[", 2)
+          
           # Compute corresponding standard deviances
           losses <- lapply(models, FUN=get.loss.score, X.test, Y.test, taxa.colnames)
           sum.losses <- mapply(sum, sum.losses, losses, SIMPLIFY=FALSE)
@@ -431,9 +442,21 @@ get.best.hyperparameters <- function(data, taxa.colnames, env.fact){
       
       # loss is average over all split
       losses = lapply(sum.losses, FUN=function(x){x/3})
+      vect.losses <- as.vector(unlist(losses))
+      result.tune.grid <- as.data.frame(tune.grid)
+      result.tune.grid$loss <- vect.losses
+      
+      file.name <- paste0("ann_loss_", nrow(tune.grid),"hyperparameters_tuning_", split.name,".csv")
+      write.table(result.tune.grid, file = file.name, sep = ",", row.names = F)
+      
+      # sink(file = paste0("ann_loss_", nrow(tune.grid),"hyperparameters_tuning_", split.type,".txt"))
+      # print(result.tune.grid)
+      # sink()
+      
       # Get hyperparameter leading to smallest score
       index.lowest.loss <- which.min(losses)
       hyperparameters <- tune.grid[index.lowest.loss,]
+      
   } else {
       hyperparameters <- tune.grid[1,]
   }
@@ -522,7 +545,7 @@ train.ann.model <- function(hyperparameters, X, Y){
                          epochs=num.epochs,
                          batch_size=batch.size)
   
-  return(ann)
+  return(list("ann" = ann, "history" = history))
 }
 
 get.ann.model <- function(input.size, output.size, num.units, num.layers, learning.rate){
@@ -541,52 +564,25 @@ get.ann.model <- function(input.size, output.size, num.units, num.layers, learni
   # returns:
   #   - ann.model: the untrained neural network
   
-  
-    # # Create a Sequential model
-    # model <- tf$keras$models$Sequential()
-    # 
-    # # model <- keras_model_sequential()
-    # # input.size <- 8  # Define input size as an integer
-    # # num.units <- 128  # Number of units
-    # # 
-    # # Add layers with LeakyReLU as a separate layer
-    # model$add(tf$keras$layers$Dense(units = as.integer(num.units), input_shape = c(as.integer(input.size))))
-    # model$add(tf$keras$layers$LeakyReLU(alpha = 0.3))  # LeakyReLU with alpha = 0.3
-    # 
-    # # Add output layer
-    # model$add(tf$keras$layers$Dense(units = 10, activation = 'softmax'))
-    # 
-    # # Compile the model
-    # model$compile(
-    #     optimizer = 'adam',
-    #     loss = 'categorical_crossentropy',
-    #     metrics = list('accuracy')
-    # )
-  model <- keras_model_sequential() %>% 
-    layer_dense(units = num.units, input_shape = input.size) %>% 
-    layer_activation_leaky_relu()
-  # model <- keras_model_sequential() %>% 
-  #     layer_dense(units = 4, input_shape = 8) %>% 
-  #     layer_activation_leaky_relu(alpha = 0.3)
-  # model <- keras_model_sequential() %>%
-  #     layer_dense(units = 128, activation = 'relu', input_shape = c(784)) %>%
-  #     layer_dense(units = 10, activation = 'softmax')
-  
-  # hidden layers
-  if (num.layers>1){
-    for (i in 1:(num.layers-1)){
-      model <- model %>% layer_dense(units=num.units) %>% 
-        layer_activation_leaky_relu()
+    # create a Sequential model
+    model <- keras_model_sequential(input_shape = c(input.size)) %>%
+        layer_dense(units = num.units, activation = 'leaky_relu') 
+    
+    # hidden layers
+    if (num.layers>1){
+        for (i in 1:(num.layers-1)){
+            model <- model %>% layer_dense(units=num.units) %>% 
+                layer_activation_leaky_relu()
+        }
     }
-  }
-  
-  #output layer
-  model <- model %>% layer_dense(units=output.size, activation="sigmoid")
-  
-  # display model
-  summary(model) 
-  
-  # Compile model
+    
+    # output layer
+    model <- model %>% layer_dense(units=output.size, activation="sigmoid")
+    
+    # display model
+    summary(model) 
+    
+  # compile model
   opt <- optimizer_adam(learning_rate=learning.rate)
   model %>% compile(optimizer = opt,
                     loss='binary_crossentropy',
@@ -1081,10 +1077,10 @@ save.models <- function(models, path, split.type){
       }
       
       # save ANN to file
-      ann.path = paste0(path, "/ann_", split.type)
-      # save_model_tf(ann, ann.path)
+      ann.path = paste0(path, "/ann_", split.type, ".keras")
+      save_model(ann, ann.path)
       # Save the model in HDF5 format
-      save_model_hdf5(ann, paste0(ann.path, ".h5"))
+      # save_model_hdf5(ann, paste0(ann.path, ".h5"))
       
     }
     # save models list
@@ -1113,10 +1109,10 @@ save.models <- function(models, path, split.type){
         }
         
         # save ann of current split
-        current.ann.path = paste0(path, "/ann_", split.type, "_", split)
+        current.ann.path = paste0(path, "/ann_", split.type, "_", split, ".keras")
         
-        # save_model_tf(current.ann, current.ann.path)
-        save_model_hdf5(current.ann, paste0(current.ann.path, ".h5"))
+        save_model(current.ann, current.ann.path)
+        # save_model_hdf5(current.ann, paste0(current.ann.path, ".h5"))
         
       }
     }
@@ -1130,23 +1126,25 @@ save.models <- function(models, path, split.type){
 
 load.models <- function(path, split.type){
   
+    file.metadata <- "metadata.json"
+    metadata.exp <- fromJSON(paste(readLines(paste0(path, file.metadata)), collapse=""))
+    
   if (split.type=='FIT'){
     
-    models.path <- paste0(path, "/models_", split.type, ".rds")
+    # load caret models saved as .rds
+    models.path <- paste0(path, "models_", split.type, ".rds")
     models.list <- readRDS(file=models.path)  # load models' list
-
     
-    
-    
-    ann.path = paste0(path, "/ann_", split.type)
+    # load neural network
+    ann.path = paste0(path, "ann_", split.type, ".keras")
     
     # load ann and copy it back in list if it exists
-    if(dir.exists(ann.path)){
-    
-      # ann <- load_model_tf(ann.path)
-      ann <- load_model_hdf5(paste0(ann.path, ".h5"))
+    if(any(metadata.exp$models == "ann")){
+
+      ann <- load_model(ann.path)
+      # ann <- load_model_hdf5(paste0(ann.path, ".h5"))
       taxa.list = names(models.list[["ANN"]][["entire_dataset"]][["training"]])
-      
+
       for (taxon in taxa.list){
         models.list[["ANN"]][["entire_dataset"]][["training"]][[taxon]][["model"]] <- ann
       }
@@ -1165,13 +1163,13 @@ load.models <- function(path, split.type){
     
     for (split in split.names){
       
-      current.ann.path <- paste0(path, "/ann_", split.type, "_", split)
+      current.ann.path <- paste0(path, "/ann_", split.type, "_", split, ".keras")
       
       # load current split's ann model and copy it back in list if it exists
-      if(dir.exists(current.ann.path)){
+      if(any(metadata.exp$models == "ann")){
         
-        # current.ann <- load_model_tf(current.ann.path)
-        current.ann <- load_model_hdf5(paste0(current.ann.path, ".h5"))
+        current.ann <- load_model(current.ann.path)
+        # current.ann <- load_model_hdf5(paste0(current.ann.path, ".h5"))
         
         taxa.list = names(models.list[["ANN"]][[split]][["training"]])
         

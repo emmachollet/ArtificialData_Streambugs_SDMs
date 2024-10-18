@@ -317,15 +317,17 @@ preprocess.data <- function(data,
   #   - dir:        the directory where to save the data when split
   #   - split.type: the type of split to be perform. It can be either "CV" for 
   #                 a 3-fold cross-validation, "ODG" for Out-of-Domain Generali-
-  #                 zation and "FIT" for no split.
+  #                 zation, "FIT" for no split or "ICE" for no split but input
+  #                 data for ICE plots.
   #
   # returns:
   #   - splits:     the splits performed according to split.type and  standard-
   #                 ized
   
   
-  # split.type must be either "CV", "ODG", or "FIT". If not, data is not split
-  if (!((split.type == "CV")|(split.type == "ODG")|(split.type == "FIT"))){
+  # split.type must be either "CV", "ODG", "FIT" or "ICE". If not, data is not split
+  if (!((split.type == "CV")|(split.type == "ODG")|
+        (split.type == "FIT")|(split.type == "ICE"))){
     split.type <- "FIT"
   }
   
@@ -351,7 +353,7 @@ preprocess.data <- function(data,
                                          splitting.criterion)
     } else if (split.type=="ODG"){
       splits.const <- odg.preprocess.data(data, env.fact)
-    } else { # FIT
+    } else { # FIT or ICE
       splits.const <- fit.preprocess.data(data, env.fact, splitting.criterion)
     }
     
@@ -384,6 +386,20 @@ clipper <- function(vec, min_value=-Inf, max_value=Inf){
   #   - the clipped version of vec
   
   return(pmax(rep(min_value, length(vec)), pmin(vec, rep(max_value, length(vec)))))
+}
+
+exp.transform <-   function(x,intercept=0,curv=0)
+{
+    #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
+    #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
+    
+    if(curv == 0)
+    { 
+        y = intercept-(intercept-1)*x
+    } else {
+        y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
+    }
+    return(y)
 }
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

@@ -72,19 +72,19 @@ map.inputs <- function(directory){
     return(list.swiss.map.inputs)
 }
 
-exp.transform <-   function(x,intercept=0,curv=0)
-{
-  #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
-  #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
-  
-  if(curv == 0)
-  { 
-    y = intercept-(intercept-1)*x
-  } else {
-    y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
-  }
-  return(y)
-}
+# exp.transform <-   function(x,intercept=0,curv=0)
+# {
+#   #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
+#   #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
+#   
+#   if(curv == 0)
+#   { 
+#     y = intercept-(intercept-1)*x
+#   } else {
+#     y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
+#   }
+#   return(y)
+# }
 
 
 # small basic ggplot colors function
