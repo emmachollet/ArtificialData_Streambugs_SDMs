@@ -330,6 +330,15 @@ plot.ice <- function(models.performance,
   #                   prediction for every model. 
   #   - env.factor.sampled: the original values of the sampled observation
   
+    # # to debug
+    # models.performance=models.fit
+    # # taxa=taxon.under.obs
+    # taxa=names.taxa[c(1:2)]
+    # standardization.constant=std.const.ice[[1]]
+    # observations = preprocessed.data.ice$`Entire dataset`
+    # nb.sample=no.sites
+    # resolution=no.steps
+    
   models.names <- names(models.performance)
   models.sdm <- models.performance[which(models.names!="Null" & models.names!="null")] # remove null model from list of models
   
@@ -391,9 +400,12 @@ plot.ice <- function(models.performance,
   
   
   list.obs.df <- lapply(models.names,
+                        # name <- models.names[1]
                         function(name, obs, pred){
                           
-                          obs["pred"]  <- predictions[[name]]
+                            # obs <- sampled.observations
+                            # pred <- predictions
+                          obs  <- pred[[name]][,c("ReachID", input.env.factors, taxa)]
                           obs["model"] <- name
                           
                           return(obs)
@@ -440,26 +452,35 @@ make.prediction <- function(model.name, models, obs, taxa, input.env.factors){
   
   
   taxa.short <- gsub("Occurrence.", "", taxa)
-  model <- models[[model.name]][[taxa.short]]
-  # input.env.factors <- model$model$coefnames
+  df.pred <- obs
   
-  if(model.name == "ANN"){
-    
-    obs.matrix  <- as.matrix(obs[ ,input.env.factors])
-    predictions <- model[[1]] %>% predict(obs.matrix)
-    
-    colnames(predictions) <- taxa.colnames
-    
-    single.taxa.prediction <- predictions[,paste0("Occurrence.", taxa.short)]
-    
-  } else {
-    
-    single.taxa.prediction.df <- predict(model, obs, type='prob')
-    single.taxa.prediction    <- single.taxa.prediction.df[[1]][, "Present"]
-    
+  for(taxon in taxa.short){
+      
+      # taxon <- taxa.short[1]
+      model <- models[[model.name]][[taxon]]
+      # input.env.factors <- model$model$coefnames
+      
+      if(model.name == "ANN"){
+          
+          obs.matrix  <- as.matrix(obs[ ,input.env.factors])
+          predictions <- model[[1]] %>% predict(obs.matrix)
+          
+          colnames(predictions) <- taxa.colnames # ! Global variable !!
+          
+          single.taxa.prediction <- predictions[,paste0("Occurrence.", taxon)]
+          
+      } else {
+          
+          single.taxa.prediction.df <- predict(model, obs, type='prob')
+          single.taxa.prediction    <- single.taxa.prediction.df[[1]][, "Present"]
+          
+      }
+      
+      df.pred[, taxon] <- single.taxa.prediction
   }
   
-  return(single.taxa.prediction)
+  
+  return(df.pred)
 }
 
 

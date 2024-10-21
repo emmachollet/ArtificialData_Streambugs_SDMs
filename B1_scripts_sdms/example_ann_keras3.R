@@ -1,7 +1,26 @@
-# install.packages("keras3")
+install.packages("keras3")
 # load("keras3")
+# library("keras3")
 # remotes::install_github("rstudio/keras")
-# keras3::install_keras(backend = "tensorflow")
+reticulate::install_python(version = '<version>')
+# reticulate::install_python()
+library(reticulate)
+# virtualenv_dir <- "C:/Users/cholleem/.virtualenvs"
+# dir.create(virtualenv_dir, showWarnings = FALSE)
+# use_virtualenv(virtualenv_dir, required = TRUE)
+
+Sys.getenv()
+# Sys.setenv(HOME = "C:/Users/cholleem")
+# Sys.setenv(R_USER = "C:/Users/cholleem")
+# 
+# "C:\Users\cholleem"
+
+
+py_config()
+# virtualenv_create("r-keras", python = "C:/Users/cholleem/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.10.11/python.exe")
+# 
+keras3::install_keras(backend = "tensorflow")
+keras3::install_keras()
 
 library(keras3)
 mnist <- dataset_mnist()

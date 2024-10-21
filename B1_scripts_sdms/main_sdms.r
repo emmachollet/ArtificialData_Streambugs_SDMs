@@ -39,14 +39,22 @@ if (!require("ggpattern")){install.packages("ggpattern"); library("ggpattern")} 
 # specific for Neural Network
 # if (!require("reticulate")){install.packages("reticulate"); library("reticulate")}    # links R to python
 library("reticulate")
+# reticulate::install_python(version = "3.10")  # or your desired version
 # install_miniconda()              # run this the very first time reticulate is installed # makes a separeta python installation
 # remotes::install_github("rstudio/keras")
-reticulate::install_python(version = '<version>')
-keras3::install_keras(backend = "tensorflow")
+# keras3::install_keras(envname = "C:/Users/cholleem/.virtualenvs/r-keras", backend = "tensorflow")
+use_virtualenv("C:/Users/cholleem/.virtualenvs/r-keras", required = TRUE)
+# keras3::install_keras(backend = "tensorflow")
+
 library("keras3")
 
-# caret has to be loaded at the end to not cache function 'train'
+# specific for Generalize Additive Model
 if (!require("mgcv")){install.packages("mgcv"); library("mgcv")}
+if (!require("gam")){install.packages("gam"); library("gam")}
+if (!require("splines")){install.packages("splines"); library("splines")}
+if (!require("foreach")){install.packages("foreach"); library("foreach")}
+
+# caret has to be loaded at the end to not cache function 'train'
 if (!require("caret")){install.packages("caret"); library("caret")}
 
 
@@ -118,14 +126,22 @@ theme_set(mytheme)
 ## Inputs, training options and noise scenarios ####
 
 # environmental factors used for streambugs
-vect.dir.env.fact <- c("Temperature"              = "tempmaxC", 
+vect.dir.env.fact <- c("Temperature"              = "tempmaxC",
                        "Flow velocity"            = "currentms",
-                       "Pesticide pollution"      = "orgmicropollTU", 
-                       "Saprobic conditions"      = "saprowqclass")
+                       "Insecticide pollution"    = "orgmicropollTU",
+                       "Water quality"            = "saprowqclass")
 vect.indir.env.fact <- c("Shade"          = "shade",
                          "Litter input"   = "Lit_Inp" ,
                          "Phosphorus"     = "C_P",
                          "Nitrogen"       = "C_N")
+# vect.dir.env.fact <- c("Temperature"      = "tempmaxC", 
+#                        "Flow velocity"    = "currentms", 
+#                        "Toxic units"      = "orgmicropollTU", 
+#                        "Saproby"          = "saprowqclass")
+# vect.indir.env.fact <- c("Shade"          = "shade", 
+#                          "Litter input"   = "Lit_Inp" ,        
+#                          "Phosphorus"     = "C_P", 
+#                          "Nitrate"        = "C_N")
 vect.info <- colnames(data.env.taxa)[1:5]
 print(vect.info)
 
@@ -160,9 +176,9 @@ temp.occ.taxa <- data.prev.taxa[which(data.prev.taxa$Prevalence.NoDisp > prev.th
 selected.taxa.analysis <- data.selected.taxa$Occurrence.taxa
 # taxa.colnames <- selected.taxa.analysis[which(selected.taxa.analysis %in% temp.occ.taxa)]
 taxa.colnames <- temp.occ.taxa
+names(taxa.colnames) <- gsub("Occurrence.", "", taxa.colnames)
 names.taxa <- names(taxa.colnames)
 
-names(taxa.colnames) <- gsub("Occurrence.", "", taxa.colnames)
 no.taxa <- length(taxa.colnames)
 print(no.taxa)
 # print(taxa.colnames)
@@ -505,6 +521,27 @@ ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
                                        "WideData_ResultsProbObs.csv"), sep = ";")
 no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
 no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_Poly")[2])
+
+pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, taxa.colnames)] %>% #, paste0("Occurrence.", taxon))] %>%
+    mutate(observation_number = rep(1:no.sites, each = no.steps),
+           column_label = 1,
+           model = "Streambugs") # %>%
+    # rename(pred = paste0("Occurrence.", taxon))
+
+env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
+
+# compute pdp for the selected taxon
+mean.ice.streamb <- pred.ice.streamb %>%
+    group_by_at(select.env.fact[1]) %>%
+    summarize(across(all_of(taxa.colnames), mean, na.rm = TRUE)) %>%
+    mutate(model = "Streambugs")
+mean.ice.streamb.bounds  <- mean.ice.streamb %>%
+    # group_by(model) %>%
+    summarize(x.mean=max(Temperature), # ! here it's specific to factor
+        y.mean.min=across(all_of(names.taxa), min, na.rm = TRUE),
+        y.mean.max=across(all_of(names.taxa), max, na.rm = TRUE)) %>%
+    mutate(# model = "Streambugs",
+           x.mean = 21.94111) # ! here it's specific to factor to fit the other models
 
 # list.plots <- list()
 # names.taxa <- names(taxa.colnames)
@@ -1148,109 +1185,136 @@ dev.off()
 dir.compar.ice <- paste0(dir.compar.plots, "ice/")
 dir.create(dir.compar.ice)
 
+taxa.for.ice <- names.taxa[c(5,9,11)]
+# taxa.for.ice <- names.taxa
+select.env.fact <- env.factor[4]
+name.select.env.fact <-  names(select.env.fact)
+
+multi.ice <- list()
+
+for (i in 1:length(list.exp)) {
+
+    # i <- 1
+  exp <- list.exp[[i]]
+  name.exp <- names(list.exp)[i]
+  dir.experiment          <- paste0(dir.output, exp, "/")
+  cat("\nLoading models and computing ICE for", length(taxa.for.ice),"taxa and predictor", select.env.fact , "for experiment:", exp, "\n")
+  
+  models.fit      <- load.models(path=dir.experiment, split.type="FIT")
+  std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
+  std.const.ice   <- readRDS(file=paste0(dir.experiment, "standardization_constant_ICE.rds"))
+  
+  correct.names <- names(models)[which(names(models.fit) %in% models | names(models.fit) %in% names(models))]
+  names(models.fit) <- correct.names
+  file.metadata <- "metadata.json"
+  metadata.exp <- fromJSON(paste(readLines(paste0(dir.experiment, file.metadata)), collapse=""))
+  
+  input.env.factors <- metadata.exp$env_factor
+  
+  ice.dfs <- plot.ice(models.performance=models.fit,
+                      select.env.fact=select.env.fact,
+                      # taxa=taxon.under.obs,
+                      taxa=taxa.for.ice,
+                      
+                      standardization.constant=std.const.ice[[1]],
+                      observations = preprocessed.data.ice$`Entire dataset`,
+                      nb.sample=no.sites,
+                      resolution=no.steps,
+                      input.env.factors=input.env.factors)
+  
+  observations              <- ice.dfs[["observations"]]
+  
+  observations.mean         <- observations %>%
+      group_by(across(all_of(select.env.fact)), model) %>%
+      summarize(across(all_of(taxa.for.ice), mean, na.rm = TRUE))
+    # group_by(across(all_of(select.env.fact)), model) %>%
+    # summarise(avg = mean(all_of(taxa.for.ice)))
+  
+  observations.mean["noise"] <- name.exp
+  observations["noise"]      <- name.exp
+  
+  multi.ice[[name.exp]] <- list(observations, observations.mean)
+  # return(list(observations, observations.mean))
+  
+}
+
+list.ice.bound <- lapply(lapply(multi.ice, "[[", 2), function(obs.mean){
+    observations.mean.bounds  <- as.data.frame(obs.mean %>% group_by(model, noise) %>%
+        summarise(x.mean=max(across(all_of(name.select.env.fact))),
+                  y.mean.min=across(all_of(taxa.for.ice), min, na.rm = TRUE),
+                  y.mean.max=across(all_of(taxa.for.ice), max, na.rm = TRUE)))
+})
+
+long.multi.ice <- bind_rows(lapply(multi.ice, "[[", 1), .id = "column_label_noise")
+long.multi.ice$model <- factor(long.multi.ice$model, levels = names(sdm.models))
+long.multi.ice$column_label_noise <- factor(long.multi.ice$column_label_noise, levels = names.exp)
+max.temp <- max(long.multi.ice[,select.env.fact])
+min.temp <- min(long.multi.ice[,select.env.fact])
+
+multi.mean <- lapply(multi.ice, "[[", 2)
+final.multi.ice <- bind_rows(multi.mean, .id = "column_label")
+final.multi.ice$model <- factor(final.multi.ice$model, levels = names(sdm.models))
+final.multi.ice$column_label_noise <- factor(final.multi.ice$column_label, levels = names.exp)
+
+final.multi.bound <- bind_rows(list.ice.bound, .id = "column_label") 
+final.multi.bound$x.mean <- round(max.temp, digits = 1)
+final.multi.bound$model <- factor(final.multi.bound$model, levels = names(sdm.models))
+final.multi.bound$column_label_noise <- factor(final.multi.bound$column_label, levels = unlist(names(list.exp)))
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# Fig 2: ICE comparison ----
+
+plot.data <- long.multi.ice
+plot.data.mean <- final.multi.ice
+plot.data.bounds <- final.multi.bound
+plot.data.stream <- mean.ice.streamb %>%
+    filter(Temperature < max.temp,
+           Temperature > min.temp) # ! predictor specific
+env.factor.sampled <- data.frame(variable = unique(data.base.ice[,select.env.fact]))
+
+    
+# plot.data
+# colnames(plot.data)
+# colnames(plot.data.mean)
+# colnames(plot.data.bounds)
+
+# unique(plot.data$column_label_noise)
+# unique(plot.data.bounds$column_label_noise)
+
 list.plots <- list()
-for(taxon.under.obs in names.taxa[1:2]){
-    
-    # taxon.under.obs
-    multi.ice <- lapply(list.exp, FUN=function(name){
-      
-      # name <- list.exp[[2]]
-      dir.experiment          <- paste0(dir.output, name, "/")
-      cat("\nLoading models and computing ICE for taxon", taxon.under.obs, "and experiment:", name, "\n")
-      
-      models.fit      <- load.models(path=dir.experiment, split.type="FIT")
-      std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
-      std.const.ice   <- readRDS(file=paste0(dir.experiment, "standardization_constant_ICE.rds"))
-      
-      correct.names <- names(models)[which(names(models.fit) %in% models | names(models.fit) %in% names(models))]
-      names(models.fit) <- correct.names
-      file.metadata <- "metadata.json"
-      metadata.exp <- fromJSON(paste(readLines(paste0(dir.experiment, file.metadata)), collapse=""))
-      
-      input.env.factors <- metadata.exp$env_factor
-      
-      ice.dfs <- plot.ice(models.performance=models.fit,
-                          select.env.fact=select.env.fact,
-                          taxa=taxon.under.obs,
-                          standardization.constant=std.const.ice[[1]],
-                          observations = preprocessed.data.ice$`Entire dataset`,
-                          nb.sample=no.sites,
-                          resolution=no.steps,
-                          input.env.factors=input.env.factors)
-      
-      observations              <- ice.dfs[["observations"]]
-      
-      observations.mean         <- observations %>%
-        group_by(across(all_of(select.env.fact)), model) %>%
-        summarise(avg = mean(pred))
-      
-      observations.mean["noise"] <- name
-      observations["noise"]      <- name
-      
-      return(list(observations, observations.mean))
-    })
-    
-    list.ice.bound <- lapply(lapply(multi.ice, "[[", 2), function(obs.mean){
-        observations.mean.bounds  <- as.data.frame(obs.mean %>% group_by(model, noise) %>%
-            summarise(x.mean=max(across(all_of(name.select.env.fact))),
-                      y.mean.min=min(avg),
-                      y.mean.max=max(avg)))
-    })
-    
-    long.multi.ice <- bind_rows(lapply(multi.ice, "[[", 1), .id = "column_label_noise")
-    long.multi.ice$model <- factor(long.multi.ice$model, levels = names(sdm.models))
-    long.multi.ice$column_label_noise <- factor(long.multi.ice$column_label_noise, levels = names.exp)
-    max.temp <- max(long.multi.ice[,select.env.fact])
-    min.temp <- min(long.multi.ice[,select.env.fact])
-    
-    multi.mean <- lapply(multi.ice, "[[", 2)
-    final.multi.ice <- bind_rows(multi.mean, .id = "column_label")
-    final.multi.ice$model <- factor(final.multi.ice$model, levels = names(sdm.models))
-    final.multi.ice$column_label_noise <- factor(final.multi.ice$column_label, levels = names.exp)
-    
-    final.multi.bound <- bind_rows(list.ice.bound, .id = "column_label") 
-    final.multi.bound$x.mean <- round(max.temp, digits = 1)
-    final.multi.bound$model <- factor(final.multi.bound$model, levels = names(sdm.models))
-    final.multi.bound$column_label_noise <- factor(final.multi.bound$column_label, levels = unlist(names(list.exp)))
-    
-    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    # Fig 2: ICE comparison ----
-    
-    plot.data <- long.multi.ice
-    plot.data.mean <- final.multi.ice
-    plot.data.bounds <- final.multi.bound
-    plot.data.stream <- mean.ice.streamb %>%
-        filter(Temperature < max.temp,
-               Temperature > min.temp) # ! predictor specific
+for (taxon in taxa.for.ice) {
+    # taxon <- taxa.for.ice[1]
+    cat("\nProduce ICE plot for:", taxon)
+    occ.taxon <- paste0("Occurrence.", taxon)
+
+    plot.data.bounds.taxon <- plot.data.bounds %>%
+        unnest(y.mean.min) %>%
+        rename(y.mean.min = all_of(taxon))  %>%
+        # select(-all_of(taxa.for.ice)) %>%
+        unnest(y.mean.max, names_sep = "") %>%
+        rename(y.mean.max = all_of(paste0("y.mean.max", taxon)))
+
         
-    # plot.data
-    # colnames(plot.data)
-    # colnames(plot.data.mean)
-    # colnames(plot.data.bounds)
-    
-    # unique(plot.data$column_label_noise)
-    # unique(plot.data.bounds$column_label_noise)
-    
     fig3 <- ggplot(data=plot.data) +
         geom_line(aes(x=.data[[select.env.fact]],
-                      y=pred,
-                      group=observation_number, 
-                      color=as.character(observation_number)),
+                      y=.data[[taxon]],
+                      group=ReachID, 
+                      color=ReachID),
                   show.legend = FALSE) +
         geom_line(data=plot.data.mean,
-                  aes(x=.data[[name.select.env.fact]], y=avg),
-                  size=1.2) +
-        geom_line(data=plot.data.stream[,c("avg", name.select.env.fact)],
-                  aes(x=.data[[name.select.env.fact]], y=avg),
-                  size=1.2, color = "grey50", linetype="dashed") + #, 
-                  # alpha = 0.6, inherit.aes=F) +
+                  aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+                  linewidth=1.2) +
+        # geom_line(data=plot.data.stream[,c(taxon, name.select.env.fact)],
+        #           aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+        #           linewidth=1.2, color = "grey50", linetype="dashed") + #, 
+        #           # alpha = 0.6, inherit.aes=F) +
         geom_rug(data = env.factor.sampled,
                  aes(x=variable), 
                  color="grey20",
                  alpha=0.7,
                  inherit.aes=F) + 
         # scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
-        geom_segment(data=plot.data.bounds,
+        geom_segment(data=plot.data.bounds.taxon,
                      inherit.aes = FALSE,
                      lineend="round",
                      linejoin="round",
@@ -1261,30 +1325,31 @@ for(taxon.under.obs in names.taxa[1:2]){
                      arrow=arrow(length = unit(0.3, "cm"),
                                  ends = "both")) +
         facet_grid(column_label_noise ~ model, labeller = label_wrap_gen()) +
-        labs(title = taxon.under.obs,
-             x = "Temperature",
+        labs(title = taxon,
+             x = name.select.env.fact,
              y = "Predicted probability of occurrence")
     # fig3
     
-    list.plots[[taxon.under.obs]] <- fig3
+    list.plots[[taxon]] <- fig3
     file.name.tax <- paste0(file.name.exp,
-                            taxon.under.obs, "_",
+                            taxon, "_",
                             select.env.fact)
-    print(file.name.tax)
+    cat("\nSaving:", file.name.tax)
     
-    pdf(paste0(dir.compar.ice, file.name.tax, "_ice_models_scenarios.pdf"), width = width.a4*1.2, height = height.a4*1.2)
+    pdf(paste0(dir.compar.ice, file.name.tax, "_ice.pdf"), width = width.a4*1.2, height = height.a4*1.2)
     print(fig3)
     dev.off()
     
-    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice_models_scenarios.png"), width = 2480*1.1,
+    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), width = 2480*1.1,
            height = 3508*1.1,
            units = c("px"))
-    
-}
+}    
+# }
 
 file.name <- "ice_all_taxa"
-print.pdf.plots(list.plots = list.plots, width = width.a4*0.7, height = height.a4*0.5,
-                dir.output = dir.output, info.file.name = file.name.exp,
+print.pdf.plots(list.plots = list.plots, width = width.a4*1.2, height = height.a4*1.2,
+                dir.output = dir.compar.plots, 
+                info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
                 file.name = file.name)
 
 
