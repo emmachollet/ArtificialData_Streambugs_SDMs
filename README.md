@@ -73,7 +73,7 @@ Directory: *name_of_the_folder*
 
 ## Project diagram/figure
 
-<img alt="Title of figure" src="C:\Users\cholleem\Documents\ArtificialData_Streambugs_SDMs\00_utilities\figure_workflow.png" width="75%">
+<img src="/00_utilities/figure_workflow.png" width="75%">
 
 
 ## Authors contribution
