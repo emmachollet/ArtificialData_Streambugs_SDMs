@@ -28,7 +28,9 @@ graphics.off() # Clean graphics display
 
 if (!require("dplyr")){install.packages("dplyr"); library("dplyr")}                    # to sort, join, merge data
 if (!require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
-if (!require("ggplot2")){install.packages("ggplot2"); library("ggplot2")}                    # to sort, join, merge data
+if (!require("ggplot2")){install.packages("ggplot2"); library("ggplot2")}                    # to do nice plots
+if (!require("ggpubr")){install.packages("ggpubr"); library("ggpubr")}                    # to do nice plots
+if (!require("gridExtra")){install.packages("gridExtra"); library("gridExtra")}                    # to do nice plots
 if (!require("readr")){install.packages("readr"); library("readr")}
 if (!require("jsonlite")){install.packages("jsonlite"); library("jsonlite")}
 if (!require("pROC")){install.packages("pROC"); library("pROC")}  # to compute AUC    
@@ -98,6 +100,7 @@ map.inputs      <- map.inputs(directory = paste0(dir.utilities,"swiss.map.gdb"))
 # width and height of an A4 page in inches
 width.a4 = 8.3
 height.a4 = 11.7
+plot.suffix <- c(".png", ".pdf")
 
 mytheme <- theme_bw() +
     theme(text = element_text(size = 14),
@@ -543,92 +546,109 @@ mean.ice.streamb.bounds  <- mean.ice.streamb %>%
     mutate(# model = "Streambugs",
            x.mean = 21.94111) # ! here it's specific to factor to fit the other models
 
-# list.plots <- list()
-# names.taxa <- names(taxa.colnames)
-# 
-# for(taxon in names.taxa){
-#     
-#     # taxon <- names.taxa[1]
-#     # extract ice dataframe for taxon selected for analysis
-#     pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, paste0("Occurrence.", taxon))] %>%
-#         mutate(observation_number = rep(1:no.sites, each = no.steps),
-#                column_label = 1,
-#                model = "Streambugs") %>%
-#         rename(pred = paste0("Occurrence.", taxon))
-#     
-#     env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
-#     
-#     # compute pdp for the selected taxon
-#     mean.ice.streamb <- pred.ice.streamb %>%
-#         group_by_at(select.env.fact[1]) %>%
-#         summarize(avg = mean(na.omit(pred))) %>%
-#         mutate(model = "Streambugs")
-#     mean.ice.streamb.bounds  <- mean.ice.streamb %>%
-#         # group_by(model) %>%
-#         summarize(x.mean=max(Temperature), # ! here it's specific to factor
-#             y.mean.min=min(avg),
-#             y.mean.max=max(avg)) %>%
-#         mutate(# model = "Streambugs",
-#                x.mean = 21.94111) # ! here it's specific to factor to fit the other models
-#     
-#     # recover preference for temperature
-#     name.pref.temp <- "df.preferences_PolyInterp30__266Taxa_tempmaxtolval.csv"
-#     df.pref.temp <- read.csv(paste0(dir.input.data, name.pref.temp), sep = ",")
-#     df.pref.temp.taxon <- df.pref.temp %>%
-#         select(Values, all_of(taxon)) %>%
-#         filter(Values >= min(mean.ice.streamb[, name.select.env.fact]) & Values <= max(mean.ice.streamb[, name.select.env.fact])) %>%
-#         rename(PrefTrait = all_of(taxon)) %>%
-#         mutate(ExpTrans = exp.transform(PrefTrait, intercept = 0, curv = -10))  # Applying the log function to column2
-#     
-#     plot.data <- pred.ice.streamb
-#     plot.data.mean  <- mean.ice.streamb     
-#     plot.data.mean.bounds  <- mean.ice.streamb.bounds
-#     plot.data.pref <- df.pref.temp.taxon
-#     # plot.data$model <- factor(plot.data$model, levels=c("GLM", "GAM", "RF"))
-#     
-#     fig3 <- ggplot(data=plot.data) +
-#         geom_line(aes(x=.data[[select.env.fact]],
-#                       y=pred,
-#                       group=observation_number, 
-#                       color=as.character(observation_number)),
-#                   show.legend = FALSE, alpha = 0.7) +
-#         geom_line(data=plot.data.mean,
-#                   aes(x=.data[[name.select.env.fact]], y=avg),
-#                   size=1.5) +
-#         geom_rug(data = env.factor.sampled,
-#                  aes(x=variable), 
-#                  color="grey20",
-#                  alpha=0.7,
-#                  inherit.aes=F) + 
-#         geom_point(data = plot.data.pref,
-#                    aes(x = Values, y = ExpTrans),
-#                    shape = 4, color = "black", size = 2, stroke = 0.8) +
-#         scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
-#         geom_segment(data=plot.data.mean.bounds,
-#                      inherit.aes = FALSE,
-#                      lineend="round",
-#                      linejoin="round",
-#                      aes(x=x.mean,
-#                          y=y.mean.min,
-#                          xend=x.mean,
-#                          yend=y.mean.max),
-#                      arrow=arrow(length = unit(0.3, "cm"),
-#                                  ends = "both")) +
-#         facet_wrap(~factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 5) +
-#         # theme_bw() +
-#         # theme(strip.background = element_rect(fill = "white"),
-#         #       legend.title = element_text(size=24),
-#         #       legend.text = element_text(size=20)) +
-#         labs(title = taxon,
-#              x = "Temperature",
-#              y = "Predicted probability of occurrence")
-#     
-#     list.plots[[taxon]] <- fig3
-#     # fig3
-# }
+list.plots.stream <- list()
+names.taxa <- names(taxa.colnames)
+
+for(taxon in names.taxa){
+
+    # taxon <- names.taxa[1]
+    # extract ice dataframe for taxon selected for analysis
+    pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, paste0("Occurrence.", taxon))] %>%
+        mutate(observation_number = rep(1:no.sites, each = no.steps),
+               column_label = 1,
+               model = "Streambugs") %>%
+        rename(pred = paste0("Occurrence.", taxon))
+
+    env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
+
+    # compute pdp for the selected taxon
+    mean.ice.streamb <- pred.ice.streamb %>%
+        group_by_at(select.env.fact[1]) %>%
+        summarize(avg = mean(na.omit(pred))) %>%
+        mutate(model = "Streambugs")
+    mean.ice.streamb.bounds  <- mean.ice.streamb %>%
+        # group_by(model) %>%
+        summarize(x.mean=max(Temperature), # ! here it's specific to factor
+            y.mean.min=min(avg),
+            y.mean.max=max(avg)) %>%
+        mutate(# model = "Streambugs",
+               x.mean = 21.94111) # ! here it's specific to factor to fit the other models
+
+    # recover preference for temperature
+    name.pref.temp <- "df.preferences_PolyInterp30__266Taxa_tempmaxtolval.csv"
+    df.pref.temp <- read.csv(paste0(dir.input.data, name.pref.temp), sep = ",")
+    df.pref.temp.taxon <- df.pref.temp %>%
+        select(Values, all_of(taxon)) %>%
+        filter(Values >= min(mean.ice.streamb[, name.select.env.fact]) & Values <= max(mean.ice.streamb[, name.select.env.fact])) %>%
+        rename(PrefTrait = all_of(taxon)) %>%
+        mutate(ExpTrans = exp.transform(PrefTrait, intercept = 0, curv = -10))  # Applying the log function to column2
+
+    plot.data <- pred.ice.streamb
+    plot.data.mean  <- mean.ice.streamb
+    plot.data.mean.bounds  <- mean.ice.streamb.bounds
+    plot.data.pref <- df.pref.temp.taxon
+    # plot.data$model <- factor(plot.data$model, levels=c("GLM", "GAM", "RF"))
+
+    fig3 <- ggplot(data=plot.data) +
+        geom_line(aes(x=.data[[select.env.fact]],
+                      y=pred,
+                      group=observation_number,
+                      color=as.character(observation_number)),
+                  show.legend = FALSE, alpha = 0.7) +
+        geom_line(data=plot.data.mean,
+                  aes(x=.data[[name.select.env.fact]], y=avg),
+                  size=1.5) +
+        geom_rug(data = env.factor.sampled,
+                 aes(x=variable),
+                 color="grey20",
+                 alpha=0.7,
+                 inherit.aes=F) +
+        geom_point(data = plot.data.pref,
+                   aes(x = Values, y = ExpTrans),
+                   shape = 4, color = "black", size = 2, stroke = 0.8) +
+        scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
+        geom_segment(data=plot.data.mean.bounds,
+                     inherit.aes = FALSE,
+                     lineend="round",
+                     linejoin="round",
+                     aes(x=x.mean,
+                         y=y.mean.min,
+                         xend=x.mean,
+                         yend=y.mean.max),
+                     arrow=arrow(length = unit(0.3, "cm"),
+                                 ends = "both")) +
+        facet_wrap(~factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 5) +
+        # theme_bw() +
+        # theme(strip.background = element_rect(fill = "white"),
+        #       legend.title = element_text(size=24),
+        #       legend.text = element_text(size=20)) +
+        labs(title = taxon,
+             x = "Temperature",
+             y = "Predicted probability of occurrence")
+
+    list.plots.stream[[taxon]] <- fig3
+    # fig3
+}
+
+# file.name <- "ice_streambugs_all_taxa_grid"
+# pdf(paste0(dir.output, file.name, ".pdf"), width = width.a4*1.2, height = height.a4*1.2)
+# grid.arrange(grobs=list.plots.stream, ncol = 5)
+# dev.off()
+
+p <- grid.arrange(grobs =list.plots.stream, ncol = 5)
+
+# save png and pdf
+for(suffix in plot.suffix){
+    file.name <- paste0(dir.output, "ice_streambugs_all_taxa_grid", suffix)
+    ggsave(file.name, plot = p, width = 2480*2.2,
+           height = 3508*2.2,
+           units = c("px"))
+}
+
+# list.plots.stream[[1]]
 # 
 # file.name <- "ice_streambugs"
-# print.pdf.plots(list.plots = list.plots, width = width.a4*0.7, height = height.a4*0.5,
+# print.pdf.plots(list.plots = list.plots.stream, width = width.a4*0.7, height = height.a4*0.5,
 #                 dir.output = dir.output, info.file.name = "",
 #                 file.name = file.name)
 
@@ -1088,7 +1108,7 @@ table.summary.metrics <- bind_rows(lapply(names(list.exp), FUN = function(name, 
     temp.res <- multi.all.results[[name]][[1]]
     temp.names <- apply(expand.grid(names(models), select.results), 1, paste, collapse="_")
     temp.summary <- temp.res[, temp.names] %>%
-        summarise_if(is.numeric, summary.metric, na.rm = TRUE) %>%
+        summarise_if(where(is.numeric), summary.metric, na.rm = TRUE) %>%
         mutate(scenario = name) %>% 
         mutate(across(is.numeric, round, digits=2))
     return(temp.summary)
@@ -1138,9 +1158,9 @@ final.multi.all.results <- bind_rows(lapply(multi.all.results, "[[", 2), .id = "
 final.multi.all.results$model <- factor(final.multi.all.results$model, levels= names(models))
 final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = names.exp)
 
-# filter results for selected taxon
-filtered.multi.all.results <- final.multi.all.results %>%
-    filter(taxa == taxon.under.obs)
+# # filter results for selected taxon
+# filtered.multi.all.results <- final.multi.all.results %>%
+#     filter(taxa == taxon.under.obs)
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Fig 1: multi box plot ----
@@ -1185,9 +1205,9 @@ dev.off()
 dir.compar.ice <- paste0(dir.compar.plots, "ice/")
 dir.create(dir.compar.ice)
 
-taxa.for.ice <- names.taxa[c(5,9,11)]
-# taxa.for.ice <- names.taxa
-select.env.fact <- env.factor[4]
+# taxa.for.ice <- names.taxa[c(5,9,11)]
+taxa.for.ice <- names.taxa
+select.env.fact <- env.factor[1]
 name.select.env.fact <-  names(select.env.fact)
 
 multi.ice <- list()
@@ -1283,7 +1303,7 @@ env.factor.sampled <- data.frame(variable = unique(data.base.ice[,select.env.fac
 
 list.plots <- list()
 for (taxon in taxa.for.ice) {
-    # taxon <- taxa.for.ice[1]
+    # taxon <- taxa.for.ice[5]
     cat("\nProduce ICE plot for:", taxon)
     occ.taxon <- paste0("Occurrence.", taxon)
 
@@ -1304,10 +1324,10 @@ for (taxon in taxa.for.ice) {
         geom_line(data=plot.data.mean,
                   aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
                   linewidth=1.2) +
-        # geom_line(data=plot.data.stream[,c(taxon, name.select.env.fact)],
-        #           aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
-        #           linewidth=1.2, color = "grey50", linetype="dashed") + #, 
-        #           # alpha = 0.6, inherit.aes=F) +
+        geom_line(data=plot.data.stream[,c(taxon, name.select.env.fact)],
+                  aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+                  linewidth=1.2, color = "grey50", linetype="dashed") + #,
+                  # alpha = 0.6, inherit.aes=F) +
         geom_rug(data = env.factor.sampled,
                  aes(x=variable), 
                  color="grey20",
@@ -1325,7 +1345,8 @@ for (taxon in taxa.for.ice) {
                      arrow=arrow(length = unit(0.3, "cm"),
                                  ends = "both")) +
         facet_grid(column_label_noise ~ model, labeller = label_wrap_gen()) +
-        labs(title = taxon,
+        labs(title = "",
+            # title = taxon,
              x = name.select.env.fact,
              y = "Predicted probability of occurrence")
     # fig3
@@ -1340,8 +1361,8 @@ for (taxon in taxa.for.ice) {
     print(fig3)
     dev.off()
     
-    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), width = 2480*1.1,
-           height = 3508*1.1,
+    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), width = 2480*1.15,
+           height = 3508*1.15,
            units = c("px"))
 }    
 # }
@@ -1354,8 +1375,10 @@ print.pdf.plots(list.plots = list.plots, width = width.a4*1.2, height = height.a
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# Fig 1 & Fig 2: PDP comparison
+# Fig 1 & Fig 2: PDP comparison ----
 
+dir.compar.pdp <- paste0(dir.compar.plots, "pdp/")
+dir.create(dir.compar.pdp)
 
 # compute boundaries
 min.boundaries <- lapply(multi.mean, FUN=function(ice){
@@ -1370,76 +1393,100 @@ lb <- max(unlist(min.boundaries))
 hb <- min(unlist(max.boundaries))
 
 plot.data <- final.multi.ice
+plot.data.stream <- mean.ice.streamb %>%
+    filter(Temperature < max.temp,
+           Temperature > min.temp) # ! predictor specific
 
-pred.streambugs.mean <- ice.df.streambugs[,c("ReachID","Watershed", select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
-  mutate(observation_number = rep(1:no.sites, each = no.steps),
-         column_label = 1) %>%
-  rename(pred = paste0("Occurrence.", taxon.under.obs)) %>%
-  group_by_at(select.env.fact[1]) %>%
-  summarize(avg = mean(na.omit(pred)))
+list.plots.pdp <- list()
+for (taxon in taxa.for.ice) {
+    # taxon <- taxa.for.ice[1]
+    cat("\nProduce PDP plot for:", taxon)
+    occ.taxon <- paste0("Occurrence.", taxon)
+        
+    fig1 <- ggplot(data=plot.data) +
+      geom_line(aes(x=.data[[name.select.env.fact]],
+                    y=.data[[taxon]],
+                    group=model,
+                    colour=model),
+                size=1, alpha = 0.8) +
+      geom_line(data=plot.data.stream,
+                aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+                size=1, color = "darkgrey", alpha = 0.8) +
+      facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 3,
+                 labeller = label_wrap_gen())+
+      #facet_wrap(~column_label) +
+      xlim(lb, hb) +
+      scale_y_continuous(limits = c(0,1)) +
+      scale_color_manual(values=model.color.map) +
+        # theme(axis.text.x = element_text(hjust = -1)) +
+      labs(x = name.select.env.fact,
+           y = "Predicted probability of occurrence",
+           colour="Models",
+           title = taxon)
+    # fig1
+    
+    list.plots.pdp[[taxon]] <- fig1
+    file.name.tax <- paste0(file.name.exp,
+                            taxon, "_",
+                            select.env.fact)
+    cat("\nSaving:", file.name.tax)
+    
+    pdf(paste0(dir.compar.pdp, file.name.tax, "_pdp.pdf"), width = width.a4*1.1, height = height.a4*0.6)
+    print(fig1)
+    dev.off()
+    
+    ggsave(paste0(dir.compar.pdp, file.name.tax, "_pdp.png"), width = 2480*1.1,
+           height = 3508*0.6,
+           units = c("px"))
+}    
 
-fig1 <- ggplot(data=plot.data) +
-  geom_line(aes(x=.data[[name.select.env.fact]],
-                y=avg,
-                group=model,
-                colour=model),
-            size=1, alpha = 0.8) +
-  geom_line(data=pred.streambugs.mean,
-            aes(x=.data[[name.select.env.fact]], y=avg),
-            size=1, color = "darkgrey", alpha = 0.8) +
-  facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 4)+
-  #facet_wrap(~column_label) +
-  xlim(lb, hb) +
-  scale_y_continuous(limits = c(0,1)) +
-  scale_color_manual(values=model.color.map) +
-    # theme(axis.text.x = element_text(hjust = -1)) +
-  labs(x = name.select.env.fact,
-       y = "Predicted probability of occurrence",
-       colour="Models",
-       title = taxon.under.obs)
-# fig1
-
-pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_scenario.pdf"), width = width.a4*1.2, height = height.a4/3)
-print(fig1)
-dev.off()
+file.name <- "pdp_all_taxa"
+print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1.1, height = height.a4*0.6,
+                dir.output = dir.compar.plots, 
+                info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
+                file.name = file.name)
 
 # rm(fig1)
 
-fig2 <- ggplot(data=plot.data) +
-  geom_line(aes(x=.data[[name.select.env.fact]],
-                y=avg,
-                group=column_label,
-                colour=column_label),
-            size=1) +
-  geom_line(data=pred.streambugs.mean,
-            aes(x=.data[[name.select.env.fact]], y=avg),
-            size=1, color = "darkgrey", alpha = 0.8) +
-  scale_color_manual(values=color.map) +
-  xlim(lb, hb) +
-  # scale_y_continuous(limits = c(0,1)) +
-  facet_wrap(~model) +
-  # facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
-  # theme_bw() +
-  # theme(strip.background = element_rect(fill = "white"),
-  #       legend.position = "bottom") +#,
-  # legend.title = element_text(size=24),
-  # legend.text = element_text(size=20)) +
-  labs(x = name.select.env.fact,
-       y = "Predicted probability of occurrence",
-       colour="Scenario", 
-       title = taxon.under.obs)
-# fig2
-
-pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_model.pdf"), width = width.a4, height = height.a4*2/3)
-print(fig2)
-dev.off()
+# # comparison pdp coloured scenarios
+# fig2 <- ggplot(data=plot.data) +
+#   geom_line(aes(x=.data[[name.select.env.fact]],
+#                 y=.data[[taxon]],
+#                 group=column_label,
+#                 colour=column_label),
+#             size=1) +
+#   geom_line(data=plot.data.stream,
+#             aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+#             size=1, color = "darkgrey", alpha = 0.8) +
+#   scale_color_manual(values=color.map) +
+#   xlim(lb, hb) +
+#   # scale_y_continuous(limits = c(0,1)) +
+#   facet_wrap(~model) +
+#   # facet_wrap(~factor(model, levels = c("GLM", "GAM", "RF"))) +
+#   # theme_bw() +
+#   # theme(strip.background = element_rect(fill = "white"),
+#   #       legend.position = "bottom") +#,
+#   # legend.title = element_text(size=24),
+#   # legend.text = element_text(size=20)) +
+#   labs(x = name.select.env.fact,
+#        y = "Predicted probability of occurrence",
+#        colour="Scenario", 
+#        title = taxon)
+# # fig2
+# 
+# pdf(paste0(dir.compar.plots, file.name.tax, "_pdp_per_model.pdf"), width = width.a4, height = height.a4*2/3)
+# print(fig2)
+# dev.off()
 
 # rm(fig2)
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Fig 3: plotting the score of given taxon ####
 
-list.plots <- list()
+dir.compar.perf <- paste0(dir.compar.plots, "perf/")
+dir.create(dir.compar.perf)
+
+list.plots.score <- list()
 for (taxon in names(taxa.colnames)) {
     # taxon <- names(taxa.colnames)[1]
     # filter results for selected taxon
@@ -1464,26 +1511,37 @@ for (taxon in names(taxa.colnames)) {
              shape = "") +
         theme(axis.text.x = element_text(angle = 45, #vjust = 0.5, 
                                          hjust=1))
-    list.plots[[taxon]] <- fig3
+    list.plots.score[[taxon]] <- fig3
+    file.name.tax <- paste0(file.name.exp,
+                            taxon)
+    cat("\nSaving:", file.name.tax)
     
+    pdf(paste0(dir.compar.perf, file.name.tax, "_perf.pdf"), width = width.a4*1.1, height = height.a4*0.6)
+    print(fig3)
+    dev.off()
+    
+    ggsave(paste0(dir.compar.perf, file.name.tax, "_perf.png"), width = 2480*1.1,
+           height = 3508*0.6,
+           units = c("px"))
+}    
+
+file.name <- "perf_all_taxa"
+print.pdf.plots(list.plots = list.plots.score, width = width.a4*1.1, height = height.a4*0.6,
+                dir.output = dir.compar.plots, 
+                info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_"),
+                file.name = file.name)
+
+# print pdf with pdp and performance plots combined in one page
+pdf(paste0(dir.compar.plots, paste0(file.name.exp, length(taxa.for.ice), "taxa"), "_perf_pdp.pdf"), width = width.a4*1.1, height = height.a4*1.1)
+for(taxon in taxa.for.ice){
+    # taxon <- taxa.for.ice[1]
+    # plot <- ggarrange(list.plots.pdp[[taxon]], ggarrange(list.plots.score[[taxon]], list.plots.stream[[taxon]], ncol = 2), ncol = 1)
+    plot <- ggarrange(list.plots.pdp[[taxon]], list.plots.score[[taxon]], ncol = 1)
+    annotate_figure(plot, top = text_grob(taxon, 
+                                          color = "black", face = "bold", size = 16))
+    print(plot)
 }
-
-file.name <- "taxa_score"
-print.pdf.plots(list.plots = list.plots, width = 8, height = 6, dir.output = dir.compar.plots, info.file.name = file.name.exp, file.name = file.name,
-                png = F)
-
-
-  #facet_wrap(~fit_pred) + 
-  # theme_minimal() +
-  # theme(legend.title=element_blank(),
-  #       axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-
-# pdf(paste0(dir.compar.plots, file.name.tax, "_taxa_score.pdf"), width = width.a4*1.5, height = height.a4/2)
-# print(fig3)
-# dev.off()
-# 
-# rm(fig3)
+dev.off()
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # Fig 6: multi-scenario bellplots ----
