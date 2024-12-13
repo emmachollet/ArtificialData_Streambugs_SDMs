@@ -546,6 +546,12 @@ mean.ice.streamb.bounds  <- mean.ice.streamb %>%
     mutate(# model = "Streambugs",
            x.mean = 21.94111) # ! here it's specific to factor to fit the other models
 
+points.ice.streamb <- data.base.ice[,c("ReachID", select.env.fact[1])]
+points.ice.streamb$pred <- NA
+for(site in points.ice.streamb$ReachID){
+    
+}
+
 list.plots.stream <- list()
 names.taxa <- names(taxa.colnames)
 
@@ -630,6 +636,7 @@ for(taxon in names.taxa){
     # fig3
 }
 
+# Figure SI A 5
 # file.name <- "ice_streambugs_all_taxa_grid"
 # pdf(paste0(dir.output, file.name, ".pdf"), width = width.a4*1.2, height = height.a4*1.2)
 # grid.arrange(grobs=list.plots.stream, ncol = 5)

@@ -3,14 +3,33 @@
 ## --- utilities needed to preprocess data and run Streambugs  ---
 ## --- to create synthetic data ---
 ##
-## --- October 2023 -- Emma Chollet ---
+## --- December 2024 -- Emma Chollet ---
 ##
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# GENERAL ####
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Plot related functions ####
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Plot related functions ####
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-print.pdf.plots <- function(list.plots, width = 12, height = width*3/4, dir.output, info.file.name = "", file.name = "list.plots.pdf", png = FALSE, png.square = F, png.vertical = F, png.ratio = 1){
+print.pdf.plots <- function(list.plots, width = 12, height = width*3/4, 
+                            dir.output, info.file.name = "", file.name = "list.plots.pdf", 
+                            png = FALSE, png.square = F, png.vertical = F, png.ratio = 1){
+    
+    # This function process files (gdb) to "sf" objects to plot maps
+    #
+    # arguments:
+    #   - list plots:             list of (gg)plots
+    #   - dir.output:             directory to output the pdf
+    #   - info.file.name, file.name: information and name of the file
+    #   - png:                    if TRUE print PNG (options for square, vertical and modify ratio for quality)
+    #
+    # returns:
+    #   - list.swiss.map.inputs:  list with "sf" inputs for plotting Swiss map 
+    #                             with major lakes and rivers 
     
     pdf(paste0(dir.output, info.file.name, file.name, ".pdf"), paper = 'special', width = width, height = height, onefile = TRUE)
     cat("\nPDF:")
@@ -72,7 +91,71 @@ map.inputs <- function(directory){
     return(list.swiss.map.inputs)
 }
 
-
+maps.env.fact <- function(map.inputs, vect.env.fact, vect.info, data){
+    
+    # inputs:
+    # map.inputs : list with "sf" inputs for plotting Swiss map 
+    #              with major lakes and rivers
+    # vect.env.fact : named vector of environmental factors (columns of data)
+    #                 to be plotted on Swiss map
+    # data : dataframe that as X, Y, ReachID, and vect.env.fact as columns
+    # data <- na.omit(data)
+    
+    list.plots <- list()
+    
+    for(variable in vect.env.fact){
+        # variable <- vect.analysis.env.fact[1]
+        print(variable)
+        name.variable <- names(variable)
+        print(name.variable)
+        
+        p <- ggplot() + 
+            geom_sf(data = map.inputs$ch, fill="#E8E8E8", color="black") + 
+            geom_sf(data = map.inputs$rivers.major, fill=NA, color="lightblue", show.legend = FALSE) + 
+            geom_sf(data = map.inputs$lakes.major, fill="lightblue", color="lightblue", show.legend = FALSE) + 
+            geom_point(data = data, aes(x=X, y=Y, color = data[, variable]), size= 5, alpha= 0.8) + 
+            # geom_text(aes(x=X, y=Y,  label = data[, "ReachID"]), size = 3, vjust = 0, nudge_y = 0.5) +
+            scale_colour_gradient2(name = name.variable,
+                                   low = "lightskyblue",
+                                   high = "firebrick3") +
+            theme_void(base_size = 18) +
+            # theme_void(base_size = 18) + 
+            theme(panel.grid.major = element_line(colour="transparent"),
+                  plot.margin = unit(c(0.1,0.1,0.1,0.1), "lines"),
+                  legend.title = element_text(size=24),
+                  legend.text = element_text(size=20))
+        
+        list.plots[variable] <- p
+    }
+    # plot_maps_variable = function (pair.fact.name, map.inputs, data) {
+    #     variable <- pair.fact.name[1]
+    #     print(variable)
+    #     name.variable <- pair.fact.name[2]
+    #     if(is.na(name.variable)){name.variable <- variable}
+    #     print(name.variable)
+    #     # data[,"ReachID"] <- gsub("CSCF.CH.", "", data[,"ReachID"])
+    #     ggplot(data = data[,c("X","Y", "ReachID", variable)]) + 
+    #         geom_sf(data = map.inputs$ch, fill="#E8E8E8", color="black") + 
+    #         geom_sf(data = map.inputs$rivers.major, fill=NA, color="lightblue", show.legend = FALSE) + 
+    #         geom_sf(data = map.inputs$lakes.major, fill="lightblue", color="lightblue", show.legend = FALSE) + 
+    #         geom_point(aes(x=X, y=Y, color = data[, variable]), size= 5, alpha= 0.8) + 
+    #         # geom_text(aes(x=X, y=Y,  label = data[, "ReachID"]), size = 3, vjust = 0, nudge_y = 0.5) +
+    #         scale_colour_gradient2(name = name.variable,
+    #                                low = "lightskyblue",
+    #                                high = "firebrick3") +
+    #         theme_void(base_size = 18) +
+    #         # theme_void(base_size = 18) + 
+    #         theme(panel.grid.major = element_line(colour="transparent"),
+    #               plot.margin = unit(c(0.1,0.1,0.1,0.1), "lines"),
+    #               legend.title = element_text(size=24),
+    #               legend.text = element_text(size=20))
+    # }
+    
+    # !! almost there, just missing labels 
+    # list.plots <- lapply(vect.env.fact, plot_maps_variable, map.inputs  = map.inputs, data = data)
+    
+    return(list.plots)
+}
 
 # small basic ggplot colors function
 gg_color_hue <- function(n) {
@@ -80,8 +163,9 @@ gg_color_hue <- function(n) {
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
-
-# Get taxonomic level ####
+## ~~~~~~~~~~~~~~~~~~~~~~~
+## Taxonomy ####
+## ~~~~~~~~~~~~~~~~~~~~~~~
 
 get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.plots){
     # required input: 
@@ -215,64 +299,6 @@ get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, v
 }
 
 
-write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
-    
-    # make list with dataframes with two columns: name of env. traits and their classes
-    
-    # initiate list with feeding types
-    feedingtypes <- c("gra", "min", "xyl", "shr", "gat", "aff", "pff", "pre", "par", "other")
-    list.preferences <- list(data.frame( "class.names" = paste0("feedingtype_", feedingtypes), "class.values" = rep(1, length(feedingtypes))))
-    names(list.preferences) <- "feedingtype"
-    
-    # add other env. traits to the list
-    env.traits <- names(system.def$par.taxaprop.traits)
-    short.traits <- c("sapro", "orgmicro", "current", "tempmax")
-    for (t in short.traits) {
-        # t <- short.traits[1]
-        trait <- env.traits[which(grepl(t, env.traits))]
-        class.names <- colnames(system.def$par.taxaprop.traits[[trait]][[2]])
-        
-        par.global <- system.def$par.global.envtraits
-        ind <- which(grepl(t, names(par.global)))
-        class.values <- par.global[[ind]][["parvals"]]
-        if(grepl("temp", t)){ class.values <- class.values - 273.15}
-        
-        temp.trait.list <- list(data.frame(class.names, class.values))
-        names(temp.trait.list) <- trait
-        list.preferences <- append(list.preferences, temp.trait.list)
-    }
-    
-    # extract parameters
-    parameters <- system.def$par
-    
-    
-    list.df.preferences <- list()
-    
-    for (n in 1:length(list.preferences)) {
-        env.pref <- names(list.preferences)[n]
-        cat(env.pref, "classes :", list.preferences[[n]][,1], "\n",
-            env.pref, "values :", list.preferences[[n]][,2], "\n")
-        classes.pref <- list.preferences[[n]][,1]
-        classes.val <- list.preferences[[n]][,2]
-        taxa.pref <- parameters[which(grepl(env.pref, names(parameters)))]
-        df.pref <- data.frame(Classes = classes.pref, Values = classes.val)
-        for (taxon in Invertebrates) {
-            df.pref[,taxon] <- NA
-            for (c in classes.pref) {
-                df.pref[which(df.pref$Classes == c), taxon] <-
-                    taxa.pref[which(grepl(taxon, names(taxa.pref)) & grepl(c, names(taxa.pref)))]
-            }
-        }
-        n.taxa <- length(Invertebrates)
-        file.name <- paste0(dir.outputs, "df_taxapref_", n.taxa, "Taxa_", env.pref, ".csv")
-        cat("Writing:", file.name, "\n")
-        write.csv(df.pref, file = file.name)
-        
-        list.df.preferences[[env.pref]] <- df.pref
-    }
-    
-    return(list.df.preferences)
-}
 
 
 plot.histogram.prev.catch <- function(df.taxa.catch, vect.taxa){
@@ -298,8 +324,9 @@ plot.histogram.prev.catch <- function(df.taxa.catch, vect.taxa){
 }
 
 
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# Preprocessing data: Splitting and standardizing data  ----
+## ~~~~~~~~~~~~~~~~~~~~~~~
+## Preprocessing data ####
+## ~~~~~~~~~~~~~~~~~~~~~~~
 
 preprocess.data <- function(data,
                             env.fact,
@@ -388,22 +415,10 @@ clipper <- function(vec, min_value=-Inf, max_value=Inf){
   return(pmax(rep(min_value, length(vec)), pmin(vec, rep(max_value, length(vec)))))
 }
 
-exp.transform <-   function(x,intercept=0,curv=0)
-{
-    #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
-    #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
-    
-    if(curv == 0)
-    { 
-        y = intercept-(intercept-1)*x
-    } else {
-        y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
-    }
-    return(y)
-}
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# Subfunctions used by the above functions ----
+## Subfunctions used by the above functions ----
 
 
 cv.preprocess.data <- function(data, env.fact, nb.split, splitting.criterion){
@@ -515,96 +530,87 @@ standardize.function <- function(list, mean, standard.deviation){
   return <- unlist(lapply(list, function(x){return((x-mean)/standard.deviation)}))
 }
 
-# restructure.all.results <- function(all.results){
-#   
-#   # This function takes as input a dataframe where there is one different column
-#   # for every model, for every metric and for fitting and predicting, e.g. there
-#   # are column ann.auc.fit or rf.dev.pred. This method reorder the those columns
-#   # such that (#model*#metric*#fit.pred = 5*2*2= 50) columns get reorderd in  
-#   # only three columns model model, metric, fit.pred, 
-#   #
-#   # arguments:
-#   #   - all.results: the dataframe to restructure
-#   #
-#   # returns:
-#   #   - fit.pred.all.results: the restructured dataframe 
-#   
-#   model.all.results <- rbind(# extract.model.results("null", all.results),
-#                              extract.model.results("GLM", all.results),
-#                              extract.model.results("GAM", all.results),
-#                              extract.model.results("RF", all.results))#,
-#                              # extract.model.results("ann", all.results))
-#   
-#   model.all.results <- model.all.results[c("taxa",
-#                                            "prevalence",
-#                                            "taxonomic_level",
-#                                            "model",
-#                                            "dev_fit",
-#                                            "auc_fit",
-#                                            "dev_pred",
-#                                            "auc_pred",
-#                                            "likelihood_ratio",
-#                                            "auc_ratio")]
-#   
-#   fit.pred.all.results <- rbind(extract.fit.pred.results("fit", model.all.results),
-#                                 extract.fit.pred.results("pred", model.all.results))
-#   
-#   return(fit.pred.all.results)
-# }
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# STREAMBUGS ####
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+exp.transform <-   function(x,intercept=0,curv=0)
+{
+    #!if curv > 0 and intercept <1: function is curved to the right, if curv < 0 and intercept <1 function is curved to the left
+    #!if curv > 0 and intercept >1: function is curved to the left,  if curv < 0 and intercept >1 function is curved to the right
+    
+    if(curv == 0)
+    { 
+        y = intercept-(intercept-1)*x
+    } else {
+        y = intercept - (intercept -1) * (1 - exp(-curv * x)) / (1-exp(-curv)) 
+    }
+    return(y)
+}
 
-# extract.model.results <- function(model.name, all.results){
-#   
-#   # This function is a helper function for the restructure results function. It
-#   # iterates over the all.results data.frame and only retains the metric columns 
-#   # which corresponds to the given model.name. Moreover it adds one column 
-#   # "model" filled with the given model name
-#   #
-#   # arguments:
-#   #   - model.name: The name model of the model whose metrics are to be kept.  
-#   #   - all.results: dataframe storing the metrics for the different models
-#   #
-#   # returns:
-#   #   - model.results: dataframe storing the metrics only for the model with 
-#   #                    name given as argument.
-#   
-#   model.results <- data.frame(all.results %>% select(contains(c("taxa",
-#                                                                 "prevalence",
-#                                                                 "taxonomic_level",
-#                                                                 model.name))))
-#   
-#   
-#   model.results["model"] <- model.name
-#   
-#   new.colnames <- c("taxa",
-#                     "prevalence",
-#                     "taxonomic_level", 
-#                     "dev_fit",
-#                     "auc_fit",
-#                     "dev_pred",
-#                     "auc_pred",
-#                     "likelihood_ratio",
-#                     "auc_ratio",
-#                     "model")
-#   
-#   # if the desired model name is not find in the columns of all.results, an 
-#   # empty dataframe is returned
-#   if (length(model.results)!=length(new.colnames)){
-#     
-#     
-#     
-#     empty.df = data.frame(matrix(nrow=0,
-#                                  ncol=length(new.colnames))) 
-#     colnames(empty.df) = new.colnames
-#     
-#     return(empty.df)
-#   }
-#   
-#   
-#   colnames(model.results) <- new.colnames
-#   
-#   return(model.results)
-# }
+write.df.preferences <- function(system.def, Invertebrates, dir.outputs){
+    
+    # make list with dataframes with two columns: name of env. traits and their classes
+    
+    # initiate list with feeding types
+    feedingtypes <- c("gra", "min", "xyl", "shr", "gat", "aff", "pff", "pre", "par", "other")
+    list.preferences <- list(data.frame( "class.names" = paste0("feedingtype_", feedingtypes), "class.values" = rep(1, length(feedingtypes))))
+    names(list.preferences) <- "feedingtype"
+    
+    # add other env. traits to the list
+    env.traits <- names(system.def$par.taxaprop.traits)
+    short.traits <- c("sapro", "orgmicro", "current", "tempmax")
+    for (t in short.traits) {
+        # t <- short.traits[1]
+        trait <- env.traits[which(grepl(t, env.traits))]
+        class.names <- colnames(system.def$par.taxaprop.traits[[trait]][[2]])
+        
+        par.global <- system.def$par.global.envtraits
+        ind <- which(grepl(t, names(par.global)))
+        class.values <- par.global[[ind]][["parvals"]]
+        if(grepl("temp", t)){ class.values <- class.values - 273.15}
+        
+        temp.trait.list <- list(data.frame(class.names, class.values))
+        names(temp.trait.list) <- trait
+        list.preferences <- append(list.preferences, temp.trait.list)
+    }
+    
+    # extract parameters
+    parameters <- system.def$par
+    
+    
+    list.df.preferences <- list()
+    
+    for (n in 1:length(list.preferences)) {
+        env.pref <- names(list.preferences)[n]
+        cat(env.pref, "classes :", list.preferences[[n]][,1], "\n",
+            env.pref, "values :", list.preferences[[n]][,2], "\n")
+        classes.pref <- list.preferences[[n]][,1]
+        classes.val <- list.preferences[[n]][,2]
+        taxa.pref <- parameters[which(grepl(env.pref, names(parameters)))]
+        df.pref <- data.frame(Classes = classes.pref, Values = classes.val)
+        for (taxon in Invertebrates) {
+            df.pref[,taxon] <- NA
+            for (c in classes.pref) {
+                df.pref[which(df.pref$Classes == c), taxon] <-
+                    taxa.pref[which(grepl(taxon, names(taxa.pref)) & grepl(c, names(taxa.pref)))]
+            }
+        }
+        n.taxa <- length(Invertebrates)
+        file.name <- paste0(dir.outputs, "df_taxapref_", n.taxa, "Taxa_", env.pref, ".csv")
+        cat("Writing:", file.name, "\n")
+        write.csv(df.pref, file = file.name)
+        
+        list.df.preferences[[env.pref]] <- df.pref
+    }
+    
+    return(list.df.preferences)
+}
+
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Probability of occurrence ####
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 get.prob.obs <- function(ss, M.taxon){
     
@@ -633,6 +639,7 @@ get.prob.obs <- function(ss, M.taxon){
     
     return(p.ijk.1)
 }
+
 
 calc.prob.occ.obs <- function(res.ss, y.names, M.taxa, obs.error = F){
 # calc.prob.occ <- function(res.ss, y.names, M.taxa, observed.abund, p.obs, p.abs, K.abs, D.drift){
@@ -724,76 +731,10 @@ calc.prob.occ.obs <- function(res.ss, y.names, M.taxa, obs.error = F){
 }
 
 
-# Figure SI A 7-15: spatial distribution env. fact. ####
-maps.env.fact <- function(map.inputs, vect.env.fact, vect.info, data){
-    
-  # inputs:
-  # map.inputs : list with "sf" inputs for plotting Swiss map 
-  #              with major lakes and rivers
-  # vect.env.fact : named vector of environmental factors (columns of data)
-  #                 to be plotted on Swiss map
-  # data : dataframe that as X, Y, ReachID, and vect.env.fact as columns
-    # data <- na.omit(data)
-    
-  list.plots <- list()
-  
-  for(variable in vect.env.fact){
-    # variable <- vect.analysis.env.fact[1]
-    print(variable)
-    name.variable <- names(variable)
-    print(name.variable)
-    
-    p <- ggplot() + 
-      geom_sf(data = map.inputs$ch, fill="#E8E8E8", color="black") + 
-      geom_sf(data = map.inputs$rivers.major, fill=NA, color="lightblue", show.legend = FALSE) + 
-      geom_sf(data = map.inputs$lakes.major, fill="lightblue", color="lightblue", show.legend = FALSE) + 
-      geom_point(data = data, aes(x=X, y=Y, color = data[, variable]), size= 5, alpha= 0.8) + 
-      # geom_text(aes(x=X, y=Y,  label = data[, "ReachID"]), size = 3, vjust = 0, nudge_y = 0.5) +
-      scale_colour_gradient2(name = name.variable,
-                             low = "lightskyblue",
-                             high = "firebrick3") +
-      theme_void(base_size = 18) +
-      # theme_void(base_size = 18) + 
-      theme(panel.grid.major = element_line(colour="transparent"),
-            plot.margin = unit(c(0.1,0.1,0.1,0.1), "lines"),
-            legend.title = element_text(size=24),
-            legend.text = element_text(size=20))
-    
-    list.plots[variable] <- p
-  }
-    # plot_maps_variable = function (pair.fact.name, map.inputs, data) {
-    #     variable <- pair.fact.name[1]
-    #     print(variable)
-    #     name.variable <- pair.fact.name[2]
-    #     if(is.na(name.variable)){name.variable <- variable}
-    #     print(name.variable)
-    #     # data[,"ReachID"] <- gsub("CSCF.CH.", "", data[,"ReachID"])
-    #     ggplot(data = data[,c("X","Y", "ReachID", variable)]) + 
-    #         geom_sf(data = map.inputs$ch, fill="#E8E8E8", color="black") + 
-    #         geom_sf(data = map.inputs$rivers.major, fill=NA, color="lightblue", show.legend = FALSE) + 
-    #         geom_sf(data = map.inputs$lakes.major, fill="lightblue", color="lightblue", show.legend = FALSE) + 
-    #         geom_point(aes(x=X, y=Y, color = data[, variable]), size= 5, alpha= 0.8) + 
-    #         # geom_text(aes(x=X, y=Y,  label = data[, "ReachID"]), size = 3, vjust = 0, nudge_y = 0.5) +
-    #         scale_colour_gradient2(name = name.variable,
-    #                                low = "lightskyblue",
-    #                                high = "firebrick3") +
-    #         theme_void(base_size = 18) +
-    #         # theme_void(base_size = 18) + 
-    #         theme(panel.grid.major = element_line(colour="transparent"),
-    #               plot.margin = unit(c(0.1,0.1,0.1,0.1), "lines"),
-    #               legend.title = element_text(size=24),
-    #               legend.text = element_text(size=20))
-    # }
-    
-    # !! almost there, just missing labels 
-    # list.plots <- lapply(vect.env.fact, plot_maps_variable, map.inputs  = map.inputs, data = data)
-    
-    return(list.plots)
-}
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Additional results ####
+## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-# process additional results ####
 get.plot.data.add.res <- function(catch.results, list.factors.type){
     
     # catch.results <- list.results$RheinabBS
@@ -862,161 +803,3 @@ get.plot.data.add.res <- function(catch.results, list.factors.type){
                 plot.data = plot.data.all.taxa.sites))
 }
 
-# 
-# # if additional results calculated
-# if(res.add){
-#     
-#     # extract results
-#     df.res.add <- as.data.frame(res.catch$res$res.add)
-#     colnames(df.res.add)[which(colnames(df.res.add) == "time")] <- "Time"
-#     # str(df.res.add)
-#     
-#     # extract rates and limitation factors value over time (only if res.add = T)
-#     col.df.res.add <- colnames(df.res.add)
-#     vect.factor <- col.df.res.add
-#     for (variable in y.names) {
-#         vect.factor <- gsub(variable, "", vect.factor)
-#     }
-#     vect.factor <- unique(vect.factor)
-#     print(vect.factor)
-#     vect.factor <- vect.factor[2:21]
-#     
-#     # [1] "time"                       "r_basal."                   "r_miner."
-#     # [4] "r_resp."                    "fsapro."                    "forgmicropoll."
-#     # [7] "r_death."                   "flimI."                     "flimP."
-#     # [10] "flimN."                     "flimnutrients."             "fselfshade."
-#     # [13] "r_prod."                    "fcurrent."                  "ftempmax."
-#     # [16] "fmicrohab."                 "sum_food."                  "sum_food_pref."
-#     # [19] "fselfinh."                  "ffoodlim."                  "r_cons_tot."
-#     
-#     # based on result above, define vectors of rates and factors per group
-#     # factor types
-#     list.factors.type <- list(
-#         "Biomass" = c("Biomass"),
-#         "Rates" = c("r_basal", "r_resp", "r_prod", "r_death", "r_cons_tot", "r_miner"),
-#         "DeathFactors" = c("fsapro", "forgmicropoll"),
-#         "AlgaeFactors" = c("flimI", "flimP", "flimN",
-#                            "fshade", "flimnutrients", "fselfshade"),
-#         "InhibFactors" = c("fmicrohab", "fcurrent",
-#                            "ftempmax",  "fselfinh", "ffoodlim"),
-#         "FoodFactors" = c("sum_food", "sum_food_pref"))
-#     fact.types <- names(list.factors.type)
-#     
-#     # assign colors to rates for better plotting
-#     mypalette.8.col <- scales::hue_pal()(8)
-#     scales::show_col(mypalette.8.col)
-#     
-#     vect.colors <- c()
-#     set.seed(3)
-#     for (n in 1:length(list.factors.type)) {
-#         # n <- 2
-#         # names(list.factors.type[[n]]) <- gg_color_hue(length(list.factors.type[[n]]))
-#         names(list.factors.type[[n]]) <- sample(mypalette.8.col, length(list.factors.type[[n]]))
-#         vect.colors <- c(vect.colors, list.factors.type[[n]])
-#     }
-#     mycolors = names(vect.colors)
-#     scales::show_col(mycolors)
-# }
-# 
-# temp.vect.taxa <- vect.taxa[3:length(vect.taxa)]
-# print(temp.vect.taxa)
-# temp.vect.sites <- vect.sites
-# 
-# if(res.add){
-#     
-#     
-#     # make list of data frames with additional results per taxon per site
-#     list.df.rates.limfact.taxa <- list()
-#     for (taxon in temp.vect.taxa) {
-#         # taxon <- vect.taxa[3]
-#         c.ind <- which(grepl(taxon, col.df.res.add) & !grepl("__", col.df.res.add))
-#         temp.df <- df.res.add[,c(1, c.ind)]
-#         temp.list <- list()
-#         for (site in temp.vect.sites) {
-#             # site <- temp.vect.sites[1]
-#             c.ind2 <- which(grepl(site, colnames(temp.df)))
-#             temp.df2 <- temp.df[,c(1,c.ind2)]
-#             c.ind3 <- which(grepl(taxon, colnames(streambugs.results)) & grepl(site, colnames(streambugs.results)))
-#             temp.df2$Biomass <- streambugs.results[,c.ind3]
-#             temp.list[[site]] <- temp.df2
-#         }
-#         list.df.rates.limfact.taxa[[taxon]] <- temp.list
-#     }
-#     
-#     # make long dataframe for plotting additional result
-#     plot.data.all.taxa.sites <- data.frame()
-#     for (taxon in temp.vect.taxa) {
-#         # taxon <- vect.taxa[3]
-#         temp.list.df.sites <- list.df.rates.limfact.taxa[[taxon]]
-#         # list.plot.data.biom.rates.fact[[taxon]] <- list()
-#         
-#         for (site in temp.vect.sites) {
-#             # site <- temp.vect.sites[1]
-#             temp.df.rates.limfact <- temp.list.df.sites[[site]]
-#             ind.y.names <- which(grepl(taxon, y.names) & grepl(site, y.names))
-#             state.variable <- y.names[ind.y.names]
-#             colnames(temp.df.rates.limfact) <- gsub(paste0(".", state.variable), "", colnames(temp.df.rates.limfact))
-#             if(grepl("Algae", taxon)){ # if limfactor of algae. add 1 - shade
-#                 temp.df.rates.limfact$fshade <- 1 - env.data[which(env.data$ReachID == site), "shade"]
-#             }
-#             
-#             temp.plot.data <- gather(temp.df.rates.limfact, key = Factor, value = Value, -c("Time"))
-#             
-#             temp.plot.data$Taxon <- taxon
-#             temp.plot.data$Site <- site
-#             
-#             # add type of limitation factor for easier plotting later
-#             temp.plot.data$FactorType <- NA
-#             for (type in fact.types) {
-#                 # type <- fact.types[1]
-#                 r.ind <- which(temp.plot.data$Factor %in% list.factors.type[[type]])
-#                 temp.plot.data[r.ind, "FactorType"] <- type
-#             }
-#             plot.data.all.taxa.sites <- rbind(plot.data.all.taxa.sites, temp.plot.data)
-#             # list.plot.data.biom.rates.fact[[taxon]][[site]]
-#         }
-#     }
-# } 
-# 
-# # select one taxon for analysis
-# taxon <- vect.taxa[3]
-# Invertebrates[7]
-# 
-# if(res.add){
-#     
-#     # assign colors to rates for better plotting
-#     mypalette.8.col <- scales::hue_pal()(8)
-#     scales::show_col(mypalette.8.col)
-#     
-#     vect.colors <- c()
-#     set.seed(3)
-#     for (n in 1:length(list.factors.type)) {
-#         # n <- 2
-#         # names(list.factors.type[[n]]) <- gg_color_hue(length(list.factors.type[[n]]))
-#         names(list.factors.type[[n]]) <- sample(mypalette.8.col, length(list.factors.type[[n]]))
-#         vect.colors <- c(vect.colors, list.factors.type[[n]])
-#     }
-#     mycolors = names(vect.colors)
-#     scales::show_col(mycolors)
-#     
-#     # plot all rates and limitation factors
-#     list.plots <- list()
-#     for (taxon in temp.vect.taxa) {
-#         plot.data <- plot.data.all.taxa.sites %>%
-#             filter(Taxon == taxon) # %>%
-#         # filter(Site != 107)
-#         p <- ggplot(plot.data, aes(x = Time, y = Value, color = Factor))
-#         p <- p + geom_line(size=1)
-#         p <- p + facet_grid(FactorType ~ Site, scales = "free")
-#         if(!grepl("Algae", taxon)){ p <- p + scale_color_manual(values = mycolors)}
-#         p <- p + theme_bw()
-#         p <- p + labs(title = taxon)
-#         ggplotly(p)
-#         
-#         list.plots[[taxon]] <- p
-#     }
-#     
-#     file.name <- "_AddRes_RatesLimFact"
-#     print.pdf.plots(list.plots = list.plots, width = 23, height = 8, dir.output = dir.plots, info.file.name = name.run, file.name = file.name, 
-#                     png = F)
-# }

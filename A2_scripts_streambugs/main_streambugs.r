@@ -41,7 +41,6 @@ file.midat.all    <- "All_2339samples_134taxa_13envfact_ProcessedDataset.csv" # 
 file.midat.bdm    <- "BDM_950samples_294taxa_13envfact_ProcessedDataset.csv" # output of: PreprocessSwissInvertebrateEnvironmentalModellingData
 file.taxonomy     <- "invertebrates_taxonomy_2023-08-03.dat"  # output of: PreprocessSwissInvertebrateEnvironmentalModellingData
 
-# file.par.update   <- "Parameters_update_Vermeiren_Chollet.dat"
 file.par.update   <- "T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat"
 file.par.correc   <- "correction_preference_traits.csv"
 file.synth.points <- "Synthetic_environmental_data_2024-03-19.dat" # output of: PreprocessSwissInvertebrateEnvironmentalModellingData
