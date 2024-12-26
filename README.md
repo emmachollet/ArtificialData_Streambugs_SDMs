@@ -1,3 +1,5 @@
+README IN CONSTRUCTION
+
 # ArtificialData_Streambugs_SDMs
 
 This data package provides the data, scripts and plots needed to produce the results of the manuscript *["Are we asking too much from species distribution models? Impact of data limitations on the predictive performance, overfitting and interpretability "](future_link)* (submitted to *Journal of Biogeography*, Dec 2024)
@@ -37,7 +39,7 @@ Directory: *ArtificialData_Streambugs_SDMs*
 | ----------------------- | ------------------------------------------------------------ |
 | README.md               | Text file (markdown format). Description of the data package. |
 | .gitignore              | Text file. List of folders that are not updated on the repository because too heavy (A3, B1, B2, C1). |
-| set_folders_structure.r | Set working directory here. Run to create all necessary folders. |
+| set_folders_structure.r | Set working directory here. **Run first to create all necessary folders.** |
 
 ### 00_utilities
 
@@ -71,24 +73,9 @@ Figure 2: Catchment delimitation used to define initial taxa pools. Ask Rosi Sib
 
 <img src="/00_utilities/MapRiverBasinRegion.jpg" width="75%">
 
-### Plots
-
-Directory: *name_of_the_folder*
-
-| filename    | description |
-| :---------- | ----------- |
-| plots_1.pdf | blablabla.  |
-| plots_2.png | blablabla.  |
 
 
-### Intermediate results
-
-Directory: *name_of_the_folder*
-
-
-## Project diagram/figure
-
-
+TO BE COMPLETED FOR ALL FOLDERS
 
 
 ## Authors contribution

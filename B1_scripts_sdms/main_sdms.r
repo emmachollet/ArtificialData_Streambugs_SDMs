@@ -1294,6 +1294,15 @@ final.multi.bound$column_label_noise <- factor(final.multi.bound$column_label, l
 plot.data <- long.multi.ice
 plot.data.mean <- final.multi.ice
 plot.data.bounds <- final.multi.bound
+
+# # sub-select models for plotting
+# plot.data <- long.multi.ice %>%
+#     filter(model %in% c("GAM", "RF"))
+# plot.data.mean <- final.multi.ice %>%
+#     filter(model %in% c("GAM", "RF"))
+# plot.data.bounds <- final.multi.bound %>%
+#     filter(model %in% c("GAM", "RF"))
+
 plot.data.stream <- mean.ice.streamb %>%
     filter(Temperature < max.temp,
            Temperature > min.temp) # ! predictor specific
@@ -1331,8 +1340,9 @@ for (taxon in taxa.for.ice) {
         geom_line(data=plot.data.mean,
                   aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
                   linewidth=1.2) +
-        geom_line(data=plot.data.stream[,c(taxon, name.select.env.fact)],
-                  aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+        geom_line(data=plot.data.stream[,c( "avg", #taxon, 
+                                           name.select.env.fact)],
+                  aes(x=.data[[name.select.env.fact]], y=.data[["avg"]]), # y=.data[[taxon]]),
                   linewidth=1.2, color = "grey50", linetype="dashed") + #,
                   # alpha = 0.6, inherit.aes=F) +
         geom_rug(data = env.factor.sampled,
@@ -1351,7 +1361,9 @@ for (taxon in taxa.for.ice) {
                          yend=y.mean.max),
                      arrow=arrow(length = unit(0.3, "cm"),
                                  ends = "both")) +
-        facet_grid(column_label_noise ~ model, labeller = label_wrap_gen()) +
+        # facet_grid(column_label_noise ~ model, labeller = label_wrap_gen()) +
+        facet_grid(model ~ column_label_noise, labeller = label_wrap_gen()) +
+        
         labs(title = "",
             # title = taxon,
              x = name.select.env.fact,
@@ -1368,7 +1380,8 @@ for (taxon in taxa.for.ice) {
     print(fig3)
     dev.off()
     
-    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), width = 2480*1.15,
+    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), 
+           width = 2480*1.15,
            height = 3508*1.15,
            units = c("px"))
 }    
