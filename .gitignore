@@ -2,4 +2,4 @@ A3_outputs_streambugs/*
 B1_scripts_sdms/old/*
 B2_outputs_sdms/*
 C1_documentation/*
-.Rhistory
+*.Rhistory
