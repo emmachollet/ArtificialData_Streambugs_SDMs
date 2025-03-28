@@ -80,16 +80,8 @@ missclassification <- function(data){
 }
 
 
-add.noise <- function(data, number.sample, noise, env.fact, env.fact.full){
+add.noise <- function(data, noise, env.fact, env.fact.full){
   
-  # # reduce number of training sample in data
-  # number.sample <- max(0, min(nrow(data), number.sample))
-  # sampled.data  <- data[sample(nrow(data), number.sample),]
-  # # reorder index
-  # sampled.data <- sampled.data[order(as.numeric(row.names(sampled.data))), ]
-  
-  
-  # noised.data <- sampled.data
   noised.data <- data
   
   for (n in noise){

@@ -209,11 +209,11 @@ extract.model.results <- function(model.name, all.results){
   #   - model.results: dataframe storing the metrics only for the model with 
   #                    name given as argument.
   
-  model.results <- data.frame(all.results %>% select(contains(c("taxa",
-                                                                "prevalence",
-                                                                "taxonomic_level",
-                                                                model.name))))
-  
+  patterns <- c("taxa", "prevalence", "taxonomic_level",
+                  paste0("^", model.name))
+    
+  model.results <- data.frame(all.results %>%
+                                  select(matches(paste(patterns, collapse = "|"))))
  
   model.results["model"] <- model.name
   
@@ -231,8 +231,6 @@ extract.model.results <- function(model.name, all.results){
   # if the desired model name is not find in the columns of all.results, an 
   # empty dataframe is returned
   if (length(model.results)!=length(new.colnames)){
-    
-    
     
     empty.df = data.frame(matrix(nrow=0,
                                  ncol=length(new.colnames))) 

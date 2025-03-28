@@ -384,6 +384,7 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact, hyperpara
   return(ann.model)
 }
 
+# NOT USED
 get.best.hyperparameters <- function(data, taxa.colnames, env.fact, split.name = "test"){
   
   
@@ -824,11 +825,34 @@ train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, l
                            " ~ ",
                            paste(feature.string, collapse = ' + '))
   
-  caret.model <- train(form=formula(formula.string),
-                      data=temp.train.data,
-                      method=method,
-                      trControl=trainctrl) #,
-                      # tuneGrid=tune.grid)
+  if(grepl("down", method)){
+      
+      nmin <- min(table(temp.train.data[,taxa]))
+      caret.model <- train(form=formula(formula.string),
+                           data=temp.train.data,
+                           method="rf",
+                           trControl=trainctrl,
+                           ntree = 1500,
+                           tuneLength = 5,
+                           ## Tell randomForest to sample by strata. Here, 
+                           ## that means within each class
+                           strata = temp.train.data[,taxa],
+                           ## Now specify that the number of samples selected
+                           ## within each class should be the same
+                           sampsize = rep(nmin, 2))
+  } else if(grepl("rf", method)){
+      caret.model <- train(form=formula(formula.string),
+                           data=temp.train.data,
+                           method="rf",
+                           trControl=trainctrl,
+                           ntree = 1500,
+                           tuneLength = 5)
+  } else {
+      caret.model <- train(form=formula(formula.string),
+                          data=temp.train.data,
+                          method=method,
+                          trControl=trainctrl)
+    }
   
   
   model.performance <- caret.model.perf(caret.model, temp.train.data, taxa)
