@@ -59,7 +59,7 @@ missdetection <- function(data, col.name, chance.missdetection){
   #   - data:                   the dataframe where the missdetection should 
   #                             take place.
   #   - col.name:               In which taxa column of the dataframe the miss-
-  #                             detection should be perfomed.
+  #                             detection should be performed.
   #   - chance.missdetection:   the likelihood of not detecting a taxa that was 
   #                             there. 
   #

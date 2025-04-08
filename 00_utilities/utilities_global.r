@@ -415,7 +415,45 @@ clipper <- function(vec, min_value=-Inf, max_value=Inf){
   return(pmax(rep(min_value, length(vec)), pmin(vec, rep(max_value, length(vec)))))
 }
 
-
+generate.scenario.names <- function(list.scenarios, no.taxa, no.models) {
+    # Helper to get either full range (if flag is TRUE) or just the best value
+    get_values <- function(scenario) {
+        if (scenario$flag) {
+            print(scenario$range)
+            return(as.list(scenario$range))
+        } else {
+            return(list(best = scenario$range["best"]))
+        }
+    }
+    
+    # Get list of value sets for each parameter
+    value_sets <- lapply(list.scenarios, get_values)
+    
+    # Create all combinations
+    scenario_grid <- expand.grid(value_sets, stringsAsFactors = FALSE)
+    
+    # Generate scenario names
+    scenario_names <- apply(scenario_grid, 1, function(row) {
+        parts <- c()
+        if ("dataset.size" %in% names(row)) {
+            parts <- c(parts, paste0(row[["dataset.size"]], "sites"))
+        }
+        if ("nb.predictors" %in% names(row)) {
+            parts <- c(parts, paste0(row[["nb.predictors"]], "pred"))
+        }
+        if ("noise.temperature" %in% names(row)) {
+            parts <- c(parts, paste0(row[["noise.temperature"]], "noisetemp"))
+        }
+        if ("misdetection" %in% names(row)) {
+            parts <- c(parts, paste0(row[["misdetection"]], "misdet"))
+        }
+        
+        # Final name with taxa and model count
+        paste0(paste(parts, collapse = "_"), "_", no.taxa, "taxa_", no.models, "models_")
+    })
+    
+    return(scenario_names)
+}
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Subfunctions used by the above functions ----

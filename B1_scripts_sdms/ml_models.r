@@ -666,13 +666,13 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
   if (split.type == 'FIT'){
     
     # if testing dispersal !!!!!
-    if("noise.disp" %in% names(list.noise)){
-      # if noise.disp = T, we test noise due to dispersal limitation, 
+    if(!"noise.disp" %in% names(list.noise)){
+      # if noise.disp = T, we test noise due to dispersal limitation,
       # in other words we transform Nas in 0 during preprocessing data
       # and here we make sure we don't have NAs anymore
       training.data <- na.omit(data[["Entire dataset"]])
     } else {
-      # if noise.disp = F, we have no “false” information coming from 
+      # if noise.disp = F, we have no “false” information coming from
       # dispersal limitation, so we remove the NAs per taxa later in apply ml models
       training.data <- data[["Entire dataset"]]
     }
@@ -703,7 +703,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
       cat("Split number:", i.split, "\n")
       
       # see explanation above for test of dispersal limitation noise
-      if("noise.disp" %in% names(list.noise)){
+      if(!"noise.disp" %in% names(list.noise)){
         training.data <- na.omit(split[[1]])
         testing.data <- na.omit(split[[2]])
       } else {
@@ -784,6 +784,8 @@ train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, l
   temp.train.data <- train.data[,c(env.fact, taxa)]
   if(!"noise.disp" %in% names(list.noise)){
     temp.train.data <- na.omit(temp.train.data)
+    # print(taxa)
+    # print(summary(temp.train.data[,taxa]))
   }
   # temp.folds.train <- intersect(as.numeric(row.names(temp.train.data)), folds.train)
   
