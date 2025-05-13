@@ -59,11 +59,11 @@ apply.ml.models <- function(data,
             
         } else if (grepl("glm", name.algo)){
             
-            trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = env.factor.full, list.noise)
+            trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = env.factor.full)
              
         } else {
             
-            trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = env.factor, list.noise)
+            trained.model <- apply.caret.model(model.name = name.algo, data, split.type, taxa.colnames, env.fact = env.factor)
         }
         
         list.trained.models[[name.model]] <- trained.model
@@ -276,7 +276,7 @@ apply.ann.model <- function(data, split.type, taxa.colnames, env.fact, hyperpara
   if (split.type == 'FIT'){
     
     # Get training set
-    training.data <- na.omit(data[["Entire dataset"]])
+    training.data <- na.omit(data[["Entire dataset"]]) # remove NAs in the whole dataset since every taxon needed
     # training.data <- data[["Entire dataset"]]
     
     X.train         <- as.matrix(training.data[ ,env.fact])
@@ -631,7 +631,7 @@ ann.model.perf <- function(taxa, model, full.prediction.probability, data){
 
 
 # caret model ----
-apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.fact, list.noise){
+apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.fact){
   
   # model.name <- "glm"
   # split.type <- "CV"
@@ -665,17 +665,19 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
   
   if (split.type == 'FIT'){
     
-    # if testing dispersal !!!!!
-    if(!"noise.disp" %in% names(list.noise)){
-      # if noise.disp = T, we test noise due to dispersal limitation,
-      # in other words we transform Nas in 0 during preprocessing data
-      # and here we make sure we don't have NAs anymore
-      training.data <- na.omit(data[["Entire dataset"]])
-    } else {
-      # if noise.disp = F, we have no “false” information coming from
-      # dispersal limitation, so we remove the NAs per taxa later in apply ml models
+    # # if testing dispersal !!!!!
+    # if(!"noise.disp" %in% names(list.noise)){
+    #   # if noise.disp = T, we test noise due to dispersal limitation,
+    #   # in other words we transform Nas in 0 during preprocessing data
+    #   # and here we make sure we don't have NAs anymore
+    #   training.data <- na.omit(data[["Entire dataset"]])
+    # } else {
+    #   # if noise.disp = F, we have no “false” information coming from
+    #   # dispersal limitation, so 
+      
+      # NAs removed later per taxa in train.caret.model
       training.data <- data[["Entire dataset"]]
-    }
+    # }
     
     folds.train <- data[["Folds train"]]
     models <- lapply(taxa.colnames,
@@ -683,8 +685,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
                     training.data,
                     folds.train,
                     env.fact,
-                    model.name,
-                    list.noise)
+                    model.name)
     
     caret.models <- list("entire_dataset" = list("training" = models))
     
@@ -703,13 +704,15 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
       cat("Split number:", i.split, "\n")
       
       # see explanation above for test of dispersal limitation noise
-      if(!"noise.disp" %in% names(list.noise)){
-        training.data <- na.omit(split[[1]])
-        testing.data <- na.omit(split[[2]])
-      } else {
+      # if(!"noise.disp" %in% names(list.noise)){
+      #   training.data <- na.omit(split[[1]])
+      #   testing.data <- na.omit(split[[2]])
+      # } else {
+      
+      # NAs removed later per taxa in train.caret.model
         training.data <- split[[1]]
         testing.data <- split[[2]]
-      }
+      # }
         
       folds.train <- split[["Folds train"]][i.split][[1]]
       
@@ -719,8 +722,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
                              training.data,
                              folds.train,
                              env.fact,
-                             model.name,
-                             list.noise)
+                             model.name)
       
       # get only the train models without the related performances
       models <- lapply(train.models,"[[", "model")
@@ -745,7 +747,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
   return(caret.models)
 }
 
-train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, list.noise){
+train.caret.model <- function(taxa, train.data, folds.train, env.fact, method){
   
   # cat(taxa, "\n")
   # taxa <- taxa.colnames[1]
@@ -782,11 +784,12 @@ train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, l
   # tune.grid <- TUNE.GRID[[method]]
   
   temp.train.data <- train.data[,c(env.fact, taxa)]
-  if(!"noise.disp" %in% names(list.noise)){
-    temp.train.data <- na.omit(temp.train.data)
+  # if(!"noise.disp" %in% names(list.noise)){
+  # we remove NAs left per taxon column
+  temp.train.data <- na.omit(temp.train.data)
     # print(taxa)
     # print(summary(temp.train.data[,taxa]))
-  }
+  # }
   # temp.folds.train <- intersect(as.numeric(row.names(temp.train.data)), folds.train)
   
   # if (is.null(tune.grid)){
@@ -827,34 +830,34 @@ train.caret.model <- function(taxa, train.data, folds.train, env.fact, method, l
                            " ~ ",
                            paste(feature.string, collapse = ' + '))
   
-  if(grepl("down", method)){
-      
-      nmin <- min(table(temp.train.data[,taxa]))
-      caret.model <- train(form=formula(formula.string),
-                           data=temp.train.data,
-                           method="rf",
-                           trControl=trainctrl,
-                           ntree = 1500,
-                           tuneLength = 5,
-                           ## Tell randomForest to sample by strata. Here, 
-                           ## that means within each class
-                           strata = temp.train.data[,taxa],
-                           ## Now specify that the number of samples selected
-                           ## within each class should be the same
-                           sampsize = rep(nmin, 2))
-  } else if(grepl("rf", method)){
-      caret.model <- train(form=formula(formula.string),
-                           data=temp.train.data,
-                           method="rf",
-                           trControl=trainctrl,
-                           ntree = 1500,
-                           tuneLength = 5)
-  } else {
+  # if(grepl("down", method)){
+  #     
+  #     nmin <- min(table(temp.train.data[,taxa]))
+  #     caret.model <- train(form=formula(formula.string),
+  #                          data=temp.train.data,
+  #                          method="rf",
+  #                          trControl=trainctrl,
+  #                          ntree = 1500,
+  #                          tuneLength = 5,
+  #                          ## Tell randomForest to sample by strata. Here, 
+  #                          ## that means within each class
+  #                          strata = temp.train.data[,taxa],
+  #                          ## Now specify that the number of samples selected
+  #                          ## within each class should be the same
+  #                          sampsize = rep(nmin, 2))
+  # } else if(grepl("rf", method)){
+  #     caret.model <- train(form=formula(formula.string),
+  #                          data=temp.train.data,
+  #                          method="rf",
+  #                          trControl=trainctrl,
+  #                          ntree = 1500,
+  #                          tuneLength = 5)
+  # } else {
       caret.model <- train(form=formula(formula.string),
                           data=temp.train.data,
                           method=method,
                           trControl=trainctrl)
-    }
+    # }
   
   
   model.performance <- caret.model.perf(caret.model, temp.train.data, taxa)

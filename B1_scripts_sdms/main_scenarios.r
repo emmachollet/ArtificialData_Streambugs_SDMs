@@ -206,7 +206,7 @@ range.scenarios <- c("best", "good", "mid", "bad")
 
 list.scenarios <- list(
     
-    "dataset.size"         = list("flag"  = F,
+    "dataset.size"         = list("flag"  = T,
                                   "range" = c("best" = 3000, 
                                               "good" = 2000, 
                                               "mid"  = 1000, 
@@ -224,13 +224,15 @@ list.scenarios <- list(
                                               "mid"  = 3, 
                                               "bad"  = 4.5)),
     
-    "misdetection"         = list("flag"  = T,
+    "misdetection"         = list("flag"  = F,
                                   "range" = c("best" = 0, 
                                               "good" = 15, 
                                               "mid"  = 30, 
                                               "bad"  = 45))
     
 )
+
+na.to.absence <- F
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Plot options ####
@@ -276,24 +278,25 @@ theme_set(mytheme)
 
 for (i in 1:length(list.scenarios)) {
     
-    # i <- 1
-    cat("scenario number:", i)
+    # i <- 3
     name.scenario     <- names(list.scenarios)[i]
+    cat("scenario number:", i, "-", name.scenario)
     scenario          <- list.scenarios[[i]]
     list.noise        <- list()
     
-    if(scenario[["flag"]]){ # if flag scenario TRUE go through whole range of scenario
+    if(scenario[["flag"]]){
+        # if flag scenario TRUE go through whole range of scenario
+        # if FALSE no simulations performed
         
         for (j in 1:length(range.scenarios)) {
-            
-            cat("range scenario:", j)
             
             # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
             ## Set up scenario ####
             
-            # j <- 4
+            # j <- 1
             file.name.scenario      <- c() # initialize name of the experiment
             name.range              <- range.scenarios[j]
+            cat("range scenario:", j, "-", name.range)
             
             ### dataset size ####
             number.sample           <- ifelse(name.scenario == "dataset.size", # if we are going through the loop of this scenario
@@ -380,9 +383,20 @@ for (i in 1:length(list.scenarios)) {
             
             
             # # replace NAs by 0 to simulate noise due to dispersal limitation
-            # if("noise.disp" %in% names(list.noise)){
-            #     data.input[is.na(data.input)] <- 0 # replace NAs by 0
-            # }
+            # to analyze number of NAs per taxon
+            for (taxon in taxa.colnames) {
+                print(summary(as.factor(data.input[,taxon])))
+            }
+            
+            if(na.to.absence){
+                # if TRUE NAs replaced by 0
+                # if FALSE rows with NA will be removed per taxon when training models
+                data.input[is.na(data.input)] <- 0
+                file.name.scenario <- paste0(file.name.scenario, "NAtoabs_")
+            } else {
+                file.name.scenario <- paste0(file.name.scenario, "NAtoNA_")
+            }
+            
             
             # replace 0/1 by absent/present
             for (taxon in taxa.colnames) {
@@ -432,7 +446,7 @@ for (i in 1:length(list.scenarios)) {
                 write(metadata.json, dir.metadata)
                 
                 ### split and standardize data ####
-                 set.seed(13)
+                set.seed(13)
                 preprocessed.data.cv  <- preprocess.data(data=data.input,
                                                          env.fact=env.factor,
                                                          dir=dir.experiment,
