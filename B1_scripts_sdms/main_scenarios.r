@@ -17,11 +17,11 @@
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 Sys.setenv(LANG="EN")
-set.seed(13)   # Always set seed to a lucky number
 getwd()        # Show working directory. It needs to be the location of 'main.r'
 rm(list=ls())  # Free work space
 graphics.off() # Clean graphics display
-
+seed <- 13     # Always set seed to a lucky number
+set.seed(seed)   
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Directories and files ####
 
@@ -276,9 +276,11 @@ theme_set(mytheme)
 # RUN SCENARIOS ####
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
+vect.seeds <- c(13, 14, 15, 16, 17)
+
 for (i in 1:length(list.scenarios)) {
     
-    # i <- 3
+    # i <- 1
     name.scenario     <- names(list.scenarios)[i]
     cat("scenario number:", i, "-", name.scenario)
     scenario          <- list.scenarios[[i]]
@@ -292,489 +294,493 @@ for (i in 1:length(list.scenarios)) {
             
             # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
             ## Set up scenario ####
-            
-            # j <- 1
-            file.name.scenario      <- c() # initialize name of the experiment
-            name.range              <- range.scenarios[j]
-            cat("range scenario:", j, "-", name.range)
-            
-            ### dataset size ####
-            number.sample           <- ifelse(name.scenario == "dataset.size", # if we are going through the loop of this scenario
-                                              scenario$range[name.range], # TRUE: go through whole range of scenario
-                                              list.scenarios[["dataset.size"]][["range"]]["best"]) # FALSE: take best case of this scenario 
-            number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample) # make nb of sample max the size of the dataset
-            file.name.scenario      <- paste0(file.name.scenario, number.sample, "sites_")
-            
-            ### number of predictors ####
-            number.pred             <- ifelse(name.scenario == "nb.predictors", # if we are going through the loop of this scenario
-                                              scenario$range[name.range], # TRUE: go through whole range of scenario
-                                              list.scenarios[["nb.predictors"]][["range"]]["best"]) # FALSE: take best case of this scenario 
-            env.factor              <- c(vect.dir.env.fact, vect.indir.env.fact)[1:number.pred]
-            env.factor.full         <- c(env.factor, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
-            no.env.fact             <- length(env.factor)
-            file.name.scenario      <- paste0(file.name.scenario, no.env.fact, "pred_")
-            
-            ### noise on predictor ####
-            if(name.scenario == "noise.temperature" & name.range != "best"){ # if we are going through noise.temp loop and not best case
+            for(s in vect.seeds){
                 
-                temp.std.dev     <- scenario$range[name.range] # standard deviation of the gaussian noise added on temperature predictor (in degrees C)
+                # j <- 3
+                file.name.scenario      <- c() # initialize name of the experiment
+                name.range              <- range.scenarios[j]
+                cat("range scenario:", j, "-", name.range)
                 
-                list.noise.temp  <- list(
+                ### dataset size ####
+                seed <- s
+                number.sample           <- ifelse(name.scenario == "dataset.size", # if we are going through the loop of this scenario
+                                                  scenario$range[name.range], # TRUE: go through whole range of scenario
+                                                  list.scenarios[["dataset.size"]][["range"]]["best"]) # FALSE: take best case of this scenario 
+                number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample) # make nb of sample max the size of the dataset
+                file.name.scenario      <- paste0(file.name.scenario, number.sample, "sites_", seed, "seed_")
+                
+                ### number of predictors ####
+                number.pred             <- ifelse(name.scenario == "nb.predictors", # if we are going through the loop of this scenario
+                                                  scenario$range[name.range], # TRUE: go through whole range of scenario
+                                                  list.scenarios[["nb.predictors"]][["range"]]["best"]) # FALSE: take best case of this scenario 
+                env.factor              <- c(vect.dir.env.fact, vect.indir.env.fact)[1:number.pred]
+                env.factor.full         <- c(env.factor, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
+                no.env.fact             <- length(env.factor)
+                file.name.scenario      <- paste0(file.name.scenario, no.env.fact, "pred_")
+                
+                ### noise on predictor ####
+                if(name.scenario == "noise.temperature" & name.range != "best"){ # if we are going through noise.temp loop and not best case
                     
-                    "noise.temp"     = list("type"       = "gaussian",
-                                            "target"     = "tempmaxC",
-                                            "amount"     = temp.std.dev,
-                                            "parameters" = list("min"=0, "max"=30)) #,
+                    temp.std.dev     <- scenario$range[name.range] # standard deviation of the gaussian noise added on temperature predictor (in degrees C)
                     
-                )
-                
-                list.noise          <- append(list.noise, list.noise.temp)
-                file.name.scenario  <- paste0(file.name.scenario, temp.std.dev, "noisetemp_")
-                
-            } else {
-                file.name.scenario  <- paste0(file.name.scenario, list.scenarios[["noise.temperature"]][["range"]]["best"], "noisetemp_")
-            }
-            
-            ### misdetection ####
-            if(name.scenario == "misdetection" & name.range != "best"){ # if we are going through noise.temp loop and not best case
-                
-                p                  <- scenario$range[name.range]/100 # probability at which a presence is turned into an absence
-                
-                list.noise.misdet  <- lapply(taxa.colnames, FUN=function(taxon){
-                                            noise_taxon <- list("type"       = "missdetection",
-                                                                "target"     = taxon,
-                                                                "amount"     = p,
-                                                                "parameters" = NULL)
-                    
-                    return(noise_taxon)
-                })
-                list.noise            <- append(list.noise, list.noise.misdet)
-                file.name.scenario    <- paste0(file.name.scenario, p, "misdet_")
-                
-            } else {
-                file.name.scenario    <- paste0(file.name.scenario, list.scenarios[["misdetection"]][["range"]]["best"], "misdet_")
-            }
-            
-            print(file.name.scenario)
-            
-            
-            # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-            ## Process input data ####
-            
-            data.input <- data.env.taxa
-            data.input$tempmaxC2 <- data.input$tempmaxC^2
-            data.input$currentms2 <- data.input$currentms^2
-            data.input <- data.input[, c(vect.info, env.factor.full, taxa.colnames)] # subselect columns of interest
-            # catch.variable <- "Watershed"
-            
-            # reduce dataset to selected number of samples
-            rind.select <- sample(dim(data.input)[1], size=number.sample, replace = F)
-            data.input <- data.input[rind.select,]
-            
-            # add noise
-            data.input.noised        <- add.noise(data            = data.input,
-                                                  noise           = list.noise,
-                                                  env.fact        = env.factor,
-                                                  env.fact.full   = env.factor.full)
-            data.input      <- data.input.noised$`noised data`
-            # env.factor      <- data.input.noised$`env fact`
-            # env.factor.full <- data.input.noised$`env fact full`
-            # no.env.fact <- length(env.factor)
-            
-            
-            # # replace NAs by 0 to simulate noise due to dispersal limitation
-            # to analyze number of NAs per taxon
-            for (taxon in taxa.colnames) {
-                print(summary(as.factor(data.input[,taxon])))
-            }
-            
-            if(na.to.absence){
-                # if TRUE NAs replaced by 0
-                # if FALSE rows with NA will be removed per taxon when training models
-                data.input[is.na(data.input)] <- 0
-                file.name.scenario <- paste0(file.name.scenario, "NAtoabs_")
-            } else {
-                file.name.scenario <- paste0(file.name.scenario, "NAtoNA_")
-            }
-            
-            
-            # replace 0/1 by absent/present
-            for (taxon in taxa.colnames) {
-                data.input[which(data.input[,taxon] == 0),taxon] <- "Absent"
-                data.input[which(data.input[,taxon] == 1),taxon] <- "Present"
-                data.input[,taxon] = as.factor(data.input[,taxon])
-            }
-            
-            
-            # sanity check of NAs
-            sum(is.na(data.input[,c(vect.info,env.factor)])) # should be zero 
-            sum(is.na(data.input[,c(taxa.colnames)])) # could have a lot, decide to replace by zero or not
-            nb.rows.na.taxa <- sum(rowSums(is.na(data.input[,c(taxa.colnames)])) != 0)
-            
-            ### write metadata ####
-            
-            # define experiment name
-            experiment.name <- paste0(
-                file.name.scenario,
-                no.taxa, "taxa_",
-                no.models, "models_",
-                ifelse(tune.ann, "tuneANN_", "")
-            )
-            # experiment.name <- paste0(experiment.name,"testDownsampling_1500trees")
-            print(experiment.name)
-            
-            # create output directory for experiment results
-            dir.experiment          <- paste0(dir.output, experiment.name, "/")
-            dir.metadata            <- paste0(dir.experiment, "metadata.json")
-            if(!dir.exists(dir.experiment)){ # run models and plots only if folders doesn't exist
-                dir.create(dir.experiment)
-                
-                # saving metadata to JSON file
-                metadata.list           <- list("input_data"       = file.input.data,
-                                                "prev_taxa"        = file.prev.taxa,
-                                                "nb_rows_na"       = nb.rows.na.taxa,
-                                                "experiment.name"  = experiment.name,
-                                                "number_split"     = number.split,
-                                                "split.criterion"  = split.criterion,
-                                                "number.sample"    = number.sample,
-                                                "models"           = models,
-                                                "env_factor"       = env.factor,
-                                                "env_factor_full"  = env.factor.full,
-                                                "noise"            = list.noise) 
-                
-                metadata.json           <- toJSON(metadata.list)
-                write(metadata.json, dir.metadata)
-                
-                ### split and standardize data ####
-                set.seed(13)
-                preprocessed.data.cv  <- preprocess.data(data=data.input,
-                                                         env.fact=env.factor,
-                                                         dir=dir.experiment,
-                                                         split.type="CV",
-                                                         nb.split=number.split,
-                                                         splitting.criterion=split.criterion)
-                
-                preprocessed.data.fit <- preprocess.data(data=data.input,
-                                                         env.fact=env.factor,
-                                                         dir=dir.experiment,
-                                                         split.type="FIT")
-                
-                # summary NA and prevalence per training/testing set
-                name.datasets <- c("FIT", names(preprocessed.data.cv))
-                vect.add.col <- apply(expand.grid(c("prev", "na"), name.datasets), 1, paste, collapse=".")
-                data.prev.na <- data.prev.taxa[which(data.prev.taxa$Occurrence.taxa %in% taxa.colnames),]
-                data.prev.na[, vect.add.col] <- NA
-                for (taxon in taxa.colnames) {
-                    # taxon <- taxa.colnames[6]
-                    for (name in name.datasets) {
-                        # name <- name.datasets[1]
-                        if(name == "FIT"){
-                            temp.df <- preprocessed.data.fit[[1]]
-                        } else {
-                            temp.df <- preprocessed.data.cv[[name]][["Training data"]]
-                        }
-                        nb.na <- sum(is.na(temp.df[,taxon]))
-                        nb.pres <- sum(temp.df[,taxon] == "Present", na.rm = T)
-                        nb.abs <- sum(temp.df[,taxon] == "Absent", na.rm = T)
-                        temp.prev <- round(nb.pres/(nb.pres + nb.abs), digits = 3)
+                    list.noise.temp  <- list(
                         
-                        data.prev.na[which(data.prev.na$Occurrence.taxa == taxon), paste0("prev.", name)] <- temp.prev
-                        data.prev.na[which(data.prev.na$Occurrence.taxa == taxon), paste0("na.", name)] <- nb.na
-                    }
-                }
-                
-                # write summarized results in csv
-                file.name <- paste0(experiment.name, "prevalence_NAs.csv")
-                write.table(data.prev.na, file = paste0(dir.experiment, file.name), sep = ",", row.names = F)
-                
-                # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-                ## Train models ####
-                
-                ### tune ann ####
-                
-                if(tune.ann){
-                    tune.grid.ann          <- expand.grid(num.units                 = c(8),
-                                                          num.layers                = c(1,2,3,5),
-                                                          learning.rate             = c(0.01),
-                                                          num.epochs                = c(100, 200),
-                                                          batch.size                = c(64))
+                        "noise.temp"     = list("type"       = "gaussian",
+                                                "target"     = "tempmaxC",
+                                                "amount"     = temp.std.dev,
+                                                "parameters" = list("min"=0, "max"=30)) #,
+                        
+                    )
                     
-                    list.trained.ann <- list()
-                    for (i.row in seq(nrow(tune.grid.ann))) {
-                        
-                        # i.row <- 1
-                        vect.hyperparam <- tune.grid.ann[i.row,]
-                        name.model <- paste0(vect.hyperparam["num.units"], "uni_",
-                                             vect.hyperparam["num.layers"], "lay_",
-                                             vect.hyperparam["num.epochs"], "epo")
-                        print(name.model)
-                        
-                        trained.ann <- apply.ann.model(data = preprocessed.data.cv, split.type = "CV", 
-                                                       taxa.colnames = taxa.colnames, env.fact = env.factor, 
-                                                       hyperparameters = vect.hyperparam)
-                        
-                        list.trained.ann[[name.model]] <- trained.ann
-                    }
+                    list.noise          <- append(list.noise, list.noise.temp)
+                    file.name.scenario  <- paste0(file.name.scenario, temp.std.dev, "noisetemp_")
                     
-                    # update models list
-                    models <- names(list.trained.ann)
-                    names(models) <- models
-                    models.cv <- list.trained.ann
-                }
-                
-                ### cross-validation ####
-                
-                tune.grid.ann          <- expand.grid(num.units                 = c(8),
-                                                      num.layers                = c(2),
-                                                      learning.rate             = c(0.01),
-                                                      num.epochs                = c(100),
-                                                      batch.size                = c(64))
-                hyperparameters <- tune.grid.ann[1,]
-                
-                models.cv  <- apply.ml.models(data=preprocessed.data.cv,
-                                              models=models,
-                                              split.type="CV", 
-                                              taxa.colnames = taxa.colnames, 
-                                              env.factor = env.factor, 
-                                              env.factor.full = env.factor.full,
-                                              hyperparameters = hyperparameters)
-                # for(variable in colnames(data.input)){
-                #     print(variable)
-                #          print(summary(preprocessed.data.cv$Split3$`Training data`[,variable]))
-                #     }
-                save.models(models=models.cv,
-                            path=dir.experiment,
-                            split.type="CV")
-                
-    
-                ### fit entire dataset ####
-                
-                models.fit <- apply.ml.models(data=preprocessed.data.fit,
-                                              models=models,
-                                              split.type="FIT",
-                                              taxa.colnames, 
-                                              env.factor, env.factor.full,
-                                              hyperparameters = hyperparameters)
-                
-                save.models(models=models.fit,
-                            path=dir.experiment,
-                            split.type="FIT")
-                
-                
-                # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-                ## Plots experiment ####
-    
-                # models.fit      <- load.models(path=dir.experiment,
-                #                                split.type="FIT")
-                # models.cv       <- load.models(path=dir.experiment,
-                #                                split.type="CV")
-                
-                ### variables for plots ####
-                
-                std.const.cv                  <- readRDS(file=paste0(dir.experiment, "standardization_constant_CV.rds"))
-                std.const.fit                 <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
-                prev.taxa                     <- data.prev.taxa
-                prev.taxa$Prevalence.DispLim  <- prev.taxa$Prevalence
-                prev.taxa$Prevalence          <- prev.taxa$Prevalence.NoDisp
-                
-                all.results                   <- summarize.all.results(models.cv, prev.taxa)
-                
-                # write summarized results in csv
-                file.name                     <- paste0(experiment.name, "allresults.csv")
-                write.table(all.results, file = paste0(dir.experiment, file.name), sep = ";", row.names = F)
-                
-                ggplot.all.results            <- restructure.all.results(all.results, models)
-                ggplot.all.results$model      <- factor(ggplot.all.results$model, levels= names(models))
-                
-                # set colors for models
-                if(tune.ann){
-                    set.seed(13)
-                    color.map <- palette(rainbow(length(models))) 
-                    scales::show_col(color.map)
                 } else {
-                    color.map <- c('GLM'           = 'deepskyblue',   # Generalized Linear Model
-                                   'GAM'           = 'green',         # Generalized Additive Model
-                                   'ANN'           = 'orange',        # Artificial Neural Network
-                                   'RF'            = 'red',           # Random Forest
-                                   'Null'          = 'black')         # Null Model
+                    file.name.scenario  <- paste0(file.name.scenario, list.scenarios[["noise.temperature"]][["range"]]["best"], "noisetemp_")
                 }
                 
-                ### boxplots performance ####
-                
-                gg.plot.dev.infos <-  ggplot.all.results %>%
-                    group_by(fit_pred, model) %>%
-                    summarise(mean=mean(dev),
-                              max=max(dev),
-                              min=min(dev),
-                              median=median(dev))
-                if(tune.ann){
-                    order.ann <- gg.plot.dev.infos %>%
-                        filter(fit_pred == "pred") %>%
-                        arrange(median) %>%
-                        pull(model)
-                    ggplot.all.results$model <- factor(ggplot.all.results$model, levels = order.ann)
+                ### misdetection ####
+                if(name.scenario == "misdetection" & name.range != "best"){ # if we are going through noise.temp loop and not best case
+                    
+                    p                  <- scenario$range[name.range]/100 # probability at which a presence is turned into an absence
+                    
+                    list.noise.misdet  <- lapply(taxa.colnames, FUN=function(taxon){
+                                                noise_taxon <- list("type"       = "missdetection",
+                                                                    "target"     = taxon,
+                                                                    "amount"     = p,
+                                                                    "parameters" = NULL)
+                        
+                        return(noise_taxon)
+                    })
+                    list.noise            <- append(list.noise, list.noise.misdet)
+                    file.name.scenario    <- paste0(file.name.scenario, p, "misdet_")
+                    
+                } else {
+                    file.name.scenario    <- paste0(file.name.scenario, list.scenarios[["misdetection"]][["range"]]["best"], "misdet_")
                 }
                 
-                median.null.pred <- min((gg.plot.dev.infos %>%
-                                             filter(fit_pred=="pred" & model=="Null"))["median"])
-                median.best.pred <- min((gg.plot.dev.infos %>%
-                                             filter(fit_pred=="pred"))["median"])
+                print(file.name.scenario)
                 
-                fig1 <- ggplot(data=ggplot.all.results,
-                               aes(x=model, y=dev)) +
-                    geom_boxplot(aes(fill=fit_pred)) +
-                    geom_hline(aes(yintercept=median.null.pred,
-                                   color="median null model (pred)"),
-                               linetype="dashed") +
-                    geom_hline(aes(yintercept=median.best.pred,
-                                   color="median best model (pred)"),
-                               linetype="dashed") +
-                    scale_fill_manual(values=c(fit = "#998ec3", pred = "#f1a340")) +
-                    scale_colour_manual(values = c('green','black')) +
-                    theme_minimal() +
-                    theme(legend.title=element_blank()) +
-                    labs(x = "Models",
-                         y = "Standardized deviance\n ",
-                         title = "") 
-                if(tune.ann){
-                    fig1 <- fig1 + theme(axis.text.x = element_text(angle = 90))
+                
+                # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+                ## Process input data ####
+                
+                data.input <- data.env.taxa
+                data.input$tempmaxC2 <- data.input$tempmaxC^2
+                data.input$currentms2 <- data.input$currentms^2
+                data.input <- data.input[, c(vect.info, env.factor.full, taxa.colnames)] # subselect columns of interest
+                # catch.variable <- "Watershed"
+                
+                # reduce dataset to selected number of samples
+                set.seed(seed)
+                rind.shuffle <- sample(dim(data.input)[1], size=dim(data.input)[1], replace = F)
+                data.input <- data.input[rind.shuffle,]    # shuffle rows with same seed everytime
+                data.input <- data.input[1:number.sample,] # select number rows according to number of sample
+                
+                # add noise
+                data.input.noised        <- add.noise(data            = data.input,
+                                                      noise           = list.noise,
+                                                      env.fact        = env.factor,
+                                                      env.fact.full   = env.factor.full)
+                data.input      <- data.input.noised$`noised data`
+                # env.factor      <- data.input.noised$`env fact`
+                # env.factor.full <- data.input.noised$`env fact full`
+                # no.env.fact <- length(env.factor)
+                
+                
+                # # replace NAs by 0 to simulate noise due to dispersal limitation
+                # to analyze number of NAs per taxon
+                for (taxon in taxa.colnames) {
+                    print(summary(as.factor(data.input[,taxon])))
                 }
                 
-                pdf(paste0(dir.experiment, experiment.name, "boxplot_performance.pdf"), width = 8, height = 5)
-                print(fig1)
-                dev.off()
+                if(na.to.absence){
+                    # if TRUE NAs replaced by 0
+                    # if FALSE rows with NA will be removed per taxon when training models
+                    data.input[is.na(data.input)] <- 0
+                    file.name.scenario <- paste0(file.name.scenario, "NAtoabs_")
+                } else {
+                    file.name.scenario <- paste0(file.name.scenario, "NAtoNA_")
+                }
                 
-            
-                ### bell plot performance ####
-                
-                fig2 <- ggplot(data=subset(ggplot.all.results, model %in% "Null"),
-                               aes(x=prevalence, y=dev, color=model)) +
-                    geom_smooth(se = FALSE) + 
-                    geom_point(data=ggplot.all.results, alpha = 0.6) +
-                    facet_wrap(~fit_pred) +
-                    scale_color_manual(values=color.map) +
-                    theme_minimal() + 
-                    theme(legend.title=element_blank()) +
-                    labs(x = "Prevalence",
-                         y = "Standardized deviance\n ",
-                         title = "")
+                # replace 0/1 by absent/present
+                for (taxon in taxa.colnames) {
+                    data.input[which(data.input[,taxon] == 0),taxon] <- "Absent"
+                    data.input[which(data.input[,taxon] == 1),taxon] <- "Present"
+                    data.input[,taxon] = as.factor(data.input[,taxon])
+                }
                 
                 
-                pdf(paste0(dir.experiment, experiment.name, "bellplot_performance.pdf"), width = 8, height = 5)
-                print(fig2)
-                dev.off() 
+                # sanity check of NAs
+                sum(is.na(data.input[,c(vect.info,env.factor)])) # should be zero 
+                sum(is.na(data.input[,c(taxa.colnames)])) # could have a lot, decide to replace by zero or not
+                nb.rows.na.taxa <- sum(rowSums(is.na(data.input[,c(taxa.colnames)])) != 0)
                 
+                ### write metadata ####
                 
-                ### ice ####
+                # define experiment name
+                experiment.name <- paste0(
+                    file.name.scenario,
+                    no.taxa, "taxa_",
+                    no.models, "models_",
+                    ifelse(tune.ann, "tuneANN_", "")
+                )
+                # experiment.name <- paste0(experiment.name,"testDownsampling_1500trees")
+                print(experiment.name)
                 
-                dir.exp.ice              <- paste0(dir.experiment, "ICE/")
-                dir.create(dir.exp.ice)
-                std.const.ice   <- readRDS(file=paste0(dir.output, "standardization_constant_ICE.rds"))
-                select.env.fact <- "tempmaxC"
-                
-                list.plots <- list()
-                
-                for(taxon.under.obs in names(taxa.colnames)){
+                # create output directory for experiment results
+                dir.experiment          <- paste0(dir.output, experiment.name, "/")
+                dir.metadata            <- paste0(dir.experiment, "metadata.json")
+                if(!dir.exists(dir.experiment)){ # run models and plots only if folders doesn't exist
+                    dir.create(dir.experiment)
                     
-                    # taxon.under.obs <- names(taxa.colnames)[1]
-                    cat("Plotting ICE for:", taxon.under.obs)
+                    # saving metadata to JSON file
+                    metadata.list           <- list("input_data"       = file.input.data,
+                                                    "prev_taxa"        = file.prev.taxa,
+                                                    "nb_rows_na"       = nb.rows.na.taxa,
+                                                    "experiment.name"  = experiment.name,
+                                                    "number_split"     = number.split,
+                                                    "split.criterion"  = split.criterion,
+                                                    "number.sample"    = number.sample,
+                                                    "models"           = models,
+                                                    "env_factor"       = env.factor,
+                                                    "env_factor_full"  = env.factor.full,
+                                                    "noise"            = list.noise) 
                     
-                    # preare streambugs ice data
-                    temp.pred.ice.streamb <- pred.ice.streamb[,c("ReachID", "Watershed", "column_label", "observation_number", "model",
-                                                                 select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
-                                             rename(pred = paste0("Occurrence.", taxon.under.obs))
-                     
-                    mean.ice.streamb <- temp.pred.ice.streamb %>%
-                        group_by_at(select.env.fact[1]) %>%
-                        summarize(avg = mean(na.omit(pred))) %>%
-                        mutate(model = "Streambugs")
-                    mean.ice.streamb.bounds  <- mean.ice.streamb %>%
-                        summarize(# x.mean=max(tempmaxC), # ! here it's specific to factor
-                            y.mean.min=min(avg),
-                            y.mean.max=max(avg)) %>%
-                        mutate(model = "Streambugs",
-                               x.mean = 21.94111) # ! here it's specific to factor to fit the other models
+                    metadata.json           <- toJSON(metadata.list)
+                    write(metadata.json, dir.metadata)
                     
-                    # produce ice output for other models
-                    input.env.factors <- env.factor
-                    ice.dfs <- plot.ice(models.performance = models.fit,
-                                        select.env.fact=select.env.fact,
-                                        taxa=taxon.under.obs,
-                                        standardization.constant=std.const.ice[[1]],
-                                        observations = preprocessed.data.ice[["Entire dataset"]],
-                                        nb.sample=no.sites,
-                                        resolution=no.steps,
-                                        input.env.factors=input.env.factors)
+                    ### split and standardize data ####
+                    set.seed(13)
+                    preprocessed.data.cv  <- preprocess.data(data=data.input,
+                                                             env.fact=env.factor,
+                                                             dir=dir.experiment,
+                                                             split.type="CV",
+                                                             nb.split=number.split,
+                                                             splitting.criterion=split.criterion)
                     
-                    pred.models     <- ice.dfs[["observations"]] %>%
-                                          rename(pred = all_of(taxon.under.obs))
-                    for(reach in data.base.ice$ReachID){
-                        # reach <- data.base.ice$ReachID[1]
-                        obs.num <- data.base.ice[which(data.base.ice$ReachID == reach), "observation_number"]
-                        rind <- which(grepl(reach, pred.models$ReachID))
-                        pred.models[rind, "observation_number"] <- obs.num
+                    preprocessed.data.fit <- preprocess.data(data=data.input,
+                                                             env.fact=env.factor,
+                                                             dir=dir.experiment,
+                                                             split.type="FIT")
+                    
+                    # summary NA and prevalence per training/testing set
+                    name.datasets <- c("FIT", names(preprocessed.data.cv))
+                    vect.add.col <- apply(expand.grid(c("prev", "na"), name.datasets), 1, paste, collapse=".")
+                    data.prev.na <- data.prev.taxa[which(data.prev.taxa$Occurrence.taxa %in% taxa.colnames),]
+                    data.prev.na[, vect.add.col] <- NA
+                    for (taxon in taxa.colnames) {
+                        # taxon <- taxa.colnames[6]
+                        for (name in name.datasets) {
+                            # name <- name.datasets[1]
+                            if(name == "FIT"){
+                                temp.df <- preprocessed.data.fit[[1]]
+                            } else {
+                                temp.df <- preprocessed.data.cv[[name]][["Training data"]]
+                            }
+                            nb.na <- sum(is.na(temp.df[,taxon]))
+                            nb.pres <- sum(temp.df[,taxon] == "Present", na.rm = T)
+                            nb.abs <- sum(temp.df[,taxon] == "Absent", na.rm = T)
+                            temp.prev <- round(nb.pres/(nb.pres + nb.abs), digits = 3)
+                            
+                            data.prev.na[which(data.prev.na$Occurrence.taxa == taxon), paste0("prev.", name)] <- temp.prev
+                            data.prev.na[which(data.prev.na$Occurrence.taxa == taxon), paste0("na.", name)] <- nb.na
+                        }
                     }
-                    env.factor.sampled       <- ice.dfs[["env.factor.sampled"]]
-                    pred.models.mean         <- pred.models %>%
-                        group_by(across(all_of(select.env.fact)), model) %>%
-                        summarise(avg = mean(pred))
-                    pred.models.mean.bounds  <- pred.models.mean %>% group_by(model) %>%
-                        summarise(x.mean=max(across(all_of(select.env.fact))),
-                                  y.mean.min=min(avg),
-                                  y.mean.max=max(avg))
-                    col.names <- c(select.env.fact, "pred", "observation_number", "column_label", "model")
-                    plot.data <- rbind(temp.pred.ice.streamb[,col.names], pred.models[,col.names] )
-                    plot.data.mean  <- rbind(mean.ice.streamb, pred.models.mean)       
-                    plot.data.mean.bounds  <- rbind(mean.ice.streamb.bounds, pred.models.mean.bounds)
-    
-                    fig3 <- ggplot(data=plot.data) +
-                        geom_line(aes(x=.data[[select.env.fact]],
-                                      y=pred,
-                                      group=observation_number, 
-                                      color=as.character(observation_number)),
-                                  show.legend = FALSE) +
-                        geom_line(data=plot.data.mean,
-                                  aes(x=.data[[select.env.fact]], y=avg),
-                                  size=1.5) +
-                        geom_rug(data = env.factor.sampled,
-                                 aes(x=variable), 
-                                 color="grey20",
-                                 alpha=0.7,
-                                 inherit.aes=F) + 
-                        scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
-                        geom_segment(data=plot.data.mean.bounds,
-                                     inherit.aes = FALSE,
-                                     lineend="round",
-                                     linejoin="round",
-                                     aes(x=x.mean,
-                                         y=y.mean.min,
-                                         xend=x.mean,
-                                         yend=y.mean.max),
-                                     arrow=arrow(length = unit(0.3, "cm"),
-                                                 ends = "both")) +
-                        facet_wrap( ~ factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 5) +
-                        theme_bw() +
-                        theme(strip.background = element_rect(fill = "white"),
-                              legend.title = element_text(size=24),
-                              legend.text = element_text(size=20)) +
-                        labs(title = taxon.under.obs,
-                             x = "Temperature",
-                             y = "Predicted probability of occurrence")
-                    # fig3
                     
-                    list.plots[[taxon.under.obs]] <- fig3
+                    # write summarized results in csv
+                    file.name <- paste0(experiment.name, "prevalence_NAs.csv")
+                    write.table(data.prev.na, file = paste0(dir.experiment, file.name), sep = ",", row.names = F)
                     
-                    # pdf(paste0(dir.experiment, "ice_", experiment.name, taxon.under.obs, ".pdf"))
-                    # print(fig3)
-                    # dev.off()
-                }  
+                    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+                    ## Train models ####
+                    
+                    ### tune ann ####
+                    
+                    if(tune.ann){
+                        tune.grid.ann          <- expand.grid(num.units                 = c(8),
+                                                              num.layers                = c(1,2,3,5),
+                                                              learning.rate             = c(0.01),
+                                                              num.epochs                = c(100, 200),
+                                                              batch.size                = c(64))
+                        
+                        list.trained.ann <- list()
+                        for (i.row in seq(nrow(tune.grid.ann))) {
+                            
+                            # i.row <- 1
+                            vect.hyperparam <- tune.grid.ann[i.row,]
+                            name.model <- paste0(vect.hyperparam["num.units"], "uni_",
+                                                 vect.hyperparam["num.layers"], "lay_",
+                                                 vect.hyperparam["num.epochs"], "epo")
+                            print(name.model)
+                            
+                            trained.ann <- apply.ann.model(data = preprocessed.data.cv, split.type = "CV", 
+                                                           taxa.colnames = taxa.colnames, env.fact = env.factor, 
+                                                           hyperparameters = vect.hyperparam)
+                            
+                            list.trained.ann[[name.model]] <- trained.ann
+                        }
+                        
+                        # update models list
+                        models <- names(list.trained.ann)
+                        names(models) <- models
+                        models.cv <- list.trained.ann
+                    }
+                    
+                    ### cross-validation ####
+                    
+                    tune.grid.ann          <- expand.grid(num.units                 = c(8),
+                                                          num.layers                = c(2),
+                                                          learning.rate             = c(0.01),
+                                                          num.epochs                = c(100),
+                                                          batch.size                = c(64))
+                    hyperparameters <- tune.grid.ann[1,]
+                    
+                    models.cv  <- apply.ml.models(data=preprocessed.data.cv,
+                                                  models=models,
+                                                  split.type="CV", 
+                                                  taxa.colnames = taxa.colnames, 
+                                                  env.factor = env.factor, 
+                                                  env.factor.full = env.factor.full,
+                                                  hyperparameters = hyperparameters)
+                    # for(variable in colnames(data.input)){
+                    #     print(variable)
+                    #          print(summary(preprocessed.data.cv$Split3$`Training data`[,variable]))
+                    #     }
+                    save.models(models=models.cv,
+                                path=dir.experiment,
+                                split.type="CV")
+                    
+        
+                    ### fit entire dataset ####
+                    
+                    models.fit <- apply.ml.models(data=preprocessed.data.fit,
+                                                  models=models,
+                                                  split.type="FIT",
+                                                  taxa.colnames, 
+                                                  env.factor, env.factor.full,
+                                                  hyperparameters = hyperparameters)
+                    
+                    save.models(models=models.fit,
+                                path=dir.experiment,
+                                split.type="FIT")
+                    
+                    
+                    # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+                    ## Plots experiment ####
+        
+                    # models.fit      <- load.models(path=dir.experiment,
+                    #                                split.type="FIT")
+                    # models.cv       <- load.models(path=dir.experiment,
+                    #                                split.type="CV")
+                    
+                    ### variables for plots ####
+                    
+                    std.const.cv                  <- readRDS(file=paste0(dir.experiment, "standardization_constant_CV.rds"))
+                    std.const.fit                 <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
+                    prev.taxa                     <- data.prev.taxa
+                    prev.taxa$Prevalence.DispLim  <- prev.taxa$Prevalence
+                    prev.taxa$Prevalence          <- prev.taxa$Prevalence.NoDisp
+                    
+                    all.results                   <- summarize.all.results(models.cv, prev.taxa)
+                    
+                    # write summarized results in csv
+                    file.name                     <- paste0(experiment.name, "allresults.csv")
+                    write.table(all.results, file = paste0(dir.experiment, file.name), sep = ";", row.names = F)
+                    
+                    ggplot.all.results            <- restructure.all.results(all.results, models)
+                    ggplot.all.results$model      <- factor(ggplot.all.results$model, levels= names(models))
+                    
+                    # set colors for models
+                    if(tune.ann){
+                        set.seed(13)
+                        color.map <- palette(rainbow(length(models))) 
+                        scales::show_col(color.map)
+                    } else {
+                        color.map <- c('GLM'           = 'deepskyblue',   # Generalized Linear Model
+                                       'GAM'           = 'green',         # Generalized Additive Model
+                                       'ANN'           = 'orange',        # Artificial Neural Network
+                                       'RF'            = 'red',           # Random Forest
+                                       'Null'          = 'black')         # Null Model
+                    }
+                    
+                    ### boxplots performance ####
+                    
+                    gg.plot.dev.infos <-  ggplot.all.results %>%
+                        group_by(fit_pred, model) %>%
+                        summarise(mean=mean(dev),
+                                  max=max(dev),
+                                  min=min(dev),
+                                  median=median(dev))
+                    if(tune.ann){
+                        order.ann <- gg.plot.dev.infos %>%
+                            filter(fit_pred == "pred") %>%
+                            arrange(median) %>%
+                            pull(model)
+                        ggplot.all.results$model <- factor(ggplot.all.results$model, levels = order.ann)
+                    }
+                    
+                    median.null.pred <- min((gg.plot.dev.infos %>%
+                                                 filter(fit_pred=="pred" & model=="Null"))["median"])
+                    median.best.pred <- min((gg.plot.dev.infos %>%
+                                                 filter(fit_pred=="pred"))["median"])
+                    
+                    fig1 <- ggplot(data=ggplot.all.results,
+                                   aes(x=model, y=dev)) +
+                        geom_boxplot(aes(fill=fit_pred)) +
+                        geom_hline(aes(yintercept=median.null.pred,
+                                       color="median null model (pred)"),
+                                   linetype="dashed") +
+                        geom_hline(aes(yintercept=median.best.pred,
+                                       color="median best model (pred)"),
+                                   linetype="dashed") +
+                        scale_fill_manual(values=c(fit = "#998ec3", pred = "#f1a340")) +
+                        scale_colour_manual(values = c('green','black')) +
+                        theme_minimal() +
+                        theme(legend.title=element_blank()) +
+                        labs(x = "Models",
+                             y = "Standardized deviance\n ",
+                             title = "") 
+                    if(tune.ann){
+                        fig1 <- fig1 + theme(axis.text.x = element_text(angle = 90))
+                    }
+                    
+                    pdf(paste0(dir.experiment, experiment.name, "boxplot_performance.pdf"), width = 8, height = 5)
+                    print(fig1)
+                    dev.off()
+                    
                 
-                file.name <- paste0("ice_alltaxa_3x1")
-                print.pdf.plots(list.plots = list.plots, width = 18, height = 6, 
-                                dir.output = dir.experiment, info.file.name = experiment.name, file.name = file.name, 
-                                png = F)
-                
-                cat("Models trained and plots produced for:", experiment.name)
+                    ### bell plot performance ####
+                    
+                    fig2 <- ggplot(data=subset(ggplot.all.results, model %in% "Null"),
+                                   aes(x=prevalence, y=dev, color=model)) +
+                        geom_smooth(se = FALSE) + 
+                        geom_point(data=ggplot.all.results, alpha = 0.6) +
+                        facet_wrap(~fit_pred) +
+                        scale_color_manual(values=color.map) +
+                        theme_minimal() + 
+                        theme(legend.title=element_blank()) +
+                        labs(x = "Prevalence",
+                             y = "Standardized deviance\n ",
+                             title = "")
+                    
+                    
+                    pdf(paste0(dir.experiment, experiment.name, "bellplot_performance.pdf"), width = 8, height = 5)
+                    print(fig2)
+                    dev.off() 
+                    
+                    
+                    ### ice ####
+                    
+                    dir.exp.ice              <- paste0(dir.experiment, "ICE/")
+                    dir.create(dir.exp.ice)
+                    std.const.ice   <- readRDS(file=paste0(dir.output, "standardization_constant_ICE.rds"))
+                    select.env.fact <- "tempmaxC"
+                    
+                    list.plots <- list()
+                    
+                    for(taxon.under.obs in names(taxa.colnames)){
+                        
+                        # taxon.under.obs <- names(taxa.colnames)[1]
+                        cat("Plotting ICE for:", taxon.under.obs)
+                        
+                        # preare streambugs ice data
+                        temp.pred.ice.streamb <- pred.ice.streamb[,c("ReachID", "Watershed", "column_label", "observation_number", "model",
+                                                                     select.env.fact, paste0("Occurrence.", taxon.under.obs))] %>%
+                                                 rename(pred = paste0("Occurrence.", taxon.under.obs))
+                         
+                        mean.ice.streamb <- temp.pred.ice.streamb %>%
+                            group_by_at(select.env.fact[1]) %>%
+                            summarize(avg = mean(na.omit(pred))) %>%
+                            mutate(model = "Streambugs")
+                        mean.ice.streamb.bounds  <- mean.ice.streamb %>%
+                            summarize(# x.mean=max(tempmaxC), # ! here it's specific to factor
+                                y.mean.min=min(avg),
+                                y.mean.max=max(avg)) %>%
+                            mutate(model = "Streambugs",
+                                   x.mean = 21.94111) # ! here it's specific to factor to fit the other models
+                        
+                        # produce ice output for other models
+                        input.env.factors <- env.factor
+                        ice.dfs <- plot.ice(models.performance = models.fit,
+                                            select.env.fact=select.env.fact,
+                                            taxa=taxon.under.obs,
+                                            standardization.constant=std.const.ice[[1]],
+                                            observations = preprocessed.data.ice[["Entire dataset"]],
+                                            nb.sample=no.sites,
+                                            resolution=no.steps,
+                                            input.env.factors=input.env.factors)
+                        
+                        pred.models     <- ice.dfs[["observations"]] %>%
+                                              rename(pred = all_of(taxon.under.obs))
+                        for(reach in data.base.ice$ReachID){
+                            # reach <- data.base.ice$ReachID[1]
+                            obs.num <- data.base.ice[which(data.base.ice$ReachID == reach), "observation_number"]
+                            rind <- which(grepl(reach, pred.models$ReachID))
+                            pred.models[rind, "observation_number"] <- obs.num
+                        }
+                        env.factor.sampled       <- ice.dfs[["env.factor.sampled"]]
+                        pred.models.mean         <- pred.models %>%
+                            group_by(across(all_of(select.env.fact)), model) %>%
+                            summarise(avg = mean(pred))
+                        pred.models.mean.bounds  <- pred.models.mean %>% group_by(model) %>%
+                            summarise(x.mean=max(across(all_of(select.env.fact))),
+                                      y.mean.min=min(avg),
+                                      y.mean.max=max(avg))
+                        col.names <- c(select.env.fact, "pred", "observation_number", "column_label", "model")
+                        plot.data <- rbind(temp.pred.ice.streamb[,col.names], pred.models[,col.names] )
+                        plot.data.mean  <- rbind(mean.ice.streamb, pred.models.mean)       
+                        plot.data.mean.bounds  <- rbind(mean.ice.streamb.bounds, pred.models.mean.bounds)
+        
+                        fig3 <- ggplot(data=plot.data) +
+                            geom_line(aes(x=.data[[select.env.fact]],
+                                          y=pred,
+                                          group=observation_number, 
+                                          color=as.character(observation_number)),
+                                      show.legend = FALSE) +
+                            geom_line(data=plot.data.mean,
+                                      aes(x=.data[[select.env.fact]], y=avg),
+                                      size=1.5) +
+                            geom_rug(data = env.factor.sampled,
+                                     aes(x=variable), 
+                                     color="grey20",
+                                     alpha=0.7,
+                                     inherit.aes=F) + 
+                            scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
+                            geom_segment(data=plot.data.mean.bounds,
+                                         inherit.aes = FALSE,
+                                         lineend="round",
+                                         linejoin="round",
+                                         aes(x=x.mean,
+                                             y=y.mean.min,
+                                             xend=x.mean,
+                                             yend=y.mean.max),
+                                         arrow=arrow(length = unit(0.3, "cm"),
+                                                     ends = "both")) +
+                            facet_wrap( ~ factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 5) +
+                            theme_bw() +
+                            theme(strip.background = element_rect(fill = "white"),
+                                  legend.title = element_text(size=24),
+                                  legend.text = element_text(size=20)) +
+                            labs(title = taxon.under.obs,
+                                 x = "Temperature",
+                                 y = "Predicted probability of occurrence")
+                        # fig3
+                        
+                        list.plots[[taxon.under.obs]] <- fig3
+                        
+                        # pdf(paste0(dir.experiment, "ice_", experiment.name, taxon.under.obs, ".pdf"))
+                        # print(fig3)
+                        # dev.off()
+                    }  
+                    
+                    file.name <- paste0("ice_alltaxa_3x1")
+                    print.pdf.plots(list.plots = list.plots, width = 18, height = 6, 
+                                    dir.output = dir.experiment, info.file.name = experiment.name, file.name = file.name, 
+                                    png = F)
+                    
+                    cat("Models trained and plots produced for:", experiment.name)
+                }
             }
         }
     }
@@ -804,8 +810,36 @@ model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Li
 
 scales::show_col(model.color.map)
 
-scenario.names <- generate.scenario.names(list.scenarios, no.taxa, no.models)
-names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
+scenario.names <- generate.scenario.names(list.scenarios, na.to.absence, no.taxa, no.models, vect.seeds)
+sites <- as.numeric(sub(".*?(\\d+)sites.*", "\\1", scenario.names))
+seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
+id.sites.seeds <- paste(sites, seeds, sep = "_")
+names(scenario.names) <- id.sites.seeds
+# names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
+list.exp <- as.list(scenario.names)
+
+# Base colours by site count
+base_colours <- c(
+    "3000" = "#89CFF0",  # light blue
+    "2000" = "#A8E6A1",  # light green
+    "1000" = "#FFD580",  # light orange
+    "500"  = "#FFA07A"   # light red
+)
+
+# Map colours to scenarios with shade variation by seed
+# First normalise seed values within each site group
+df <- data.frame(scenario = scenario.names, sites, seeds = as.numeric(seeds), id = id.sites.seeds)
+
+# Scale seeds within site group to [0.4, 1] for visibility
+df$alpha <- ave(df$seeds, df$sites, FUN = function(x) scales::rescale(x, to = c(0.4, 1)))
+
+# Final colours
+df$colour <- mapply(function(site, alpha) {
+    alpha(base_colours[as.character(site)], alpha)
+}, df$sites, df$alpha)
+
+# Named vector to use in ggplot
+color.map <- setNames(df$colour, df$id)
 
 # select experiments to compare
 # list.exp     <- list("1. Best-case scenario"                     = "3000Sites_35Taxa_4SDMs_8EnvFact_",
@@ -815,8 +849,15 @@ names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
 #                      "4. Noise on temperature"                   = "3000Sites_35Taxa_4SDMs_8EnvFact_noise.temp",
 #                      "5. Misdetection"                           = "3000Sites_35Taxa_4SDMs_8EnvFact_misdetection.all.taxa0.1",
 #                      "6. Absences due to dispersal limitation"   = "3000Sites_35Taxa_4SDMs_8EnvFact_noise.disp")
-list.exp <- as.list(scenario.names)
-names.exp <- names(list.exp)
+# list.exp     <- list("1. 3000 sites"                     = "3000sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      "2. 2000 sites"                    = "2000sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      "3. 1000 sites seed 13"        = "1000sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      # "Remove flow velocity"      = "3000Sites_45Taxa_4SDMs_7EnvFact_",
+#                      "4. 1000 sites seed 14"                   = "1000sites_14seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      "5. 1000 sites seed 15"                           = "1000sites_15seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      "6. 500 sites"   = "500sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_")
+# 
+# names.exp <- names(list.exp)
 
 # test.colors <- RColorBrewer::brewer.pal(8, "Set1")
 # scales::show_col(test.colors)
@@ -830,24 +871,28 @@ names.exp <- names(list.exp)
 #                '4'            = '#e41a1c',
 #                '5'            = '#ff7f00',
 #                '6'            = '#ffd92f')
-# 
-color.map <- c(
-    "Best"         = "#89CFF0",  # Light Blue
-    "Good"         = "#A8E6A1",  # Light Green
-    "Intermediate" = "#FFD580",  # Light Orange
-    "Bad"          = "#FFA07A"   # Light Red
-)
+# # 
+# color.map <- c(
+#     "Best"         = "#89CFF0",  # Light Blue
+#     "Good"         = "#A8E6A1",  # Light Green
+#     "Intermediate" = "#FFD580",  # Light Orange
+#     "Bad"          = "#FFA07A"   # Light Red
+# )
                 # '5'            = '#ff7f00',
                 # '6'            = '#ffd92f')
 
-color.map <- color.map[1:length(list.exp)]
-names(color.map) <- names(list.exp)
+# color.map <- color.map[1:length(list.exp)]
+# names(color.map) <- names(list.exp)
 scales::show_col(color.map)
 
 scenario.true <- names(list.scenarios)[sapply(list.scenarios, function(x) x$flag)]
 
 # create file names for saving plots
-file.name.exp <- paste0("comparison_", scenario.true, "_",
+# file.name.exp <- paste0("comparison_", scenario.true, "_",
+#                         ifelse(na.to.absence, "NAtoabs", "NAtoNA"), "_",
+#                         length(list.exp), "exp_")
+file.name.exp <- paste0("comparison_", scenario.true, "_testseeds_",
+                        ifelse(na.to.absence, "NAtoabs", "NAtoNA"), "_",
                         length(list.exp), "exp_")
 print(file.name.exp)
 file.name.tax <- paste0(file.name.exp,
@@ -945,6 +990,33 @@ final.multi.all.results <- bind_rows(lapply(multi.all.results, "[[", 2), .id = "
 final.multi.all.results$model <- factor(final.multi.all.results$model, levels= names(models))
 final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = names.exp)
 
+# Done with ChatGPT 28.05.25
+
+# Extract components
+final.multi.all.results$sites <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "\\d+(?=_)"))
+final.multi.all.results$seed  <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "(?<=_)\\d+"))
+
+# Create readable label
+final.multi.all.results$scenario_label <- paste0(final.multi.all.results$sites, " sites – run ", 
+                                                    as.numeric(factor(final.multi.all.results$seed, 
+                                                                      levels = sort(unique(final.multi.all.results$seed)))))
+# Sort column_label manually
+sorted_labels <- final.multi.all.results |>
+    dplyr::distinct(column_label, sites, seed) |>
+    dplyr::arrange(desc(sites), seed) |>
+    dplyr::pull(column_label)
+
+# Apply order to both column_label and scenario_label
+final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = sorted_labels)
+
+# Also apply to scenario_label (same order)
+label_map <- final.multi.all.results |>
+    dplyr::distinct(column_label, scenario_label) |>
+    dplyr::arrange(factor(column_label, levels = sorted_labels)) |>
+    dplyr::pull(scenario_label)
+
+names(label_map) <- sorted_labels
+
 # # filter results for selected taxon
 # filtered.multi.all.results <- final.multi.all.results %>%
 #     filter(taxa == taxon.under.obs)
@@ -972,7 +1044,7 @@ fig5 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
     scale_x_discrete(limits=names(models)) +
     scale_y_continuous(limits = c(0, 1.7)) +
     scale_color_manual(values = model.color.map) +
-    facet_wrap(~ column_label, ncol = 3, , labeller = label_wrap_gen()) +
+    facet_wrap(~ column_label, ncol = 4, , labeller = label_wrap_gen()) +
     scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
     scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
     labs(x = "Model",
@@ -982,43 +1054,84 @@ fig5 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
          pattern = "")
 # fig5
 
-pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels_stripesfit.pdf"), width = width.a4*1, height = height.a4*0.6)
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels.pdf"), width = width.a4*1.2, height = height.a4*0.5)
 print(fig5)
 dev.off() 
 
 
-# test box plot alligned scenarios
-fig5 <- ggplot(data=plot.data, aes(x=fit_pred, y=dev)) +
+# test box plot aligned scenarios
+plot.data2 <- plot.data %>% filter(model != "Null")
+
+# Done with ChatGPT 28.05.25
+
+# Sort scenarios  and model consistently
+# Apply order to models
+plot.data2$model <- factor(plot.data2$model, levels = c("GLM", "GAM", "RF", "ANN"))
+
+# Create grouping for boxplots
+plot.data2$group_x <- factor(paste0(plot.data2$sites, "s_", plot.data2$fit_pred),
+                             levels = unlist(lapply(sort(unique(plot.data2$sites), decreasing = TRUE),
+                                                    function(s) paste0(s, "s_", c("fit", "pred")))))
+
+plot.data2 <- plot.data2 %>% filter(is.finite(dev))
+
+# # Force color.map to have names that match column_label factor levels
+# names(color.map) <- levels(plot.data2$column_label)
+# names(label_map) <- levels(plot.data2$column_label)
+
+fig5 <- ggplot(data = plot.data2, aes(x = group_x, y = dev)) +
     geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
                          pattern_colour = 'black',
                          pattern_fill = 'black',
                          pattern_density = 0.1,
-                         # pattern_spacing = 0.01,
-                         pattern_key_scale_factor = 1.5
-                         # pattern = 'stripe', 
-                         # pattern_size = 0.2
-    ) +
-    geom_hline(data = df.best.median, aes(yintercept = dev, color = model), 
-               linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
-    scale_x_discrete(limits=c("fit", "pred")) +
+                         pattern_key_scale_factor = 1.5) +
+    scale_x_discrete(name = "Scenario group (sites + run type)") +
     scale_y_continuous(limits = c(0, 1.7)) +
     scale_color_manual(values = color.map) +
-    facet_wrap(~ model, ncol = 3, , labeller = label_wrap_gen()) +
-    scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
-    scale_fill_manual(values = color.map) +
-    labs(x = "Model",
-         y = "Standardized deviance",
-         # color = "Best median",
-         fill = "",
-         pattern = "")
+    scale_fill_manual(values = color.map, labels = label_map) +
+    scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
+    facet_wrap(~ model, ncol = 4, labeller = label_wrap_gen()) +
+    labs(
+        y = "Standardized deviance",
+        fill = "Scenario",
+        pattern = ""
+    ) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          strip.text = element_text(face = "bold"))
+
 # fig5
 
-pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels_stripesfit.pdf"), width = width.a4*1, height = height.a4*0.6)
+# fig5 <- ggplot(data=plot.data2, aes(x=fit_pred, y=dev)) +
+#     geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
+#                          pattern_colour = 'black',
+#                          pattern_fill = 'black',
+#                          pattern_density = 0.1,
+#                          # pattern_spacing = 0.01,
+#                          pattern_key_scale_factor = 1.5
+#                          # pattern = 'stripe', 
+#                          # pattern_size = 0.2
+#     ) +
+#     # geom_hline(data = df.best.median, aes(yintercept = dev, color = model), 
+#     #            linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
+#     scale_x_discrete(limits=c("fit", "pred")) +
+#     scale_y_continuous(limits = c(0, 1.7)) +
+#     scale_color_manual(values = color.map) +
+#     facet_wrap(~ model, ncol = 2, , labeller = label_wrap_gen()) +
+#     scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
+#     scale_fill_manual(values = color.map) +
+#     labs(x = "Model",
+#          y = "Standardized deviance",
+#          # color = "Best median",
+#          fill = "",
+#          pattern = "")
+# # fig5
+
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colorscenarios_test.pdf"), width = width.a4*2.2, height = height.a4*0.7)
 print(fig5)
 dev.off() 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-# PLOT: plotting the score of given taxon ####
+# PLOT: score per taxon ####
 
 dir.compar.perf <- paste0(dir.compar.plots, "perf/")
 dir.create(dir.compar.perf)
@@ -1031,50 +1144,277 @@ for (taxon in names(taxa.colnames)) {
         filter(taxa == taxon)
     plot.data$shape <- ifelse(plot.data$fit_pred == "fit", "Calibration", "Prediction")
     plot.data$shape <- factor(plot.data$shape, levels= c("Calibration", "Prediction"))
+    plot.data$sites <- factor(plot.data$sites, levels = c(3000, 2000, 1000, 500))
+    # 
+    # fig3 <- ggplot(data=plot.data) +
+    #     geom_point(aes(x=column_label,
+    #                    y=dev,
+    #                    shape=shape, 
+    #                    color=model),
+    #                size=3,
+    #                alpha=0.7) +
+    #     geom_line(aes(x = column_label,
+    #                   y = dev,
+    #                   group = interaction(model, shape), 
+    #                   color = model,
+    #                   linetype = shape),                  # optional: diff line types for Calibration vs Prediction
+    #               linewidth = 0.7,
+    #               alpha = 0.5) +
+    #     scale_x_discrete(limits=names(list.exp)) +
+    #     scale_color_manual(values=model.color.map) +
+    #     labs(x= paste("Scenario:", scenario.true),
+    #          y="Standardized deviance",
+    #          title = taxon,
+    #          color = "Model",
+    #          shape = "",
+    #          linetype = "") +
+    #     theme(axis.text.x = element_text(angle = 45, #vjust = 0.5, 
+    #                                      hjust=1))
+    # list.plots.score[[taxon]] <- fig3
+    # file.name.tax <- paste0(file.name.exp,
+    #                         taxon)
     
-    fig3 <- ggplot(data=plot.data) +
-        geom_point(aes(x=column_label,
-                       y=dev,
-                       shape=shape, 
-                       color=model),
-                   size=3,
-                   alpha=0.7) +
-        geom_line(aes(x = column_label,
-                      y = dev,
-                      group = interaction(model, shape), 
-                      color = model,
-                      linetype = shape),                  # optional: diff line types for Calibration vs Prediction
-                  linewidth = 0.7,
-                  alpha = 0.5) +
-        scale_x_discrete(limits=names(list.exp)) +
-        scale_color_manual(values=model.color.map) +
-        labs(x= paste("Scenario:", scenario.true),
-             y="Standardized deviance",
-             title = taxon,
-             color = "Model",
-             shape = "",
-             linetype = "") +
-        theme(axis.text.x = element_text(angle = 45, #vjust = 0.5, 
-                                         hjust=1))
+    fig3 <- ggplot(data = plot.data, aes(x = sites, y = dev)) +
+        geom_boxplot_pattern(
+            aes(pattern = shape, fill = model, color = model),
+            pattern_density = 0.1,
+            pattern_key_scale_factor = 1.5,
+            pattern_colour = "black",
+            # alpha = 0.7,
+            outlier.shape = NA
+        ) +
+        scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
+        scale_color_manual(values = model.color.map) +
+        scale_fill_manual(values = model.color.map) +
+        labs(
+            x = "Number of sites",
+            y = "Standardized deviance",
+            fill = "Model",
+            pattern = "",
+            color = "Model",
+            title = taxon
+        ) +
+        theme_minimal() +
+        theme(
+            axis.text.x = element_text(angle = 45, hjust = 1),
+            strip.text = element_text(face = "bold")
+        )
+    
+    # Optionally: facet by model
+    # fig3 <- fig3 + facet_wrap(~ model, ncol = 2)
+    
+    # Save plot
     list.plots.score[[taxon]] <- fig3
-    file.name.tax <- paste0(file.name.exp,
-                            taxon)
+    
     cat("\nSaving:", file.name.tax)
-    
-    pdf(paste0(dir.compar.perf, file.name.tax, "_perf.pdf"), width = width.a4*1.1, height = height.a4*0.6)
-    print(fig3)
-    dev.off()
-    
-    ggsave(paste0(dir.compar.perf, file.name.tax, "_perf.png"), width = 2480*1.1,
-           height = 3508*0.6,
-           units = c("px"))
+    # 
+    # pdf(paste0(dir.compar.perf, file.name.tax, "_perf.pdf"), width = width.a4*1.1, height = height.a4*0.6)
+    # print(fig3)
+    # dev.off()
+    # 
+    # ggsave(paste0(dir.compar.perf, file.name.tax, "_perf.png"), width = 2480*1.1,
+    #        height = 3508*0.6,
+    #        units = c("px"))
 }    
 
 file.name <- "perf_all_taxa"
 print.pdf.plots(list.plots = list.plots.score, width = width.a4*1.1, height = height.a4*0.6,
                 dir.output = dir.compar.plots, 
-                info.file.name = paste0(file.name.exp, no.taxa, "taxa_"),
+                info.file.name = paste0(file.name.exp, no.taxa, "taxa_testseeds"),
                 file.name = file.name)
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# PLOT: comparison ice ----
+
+## ice data ----
+
+dir.compar.ice <- paste0(dir.compar.plots, "ice/")
+dir.create(dir.compar.ice)
+
+# taxa.for.ice <- names.taxa[c(5,9,11)]
+taxa.for.ice <- names.taxa
+select.env.fact <- env.factor[1]
+name.select.env.fact <-  names(select.env.fact)
+
+multi.ice <- list()
+
+for (i in 1:length(list.exp)) {
+    
+    # i <- 1
+    exp             <- list.exp[[i]]
+    name.exp        <- names(list.exp)[i]
+    dir.experiment  <- paste0(dir.output, exp, "/")
+    cat("\nLoading models and computing ICE for", length(taxa.for.ice),"taxa and predictor", select.env.fact , "for experiment:", exp, "\n")
+    
+    models.fit      <- load.models(path=dir.experiment, split.type="FIT")
+    std.const.fit   <- readRDS(file=paste0(dir.experiment, "standardization_constant_FIT.rds"))
+    std.const.ice   <- readRDS(file=paste0(dir.output, "standardization_constant_ICE.rds"))
+    
+    correct.names     <- names(models)[which(names(models.fit) %in% models | names(models.fit) %in% names(models))]
+    names(models.fit) <- correct.names
+    file.metadata     <- "metadata.json"
+    metadata.exp      <- fromJSON(paste(readLines(paste0(dir.experiment, file.metadata)), collapse=""))
+    
+    input.env.factors <- metadata.exp$env_factor
+    
+    ice.dfs <- plot.ice(models.performance=models.fit,
+                        select.env.fact=select.env.fact,
+                        # taxa=taxon.under.obs,
+                        taxa=taxa.for.ice,
+                        
+                        standardization.constant=std.const.ice[[1]],
+                        observations = preprocessed.data.ice$`Entire dataset`,
+                        nb.sample=no.sites,
+                        resolution=no.steps,
+                        input.env.factors=input.env.factors)
+    
+    observations              <- ice.dfs[["observations"]]
+    
+    observations.mean         <- observations %>%
+                                    group_by(across(all_of(select.env.fact)), model) %>%
+                                    summarize(across(all_of(taxa.for.ice), mean, na.rm = TRUE))
+    # group_by(across(all_of(select.env.fact)), model) %>%
+    # summarise(avg = mean(all_of(taxa.for.ice)))
+    
+    observations.mean["noise"] <- name.exp
+    observations["noise"]      <- name.exp
+    
+    multi.ice[[name.exp]]      <- list(observations, observations.mean)
+    # return(list(observations, observations.mean))
+    
+}
+
+list.ice.bound <- lapply(lapply(multi.ice, "[[", 2), function(obs.mean){
+    observations.mean.bounds  <- as.data.frame(obs.mean %>% group_by(model, noise) %>%
+                                                   summarise(x.mean=max(across(all_of(name.select.env.fact))),
+                                                             y.mean.min=across(all_of(taxa.for.ice), min, na.rm = TRUE),
+                                                             y.mean.max=across(all_of(taxa.for.ice), max, na.rm = TRUE)))
+})
+
+long.multi.ice <- bind_rows(lapply(multi.ice, "[[", 1), .id = "column_label_noise")
+long.multi.ice$model <- factor(long.multi.ice$model, levels = names(sdm.models))
+long.multi.ice$column_label_noise <- factor(long.multi.ice$column_label_noise, levels = names.exp)
+max.temp <- max(long.multi.ice[,select.env.fact])
+min.temp <- min(long.multi.ice[,select.env.fact])
+
+multi.mean <- lapply(multi.ice, "[[", 2)
+final.multi.ice <- bind_rows(multi.mean, .id = "column_label")
+final.multi.ice$model <- factor(final.multi.ice$model, levels = names(sdm.models))
+final.multi.ice$column_label_noise <- factor(final.multi.ice$column_label, levels = names.exp)
+
+final.multi.bound <- bind_rows(list.ice.bound, .id = "column_label") 
+final.multi.bound$x.mean <- round(max.temp, digits = 1)
+final.multi.bound$model <- factor(final.multi.bound$model, levels = names(sdm.models))
+final.multi.bound$column_label_noise <- factor(final.multi.bound$column_label, levels = unlist(names(list.exp)))
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+## produce plot ----
+
+plot.data <- long.multi.ice
+plot.data.mean <- final.multi.ice
+plot.data.bounds <- final.multi.bound
+
+# # sub-select models for plotting
+# plot.data <- long.multi.ice %>%
+#     filter(model %in% c("GAM", "RF"))
+# plot.data.mean <- final.multi.ice %>%
+#     filter(model %in% c("GAM", "RF"))
+# plot.data.bounds <- final.multi.bound %>%
+#     filter(model %in% c("GAM", "RF"))
+
+plot.data.stream <- mean.ice.streamb %>%
+    rename(Temperature = tempmaxC) %>%
+    filter(Temperature < max.temp,
+           Temperature > min.temp) # ! predictor specific
+env.factor.sampled <- data.frame(variable = unique(data.base.ice[,select.env.fact]))
+
+
+# plot.data
+# colnames(plot.data)
+# colnames(plot.data.mean)
+# colnames(plot.data.bounds)
+
+# unique(plot.data$column_label_noise)
+# unique(plot.data.bounds$column_label_noise)
+
+list.plots <- list()
+for (taxon in taxa.for.ice) {
+    # taxon <- taxa.for.ice[5]
+    cat("\nProduce ICE plot for:", taxon)
+    occ.taxon <- paste0("Occurrence.", taxon)
+    
+    plot.data.bounds.taxon <- plot.data.bounds %>%
+        unnest(y.mean.min) %>%
+        rename(y.mean.min = all_of(taxon))  %>%
+        # select(-all_of(taxa.for.ice)) %>%
+        unnest(y.mean.max, names_sep = "") %>%
+        rename(y.mean.max = all_of(paste0("y.mean.max", taxon)))
+    
+    
+    fig3 <- ggplot(data=plot.data) +
+        geom_line(aes(x=.data[[select.env.fact]],
+                      y=.data[[taxon]],
+                      group=ReachID, 
+                      color=ReachID),
+                  show.legend = FALSE) +
+        geom_line(data=plot.data.mean,
+                  aes(x=.data[[name.select.env.fact]], y=.data[[taxon]]),
+                  linewidth=1.2) +
+        geom_line(data=plot.data.stream[,c( "avg", #taxon, 
+                                            name.select.env.fact)],
+                  aes(x=.data[[name.select.env.fact]], y=.data[["avg"]]), # y=.data[[taxon]]),
+                  linewidth=1.2, color = "grey50", linetype="dashed") + #,
+        # alpha = 0.6, inherit.aes=F) +
+        geom_rug(data = env.factor.sampled,
+                 aes(x=variable), 
+                 color="grey20",
+                 alpha=0.7,
+                 inherit.aes=F) + 
+        # scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
+        geom_segment(data=plot.data.bounds.taxon,
+                     inherit.aes = FALSE,
+                     lineend="round",
+                     linejoin="round",
+                     aes(x=x.mean,
+                         y=y.mean.min,
+                         xend=x.mean,
+                         yend=y.mean.max),
+                     arrow=arrow(length = unit(0.3, "cm"),
+                                 ends = "both")) +
+        # facet_grid(column_label_noise ~ model, labeller = label_wrap_gen()) +
+        facet_grid(model ~ column_label_noise, labeller = label_wrap_gen()) +
+        
+        labs(title = "",
+             # title = taxon,
+             x = name.select.env.fact,
+             y = "Predicted probability of occurrence")
+    # fig3
+    
+    list.plots[[taxon]] <- fig3
+    file.name.tax <- paste0(file.name.exp,
+                            taxon, "_",
+                            select.env.fact)
+    cat("\nSaving:", file.name.tax)
+    
+    pdf(paste0(dir.compar.ice, file.name.tax, "_ice.pdf"), width = width.a4*1.2, height = height.a4*1.2)
+    print(fig3)
+    dev.off()
+    
+    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), 
+           width = 2480*1.15,
+           height = 3508*1.15,
+           units = c("px"))
+}    
+# }
+
+file.name <- "ice_all_taxa"
+print.pdf.plots(list.plots = list.plots, width = width.a4*1.2, height = height.a4*1.2,
+                dir.output = dir.compar.plots, 
+                info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
+                file.name = file.name)
+
+
+
 
 
 

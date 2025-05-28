@@ -785,7 +785,7 @@ train.caret.model <- function(taxa, train.data, folds.train, env.fact, method){
   
   temp.train.data <- train.data[,c(env.fact, taxa)]
   # if(!"noise.disp" %in% names(list.noise)){
-  # we remove NAs left per taxon column
+  # we remove NAs left per taxon column (might reduce size training data, or not if NAs were turned to 0)
   temp.train.data <- na.omit(temp.train.data)
     # print(taxa)
     # print(summary(temp.train.data[,taxa]))
