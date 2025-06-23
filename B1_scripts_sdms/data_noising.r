@@ -17,10 +17,13 @@ add.gaussian.noise <- function(data, col.name, standard.deviation, min_value=-In
   # returns:
   #   - the dataframe with noise added
   
+    # col.name <- "tempmaxC"
+    # rnorm(nrow(data), mean=0, sd=1.5)
+    
   # Adding noise
-  data[col.name] <- data[col.name] + rnorm(nrow(data), mean=0, sd=standard.deviation)
+  data[,col.name] <- data[,col.name] + rnorm(nrow(data), mean=0, sd=standard.deviation)
   # Clipping
-  data[col.name] <- clipper(data[[col.name]], min_value, max_value)
+  data[,col.name] <- clipper(data[,col.name], min_value, max_value)
   
   return(data)
   
@@ -43,7 +46,7 @@ binomial.flipper <- function(data, col.name, chance.flipping){
   # returns:
   #   - the dataframe with missclassified taxa
   
-  data[col.name] <- (data[col.name] + rbinom(n=nrow(data), size=1, prob=chance.flipping)) %% 2
+  data[,col.name] <- (data[,col.name] + rbinom(n=nrow(data), size=1, prob=chance.flipping)) %% 2
   
   return(data)
   
@@ -66,7 +69,7 @@ missdetection <- function(data, col.name, chance.missdetection){
   # returns:
   #   - the dataframe with missclassified taxa
   
-  data[col.name] <- ifelse(data[[col.name]] == 0, 0, rbinom(dim(data)[1], 1, 1-chance.missdetection))
+  data[,col.name] <- ifelse(data[,col.name] == 0, 0, rbinom(dim(data)[1], 1, 1-chance.missdetection))
   return(data)
 }
 
@@ -82,6 +85,10 @@ missclassification <- function(data){
 
 add.noise <- function(data, noise, env.fact, env.fact.full){
   
+    # data            = data.input.orig
+    # noise           = list.noise
+    # env.fact        = env.factor
+    # env.fact.full   = env.factor.full
   noised.data <- data
   
   for (n in noise){

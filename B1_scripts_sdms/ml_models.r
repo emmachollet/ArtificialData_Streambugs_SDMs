@@ -39,7 +39,7 @@ apply.ml.models <- function(data,
     
     for (i in 1:length(models)) {
         # to debug
-        # i <- 2
+        # i <- 1
         name.model <- names(models)[i]
         name.algo <- models[i]
         
@@ -750,7 +750,7 @@ apply.caret.model <- function(model.name, data, split.type, taxa.colnames, env.f
 train.caret.model <- function(taxa, train.data, folds.train, env.fact, method){
   
   # cat(taxa, "\n")
-  # taxa <- taxa.colnames[1]
+  # taxa <- taxa.colnames[22] # Tipulidae
   # train.data <- training.data
   # folds.train
   # env.fact
@@ -871,8 +871,8 @@ caret.model.perf <- function(model, data, taxa){
   # taxa <- taxa.colnames[1]
     
   # data <- testing.data
-    # taxa <- taxa.colnames[2]
-    # taxa.short <- gsub("Occurrence.", "", taxa)
+  # taxa <- taxa.colnames[2]
+  # taxa.short <- gsub("Occurrence.", "", taxa)
   # model <- models[[taxa.short]]
     
   # This function returns the performance of a caret model. The performances
@@ -1047,33 +1047,83 @@ performance.wrapper <- function(model, observation, prediction, prediction.proba
   # returns:
   #   - performances: the performances as described above  
   
-  likelihood <- compute.likelihood(observation, taxa, prediction.probability)
-  rind.na <- which(is.na(likelihood))
-  if(length(rind.na) > 0) likelihood <- likelihood[-rind.na]
-  performance <- -2*sum(log(likelihood)) / length(likelihood)
-  
-  if(length(rind.na) > 0) {
-      resp <- ifelse(observation[-rind.na,taxa]=="Present", 1, 0)
-      pred <- prediction.probability[["Present"]][-rind.na]
-  } else {
-      resp <- ifelse(observation[,taxa]=="Present", 1, 0)
-      pred <- prediction.probability[["Present"]]
+    # if GLM did not converge, all performance metrics are NA
+  if(list.depth(model) > 1){
+      
+      if(model$method == "glm" && model$finalModel$converged == FALSE){
+      
+          model.performances <- list()
+          
+          model.performances[["model"]]                       <- model
+          model.performances[["observation"]]                 <- observation
+          model.performances[["prediction_factors"]]          <- prediction
+          model.performances[["prediction_probabilities"]]    <- prediction.probability
+          model.performances[["likelihood"]]                  <- NA
+          model.performances[["standard_deviance"]]           <- NA
+          model.performances[["auc"]]                         <- NA
+          
+          cat("\nWARNING: Model", model$method ,"did not converge for:", taxa, "-> performance metrics set to NAs\n")
+     
+     } else {
+         
+          likelihood <- compute.likelihood(observation, taxa, prediction.probability)
+          rind.na <- which(is.na(likelihood))
+          if(length(rind.na) > 0) likelihood <- likelihood[-rind.na]
+          performance <- -2*sum(log(likelihood)) / length(likelihood)
+          
+          if(length(rind.na) > 0) {
+              resp <- ifelse(observation[-rind.na,taxa]=="Present", 1, 0)
+              pred <- prediction.probability[["Present"]][-rind.na]
+          } else {
+              resp <- ifelse(observation[,taxa]=="Present", 1, 0)
+              pred <- prediction.probability[["Present"]]
+          }
+          
+          auc <- auc(response = resp,
+                     predictor = pred,
+                     quiet = TRUE)
+          
+          model.performances <- list()
+          
+          model.performances[["model"]]                       <- model
+          model.performances[["observation"]]                 <- observation
+          model.performances[["prediction_factors"]]          <- prediction
+          model.performances[["prediction_probabilities"]]    <- prediction.probability
+          model.performances[["likelihood"]]                  <- likelihood
+          model.performances[["standard_deviance"]]           <- performance
+          model.performances[["auc"]]                         <- auc   
+      }
+      
+  } else { # if it converged, compute performance metrics
+        
+      likelihood <- compute.likelihood(observation, taxa, prediction.probability)
+      rind.na <- which(is.na(likelihood))
+      if(length(rind.na) > 0) likelihood <- likelihood[-rind.na]
+      performance <- -2*sum(log(likelihood)) / length(likelihood)
+      
+      if(length(rind.na) > 0) {
+          resp <- ifelse(observation[-rind.na,taxa]=="Present", 1, 0)
+          pred <- prediction.probability[["Present"]][-rind.na]
+      } else {
+          resp <- ifelse(observation[,taxa]=="Present", 1, 0)
+          pred <- prediction.probability[["Present"]]
+      }
+    
+      auc <- auc(response = resp,
+                 predictor = pred,
+                 quiet = TRUE)
+      
+      model.performances <- list()
+      
+      model.performances[["model"]]                       <- model
+      model.performances[["observation"]]                 <- observation
+      model.performances[["prediction_factors"]]          <- prediction
+      model.performances[["prediction_probabilities"]]    <- prediction.probability
+      model.performances[["likelihood"]]                  <- likelihood
+      model.performances[["standard_deviance"]]           <- performance
+      model.performances[["auc"]]                         <- auc
   }
-
-  auc <- auc(response = resp,
-             predictor = pred,
-             quiet = TRUE)
-  
-  model.performances <- list()
-  
-  model.performances[["model"]]                       <- model
-  model.performances[["observation"]]                 <- observation
-  model.performances[["prediction_factors"]]          <- prediction
-  model.performances[["prediction_probabilities"]]    <- prediction.probability
-  model.performances[["likelihood"]]                  <- likelihood
-  model.performances[["standard_deviance"]]           <- performance
-  model.performances[["auc"]]                         <- auc
-  
+    
   return(model.performances)
 }
 
