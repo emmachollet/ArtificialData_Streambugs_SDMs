@@ -22,6 +22,7 @@ rm(list=ls())  # Free work space
 graphics.off() # Clean graphics display
 seed <- 13     # Always set seed to a lucky number
 set.seed(seed)   
+
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Directories and files ####
 
@@ -37,6 +38,7 @@ name.streambugs.run     <- "8Catch_3009Sites_PolyInterp30_runC_100Yea_36501Steps
 file.input.data         <- paste0(name.streambugs.run, "_WideData_ResultsSamplePresAbs.csv")
 file.prev.taxa          <- paste0(name.streambugs.run, "_PrevalenceTaxonomy_SamplePresAbs.csv")
 file.selected.taxa      <- "selected_taxa_analysis.csv"
+
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Data and functions ####
@@ -209,7 +211,7 @@ range.scenarios <- c("best", "good", "mid", "bad")
 
 list.scenarios <- list(
     
-    "dataset.size"         = list("flag"  = T,
+    "dataset.size"         = list("flag"  = F,
                                   "range" = c("best" = 3000, 
                                               "good" = 2000, 
                                               "mid"  = 1000, 
@@ -227,7 +229,7 @@ list.scenarios <- list(
                                               "mid"  = 3, 
                                               "bad"  = 4.5)),
     
-    "misdetection"         = list("flag"  = F,
+    "misdetection"         = list("flag"  = T,
                                   "range" = c("best" = 0, 
                                               "good" = 15, 
                                               "mid"  = 30, 
@@ -902,7 +904,7 @@ base_colours <- c(
     "#FFD580",  # light orange
     "#FFA07A"   # light red
 )
-names(base_colours) <- range.noise
+names(base_colours) <- amount.noise
 
 # Map colours to scenarios with shade variation by seed
 # First normalise seed values within each site group
@@ -967,9 +969,11 @@ scales::show_col(color.map)
 # file.name.exp <- paste0("comparison_", noise.tested, "_",
 #                         ifelse(na.to.absence, "NAtoabs", "NAtoNA"), "_",
 #                         length(list.exp), "exp_")
-file.name.exp <- paste0("comparison_", noise.tested, "_testseeds_",
-                        ifelse(na.to.absence, "NAtoabs", "NAtoNA"), "_",
-                        length(list.exp), "exp_")
+file.name.exp <- paste0("comparison_", noise.tested, "_", 
+                        length(list.exp), "exp_",
+                        length(vect.seeds), "seeds_",
+                        ifelse(na.to.absence, "NAtoabs", "NAtoNA_")
+                        )
 print(file.name.exp)
 file.name.tax <- paste0(file.name.exp,
                         taxon.under.obs, "_",
@@ -1103,107 +1107,112 @@ names(label_map) <- sorted_labels
 plot.data <- final.multi.all.results
 plot.data$pattern <- ifelse(plot.data$fit_pred == "fit", "Calibration", "Prediction")
 plot.data$pattern <- factor(plot.data$pattern, levels= c("Calibration", "Prediction"))
-
-# # original paper boxplot
-# fig5 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
-#     geom_boxplot_pattern(aes(fill = model, pattern = pattern),
-#                          pattern_colour = 'black',
-#                          pattern_fill = 'black',
-#                          pattern_density = 0.1,
-#                          # pattern_spacing = 0.01,
-#                          pattern_key_scale_factor = 1.5
-#                          # pattern = 'stripe', 
-#                          # pattern_size = 0.2
-#     ) +
-#     geom_hline(data = df.best.median, aes(yintercept = dev, color = model), 
-#                linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
-#     scale_x_discrete(limits=names(models)) +
-#     scale_y_continuous(limits = c(0, 1.7)) +
-#     scale_color_manual(values = model.color.map) +
-#     facet_wrap(~ column_label, ncol = 4, , labeller = label_wrap_gen()) +
-#     scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
-#     scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
-#     labs(x = "Model",
-#          y = "Standardized deviance",
-#          # color = "Best median",
-#          fill = "",
-#          pattern = "")
-# # fig5
-# 
-# pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels.pdf"), width = width.a4*1.2, height = height.a4*0.5)
-# print(fig5)
-# dev.off() 
-
-
-# test box plot aligned scenarios
-plot.data2 <- plot.data %>% filter(model != "Null")
-
-# Done with ChatGPT 28.05.25
-
-# Sort scenarios  and model consistently
-# Apply order to models
-plot.data2$model <- factor(plot.data2$model, levels = c("GLM", "GAM", "RF", "ANN"))
+plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF", "ANN"))
 
 # Create grouping for boxplots
-plot.data2$group_x <- factor(paste0(plot.data2$amount, "_", plot.data2$fit_pred),
-                             levels = unlist(lapply(sort(unique(plot.data2$amount), decreasing = TRUE),
-                                                    function(s) paste0(s, "_", c("fit", "pred")))))
+plot.data$group_x <- factor(paste0(plot.data$amount, "_", plot.data$fit_pred),
+                             levels = unlist(lapply(sort(unique(plot.data$amount), 
+                                                         decreasing = ifelse(grepl("dataset", noise.tested), T, F)),
+                                                    FUN = function(s) paste0(s, "_", c("fit", "pred"))
+                                                    )))
 
-plot.data2 <- plot.data2 %>% filter(is.finite(dev))
+plot.data <- plot.data %>% filter(is.finite(dev))
+
+## color per model ----
+
+fig.box1 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
+    geom_boxplot_pattern(aes(fill = model, pattern = pattern),
+                         pattern_colour = 'black',
+                         pattern_fill = 'black',
+                         pattern_density = 0.1,
+                         # pattern_spacing = 0.01,
+                         pattern_key_scale_factor = 1.5
+                         # pattern = 'stripe',
+                         # pattern_size = 0.2
+    ) +
+    geom_hline(data = df.best.median, aes(yintercept = dev, color = model),
+               linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
+    scale_x_discrete(limits=names(models)) +
+    scale_y_continuous(limits = c(0, 1.7)) +
+    scale_color_manual(values = model.color.map) +
+    facet_wrap(~ column_label, ncol = 4, , labeller = label_wrap_gen()) +
+    scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
+    scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
+    labs(x = "Model",
+         y = "Standardized deviance",
+         # color = "Best median",
+         fill = "",
+         pattern = "")
+# fig.box1
+
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels.pdf"), width = width.a4*1.2, height = height.a4*0.5)
+print(fig.box1)
+dev.off()
+
+## color per scenarios ----
+
+# ! for now test seeds, check otherwise ####
+
+plot.data2 <- plot.data %>% filter(model != "Null")
 
 # # Force color.map to have names that match column_label factor levels
 # names(color.map) <- levels(plot.data2$column_label)
 # names(label_map) <- levels(plot.data2$column_label)
 
-fig5 <- ggplot(data = plot.data2, aes(x = group_x, y = dev)) +
-    geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
-                         pattern_colour = 'black',
-                         pattern_fill = 'black',
-                         pattern_density = 0.1,
-                         pattern_key_scale_factor = 1.5) +
-    scale_x_discrete(name = "Scenario group (noise + run)") +
-    scale_y_continuous(limits = c(0, 1.7)) +
-    scale_color_manual(values = color.map) +
-    scale_fill_manual(values = color.map, labels = label_map) +
-    scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
-    facet_wrap(~ model, ncol = 4, labeller = label_wrap_gen()) +
-    labs(
-        y = "Standardized deviance",
-        fill = "Scenario",
-        pattern = ""
-    ) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1),
-          strip.text = element_text(face = "bold"))
+if(length(vect.seeds) > 1){
+    
+    fig.box2 <- ggplot(data = plot.data2, aes(x = group_x, y = dev)) +
+        geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
+                             pattern_colour = 'black',
+                             pattern_fill = 'black',
+                             pattern_density = 0.1,
+                             pattern_key_scale_factor = 1.5) +
+        scale_x_discrete(name = "Scenario group (noise + run)") +
+        scale_y_continuous(limits = c(0, 1.7)) +
+        scale_color_manual(values = color.map) +
+        scale_fill_manual(values = color.map, labels = label_map) +
+        scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
+        facet_wrap(~ model, ncol = 4, labeller = label_wrap_gen()) +
+        labs(
+            y = "Standardized deviance",
+            fill = "Scenario",
+            pattern = ""
+        ) +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1),
+              strip.text = element_text(face = "bold"))
+    
+    # fig.box2
+    
+} else {
+    
+    fig.box2 <- ggplot(data=plot.data2, aes(x=fit_pred, y=dev)) +
+        geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
+                             pattern_colour = 'black',
+                             pattern_fill = 'black',
+                             pattern_density = 0.1,
+                             # pattern_spacing = 0.01,
+                             pattern_key_scale_factor = 1.5
+                             # pattern = 'stripe',
+                             # pattern_size = 0.2
+        ) +
+        # geom_hline(data = df.best.median, aes(yintercept = dev, color = model),
+        #            linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
+        scale_x_discrete(limits=c("fit", "pred")) +
+        scale_y_continuous(limits = c(0, 1.7)) +
+        scale_color_manual(values = color.map) +
+        facet_wrap(~ model, ncol = 2, , labeller = label_wrap_gen()) +
+        scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
+        scale_fill_manual(values = color.map) +
+        labs(x = "Model",
+             y = "Standardized deviance",
+             # color = "Best median",
+             fill = "",
+             pattern = "")
+    # fig.box2
+}
 
-# fig5
-
-# fig5 <- ggplot(data=plot.data2, aes(x=fit_pred, y=dev)) +
-#     geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
-#                          pattern_colour = 'black',
-#                          pattern_fill = 'black',
-#                          pattern_density = 0.1,
-#                          # pattern_spacing = 0.01,
-#                          pattern_key_scale_factor = 1.5
-#                          # pattern = 'stripe', 
-#                          # pattern_size = 0.2
-#     ) +
-#     # geom_hline(data = df.best.median, aes(yintercept = dev, color = model), 
-#     #            linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
-#     scale_x_discrete(limits=c("fit", "pred")) +
-#     scale_y_continuous(limits = c(0, 1.7)) +
-#     scale_color_manual(values = color.map) +
-#     facet_wrap(~ model, ncol = 2, , labeller = label_wrap_gen()) +
-#     scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
-#     scale_fill_manual(values = color.map) +
-#     labs(x = "Model",
-#          y = "Standardized deviance",
-#          # color = "Best median",
-#          fill = "",
-#          pattern = "")
-# # fig5
-
-pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colorscenarios_test.pdf"), width = width.a4*2.2, height = height.a4*0.7)
-print(fig5)
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colorscenarios.pdf"), width = width.a4*2.2, height = height.a4*0.7)
+print(fig.box2)
 dev.off() 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1214,80 +1223,78 @@ dir.create(dir.compar.perf)
 
 list.plots.score <- list()
 for (taxon in names(taxa.colnames)) {
+    
     # taxon <- names(taxa.colnames)[1]
     # taxon <- "Tipulidae"
+    
     # filter results for selected taxon
     plot.data <- final.multi.all.results %>%
         filter(taxa == taxon)
     plot.data$shape <- ifelse(plot.data$fit_pred == "fit", "Calibration", "Prediction")
     plot.data$shape <- factor(plot.data$shape, levels= c("Calibration", "Prediction"))
     plot.data$amount <- factor(plot.data$amount, levels = range.noise)
-    # 
-    # fig3 <- ggplot(data=plot.data) +
-    #     geom_point(aes(x=column_label,
-    #                    y=dev,
-    #                    shape=shape, 
-    #                    color=model),
-    #                size=3,
-    #                alpha=0.7) +
-    #     geom_line(aes(x = column_label,
-    #                   y = dev,
-    #                   group = interaction(model, shape), 
-    #                   color = model,
-    #                   linetype = shape),                  # optional: diff line types for Calibration vs Prediction
-    #               linewidth = 0.7,
-    #               alpha = 0.5) +
-    #     scale_x_discrete(limits=names(list.exp)) +
-    #     scale_color_manual(values=model.color.map) +
-    #     labs(x= paste("Scenario:", noise.tested),
-    #          y="Standardized deviance",
-    #          title = taxon,
-    #          color = "Model",
-    #          shape = "",
-    #          linetype = "") +
-    #     theme(axis.text.x = element_text(angle = 45, #vjust = 0.5, 
-    #                                      hjust=1))
-    # list.plots.score[[taxon]] <- fig3
-    # file.name.tax <- paste0(file.name.exp,
-    #                         taxon)
     
-    fig3 <- ggplot(data = plot.data, aes(x = amount, y = dev)) +
-        geom_jitter(aes(shape = shape, color = model)) +
-        # geom_boxplot_pattern(
-        #     aes(pattern = shape, fill = model, color = model),
-        #     pattern_density = 0.1,
-        #     pattern_key_scale_factor = 1.5,
-        #     pattern_colour = "black",
-        #     # alpha = 0.7,
-        #     outlier.shape = NA
-        # ) +
-        scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
-        scale_color_manual(values = model.color.map) +
-        # scale_fill_manual(values = model.color.map) +
-        labs(
-            x = "Number of noise",
-            y = "Standardized deviance",
-            fill = "Model",
-            pattern = "",
-            color = "Model",
-            title = taxon
-        ) +
-        theme_minimal() +
-        theme(
-            axis.text.x = element_text(angle = 45, hjust = 1),
-            strip.text = element_text(face = "bold")
-        )
-    fig3
-    # Optionally: facet by model
-    # fig3 <- fig3 + facet_wrap(~ model, ncol = 2)
-    
-    # Save plot
-    list.plots.score[[taxon]] <- fig3
+    if(length(vect.seeds) > 1){
+        
+        fig.perf1 <- ggplot(data = plot.data, aes(x = amount, y = dev)) +
+            geom_jitter(aes(shape = shape, color = model)) +
+            scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
+            scale_color_manual(values = model.color.map) +
+            labs(
+                x = "Number of noise",
+                y = "Standardized deviance",
+                fill = "Model",
+                pattern = "",
+                color = "Model",
+                title = taxon
+            ) +
+            theme_minimal() +
+            theme(
+                axis.text.x = element_text(angle = 45, hjust = 1),
+                strip.text = element_text(face = "bold")
+            )
+        # fig.perf1
+        # Optionally: facet by model
+        # fig.perf1 <- fig.perf1 + facet_wrap(~ model, ncol = 2)
+        
+        # Save plot
+        list.plots.score[[taxon]] <- fig.perf1
+        
+    } else {
+        
+        fig.perf1 <- ggplot(data=plot.data) +
+            geom_point(aes(x=column_label,
+                           y=dev,
+                           shape=shape,
+                           color=model),
+                       size=3,
+                       alpha=0.7) +
+            geom_line(aes(x = column_label,
+                          y = dev,
+                          group = interaction(model, shape),
+                          color = model,
+                          linetype = shape),                  # optional: diff line types for Calibration vs Prediction
+                      linewidth = 0.7,
+                      alpha = 0.5) +
+            scale_x_discrete(limits=names(list.exp)) +
+            scale_color_manual(values=model.color.map) +
+            labs(x= paste("Scenario:", noise.tested),
+                 y="Standardized deviance",
+                 title = taxon,
+                 color = "Model",
+                 shape = "",
+                 linetype = "") +
+            theme(axis.text.x = element_text(angle = 45, #vjust = 0.5,
+                                             hjust=1))
+        list.plots.score[[taxon]] <- fig.perf1
+        file.name.tax <- paste0(file.name.exp,
+                                taxon)
+    }
     
     cat("\nSaving:", file.name.tax)
     # 
     # pdf(paste0(dir.compar.perf, file.name.tax, "_perf.pdf"), width = width.a4*1.1, height = height.a4*0.6)
-    # print(fig3)
+    # print(fig.perf1)
     # dev.off()
     # 
     # ggsave(paste0(dir.compar.perf, file.name.tax, "_perf.png"), width = 2480*1.1,
@@ -1298,7 +1305,7 @@ for (taxon in names(taxa.colnames)) {
 file.name <- "perf_all_taxa"
 print.pdf.plots(list.plots = list.plots.score, width = width.a4*1.1, height = height.a4*0.6,
                 dir.output = dir.compar.plots, 
-                info.file.name = paste0(file.name.exp, no.taxa, "taxa_testseeds"),
+                info.file.name = paste0(file.name.exp, no.taxa, "taxa"),
                 file.name = file.name)
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1400,10 +1407,6 @@ plot.data.bounds <- final.multi.bound
 # plot.data.bounds <- final.multi.bound %>%
 #     filter(model %in% c("GAM", "RF"))
 
-plot.data.stream <- mean.ice.streamb %>%
-    rename(Temperature = tempmaxC) %>%
-    filter(Temperature < max.temp,
-           Temperature > min.temp) # ! predictor specific
 env.factor.sampled <- data.frame(variable = unique(data.base.ice[,select.env.fact]))
 
 
@@ -1417,7 +1420,7 @@ env.factor.sampled <- data.frame(variable = unique(data.base.ice[,select.env.fac
 
 list.plots <- list()
 for (taxon in taxa.for.ice) {
-    # taxon <- taxa.for.ice[5]
+    # taxon <- taxa.for.ice[1]
     cat("\nProduce ICE plot for:", taxon)
     occ.taxon <- paste0("Occurrence.", taxon)
     
@@ -1428,8 +1431,18 @@ for (taxon in taxa.for.ice) {
         unnest(y.mean.max, names_sep = "") %>%
         rename(y.mean.max = all_of(paste0("y.mean.max", taxon)))
     
+    # preare streambugs ice data
+    plot.data.stream <- pred.ice.streamb[,c("ReachID", "Watershed", "column_label", "observation_number", "model",
+                                                 select.env.fact, paste0("Occurrence.", taxon))] %>%
+        rename(pred = paste0("Occurrence.", taxon)) %>%
+        group_by_at(select.env.fact[1]) %>%
+        summarize(avg = mean(na.omit(pred))) %>%
+        mutate(model = "Streambugs") %>%
+        # rename(Temperature = tempmaxC) %>%
+        filter(Temperature < max.temp,
+               Temperature > min.temp)
     
-    fig3 <- ggplot(data=plot.data) +
+    fig.ice <- ggplot(data=plot.data) +
         geom_line(aes(x=.data[[select.env.fact]],
                       y=.data[[taxon]],
                       group=ReachID, 
@@ -1463,37 +1476,117 @@ for (taxon in taxa.for.ice) {
         facet_grid(model ~ column_label_noise, labeller = label_wrap_gen()) +
         
         labs(title = "",
-             # title = taxon,
+             title = taxon,
              x = name.select.env.fact,
              y = "Predicted probability of occurrence")
-    # fig3
+    # fig.ice
     
-    list.plots[[taxon]] <- fig3
+    list.plots[[taxon]] <- fig.ice
     file.name.tax <- paste0(file.name.exp,
                             taxon, "_",
                             select.env.fact)
     cat("\nSaving:", file.name.tax)
     
-    pdf(paste0(dir.compar.ice, file.name.tax, "_ice.pdf"), width = width.a4*1.2, height = height.a4*1.2)
-    print(fig3)
-    dev.off()
-    
-    ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), 
-           width = 2480*1.15,
-           height = 3508*1.15,
-           units = c("px"))
+    # pdf(paste0(dir.compar.ice, file.name.tax, "_ice.pdf"), width = width.a4*1.2, height = height.a4*1.2)
+    # print(fig.ice)
+    # dev.off()
+    # 
+    # ggsave(paste0(dir.compar.ice, file.name.tax, "_ice.png"), 
+    #        width = 2480*1.15,
+    #        height = 3508*1.15,
+    #        units = c("px"))
 }    
 # }
 
 file.name <- "ice_all_taxa"
-print.pdf.plots(list.plots = list.plots, width = width.a4*1.2, height = height.a4*1.2,
+print.pdf.plots(list.plots = list.plots, 
+                width = width.a4*1.2, 
+                height = height.a4*1,
                 dir.output = dir.compar.plots, 
                 info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
                 file.name = file.name)
 
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# PLOT: comparison pdp ----
 
+## pdp data ----
 
+dir.compar.pdp <- paste0(dir.compar.plots, "pdp/")
+dir.create(dir.compar.pdp)
 
+# compute boundaries
+min.boundaries <- lapply(multi.mean, FUN=function(ice){
+    min(ice[[name.select.env.fact]])
+})
+
+max.boundaries <- lapply(multi.mean, FUN=function(ice){
+    max(ice[[name.select.env.fact]])
+})
+
+lb <- max(unlist(min.boundaries))
+hb <- min(unlist(max.boundaries))
+
+plot.data <- final.multi.ice
+
+list.plots.pdp <- list()
+for (taxon in taxa.for.ice) {
+    # taxon <- taxa.for.ice[1]
+    cat("\nProduce PDP plot for:", taxon)
+    occ.taxon <- paste0("Occurrence.", taxon)
+    
+    # preare streambugs ice data
+    plot.data.stream <- pred.ice.streamb[,c("ReachID", "Watershed", "column_label", "observation_number", "model",
+                                            select.env.fact, paste0("Occurrence.", taxon))] %>%
+        rename(pred = paste0("Occurrence.", taxon)) %>%
+        group_by_at(select.env.fact[1]) %>%
+        summarize(avg = mean(na.omit(pred))) %>%
+        mutate(model = "Streambugs") %>%
+        # rename(Temperature = tempmaxC) %>%
+        filter(Temperature < max.temp,
+               Temperature > min.temp)
+    
+    fig.pdp <- ggplot(data=plot.data) +
+        geom_line(aes(x=.data[[name.select.env.fact]],
+                      y=.data[[taxon]],
+                      group=model,
+                      colour=model),
+                  size=1, alpha = 0.8) +
+        geom_line(data=plot.data.stream,
+                  aes(x=.data[[name.select.env.fact]], y=.data[["avg"]]),
+                  size=1, color = "darkgrey", alpha = 0.8) +
+        facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 4,
+                   labeller = label_wrap_gen())+
+        #facet_wrap(~column_label) +
+        xlim(lb, hb) +
+        scale_y_continuous(limits = c(0,1)) +
+        scale_color_manual(values=model.color.map) +
+        # theme(axis.text.x = element_text(hjust = -1)) +
+        labs(x = name.select.env.fact,
+             y = "Predicted probability of occurrence",
+             colour="Models",
+             title = taxon)
+    # fig.pdp
+    
+    list.plots.pdp[[taxon]] <- fig.pdp
+    file.name.tax <- paste0(file.name.exp,
+                            taxon, "_",
+                            select.env.fact)
+    cat("\nSaving:", file.name.tax)
+    # 
+    # pdf(paste0(dir.compar.pdp, file.name.tax, "_pdp.pdf"), width = width.a4*1.1, height = height.a4*0.6)
+    # print(fig.pdp)
+    # dev.off()
+    # 
+    # ggsave(paste0(dir.compar.pdp, file.name.tax, "_pdp.png"), width = 2480*1.1,
+    #        height = 3508*0.6,
+    #        units = c("px"))
+}    
+
+file.name <- "pdp_all_taxa"
+print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1.1, height = height.a4*0.3,
+                dir.output = dir.compar.plots, 
+                info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
+                file.name = file.name)
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

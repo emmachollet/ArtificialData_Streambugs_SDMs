@@ -2,7 +2,7 @@ README IN CONSTRUCTION
 
 # ArtificialData_Streambugs_SDMs
 
-This data package provides the data, scripts and plots needed to produce the results of the manuscript *["Are we asking too much from species distribution models? Impact of data limitations on the predictive performance, overfitting and interpretability "](future_link)* (submitted to *Journal of Biogeography*, Dec 2024)
+This rpository provides the data, scripts and plots needed to produce the results of the manuscript *["Are we asking too much from species distribution models? Impact of data limitations on the predictive performance, overfitting and interpretability "](future_link)* (submitted to *Journal of Biogeography*, Dec 2024)
 
 > *Authors:* Emma Chollet Ramampiandra (ECR), Gaspard Fragnière (GF), Andreas Scheidegger (AS), Nele Schuwirth (NS)
 >
@@ -29,6 +29,33 @@ The input data is already pre-processed (pre-processing information available up
 
 ## Folders and files
 
+### Structure of the repository
+
+├── 00_utilities/
+│   ├── utilities_global.R
+│   ├── figure_workflow.png
+├── A1_inputs_streambugs/
+│   ├── databases/
+│   ├── "input files"
+├── A2_scripts_streambugs/
+│   ├── library/
+│   ├── main_streambugs.R
+│   ├── "function scripts"
+├── A3_outputs_streambugs/
+│   ├── "csv output files 3000 sites (probability, pres/abs)"...
+├── B1_scripts_sdms/
+│   ├── main_scenarios.r
+│   ├── "function scripts"
+│   └── ...
+├── B2_outputs_sdms/
+│   ├── "folder for each scenario"
+│   │   ├── "rds files of processed data amd trained models"
+│   │   ├── "csv files with model results (performance) and prevalence)
+│   │   ├── "pdf with model plots (performance and ice)
+│   ├── comparison_plots/
+├── C1_documentation/
+│   ├── pptx
+
 
 
 ### Overarching folder
@@ -37,7 +64,7 @@ Directory: *ArtificialData_Streambugs_SDMs*
 
 | filename                | description                                                  |
 | ----------------------- | ------------------------------------------------------------ |
-| README.md               | Text file (markdown format). Description of the data package. |
+| README.md               | Text file (markdown format). Description of the repository.  |
 | .gitignore              | Text file. List of folders that are not updated on the repository because too heavy (A3, B1, B2, C1). |
 | set_folders_structure.r | Set working directory here. **Run first to create all necessary folders.** |
 

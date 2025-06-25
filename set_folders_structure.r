@@ -25,3 +25,8 @@ directories <- c(
 for(directory in directories){
     dir.create(directory)
 }
+
+# Backwards: extract list of all files in all folders
+list.files(path = ".", recursive = TRUE)
+writeLines(list.files(".", recursive = TRUE), "folder_structure_full.txt")
+

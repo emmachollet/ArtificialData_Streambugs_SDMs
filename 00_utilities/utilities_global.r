@@ -465,7 +465,9 @@ generate.scenario.names <- function(list.scenarios, na.to.absence, no.taxa, no.m
             parts <- c(parts, paste0(row[["noise.temperature"]], "noisetemp"))
         }
         if ("misdetection" %in% names(row)) {
-            parts <- c(parts, paste0(row[["misdetection"]], "misdet"))
+            amount <- row[["misdetection"]]/100
+            parts <- c(parts, paste0(amount, "misdet"))
+            
         }
         
         # Final name with NA handling, taxa, and model count
