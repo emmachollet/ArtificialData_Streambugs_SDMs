@@ -211,7 +211,7 @@ range.scenarios <- c("best", "good", "mid", "bad")
 
 list.scenarios <- list(
     
-    "dataset.size"         = list("flag"  = F,
+    "dataset.size"         = list("flag"  = T,
                                   "range" = c("best" = 3000, 
                                               "good" = 2000, 
                                               "mid"  = 1000, 
@@ -229,7 +229,7 @@ list.scenarios <- list(
                                               "mid"  = 3, 
                                               "bad"  = 4.5)),
     
-    "misdetection"         = list("flag"  = T,
+    "misdetection"         = list("flag"  = F,
                                   "range" = c("best" = 0, 
                                               "good" = 15, 
                                               "mid"  = 30, 
@@ -303,6 +303,7 @@ for (i in 1:length(list.scenarios)) {
     
     # i <- 1
     name.scenario     <- names(list.scenarios)[i]
+    # name.scenario <- "combined"
     cat("\nscenario number:", i, "-", name.scenario)
     scenario          <- list.scenarios[[i]]
     
@@ -312,14 +313,14 @@ for (i in 1:length(list.scenarios)) {
         
         for (j in 1:length(range.scenarios)) {
             
-            # j <- 2
+            # j <- 1
             # par(mfrow=c(5,2))
             
             # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
             ## Set up scenario ####
             for(seed in vect.seeds){
                 
-                # seed <- 15
+                # seed <- 13
                 file.name.scenario      <- c() # initialize name of the experiment
                 list.noise              <- list() # initialize internal list of noise
                 name.range              <- range.scenarios[j]
@@ -331,12 +332,14 @@ for (i in 1:length(list.scenarios)) {
                                                   scenario$range[name.range], # TRUE: go through whole range of scenario
                                                   list.scenarios[["dataset.size"]][["range"]]["best"]) # FALSE: take best case of this scenario 
                 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample) # make nb of sample max the size of the dataset
+                # number.sample <- 500
                 file.name.scenario      <- paste0(file.name.scenario, number.sample, "sites_", seed, "seed_")
                 
                 ### number of predictors ####
                 number.pred             <- ifelse(name.scenario == "nb.predictors", # if we are going through the loop of this scenario
                                                   scenario$range[name.range], # TRUE: go through whole range of scenario
                                                   list.scenarios[["nb.predictors"]][["range"]]["best"]) # FALSE: take best case of this scenario 
+                # number.pred <- 2
                 env.factor              <- c(vect.dir.env.fact, vect.indir.env.fact)[1:number.pred]
                 env.factor.full         <- c(env.factor, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
                 no.env.fact             <- length(env.factor)
@@ -346,6 +349,7 @@ for (i in 1:length(list.scenarios)) {
                 if(name.scenario == "noise.temperature" & name.range != "best"){ # if we are going through noise.temp loop and not best case
                     
                     temp.std.dev     <- scenario$range[name.range] # standard deviation of the gaussian noise added on temperature predictor (in degrees C)
+                    # temp.std.dev <- 4.5
                     
                     list.noise.temp  <- list(
                         
@@ -367,6 +371,7 @@ for (i in 1:length(list.scenarios)) {
                 if(name.scenario == "misdetection" & name.range != "best"){ # if we are going through noise.temp loop and not best case
                     
                     p                  <- scenario$range[name.range]/100 # probability at which a presence is turned into an absence
+                    # p <- 45/100
                     
                     list.noise.misdet  <- lapply(taxa.colnames, FUN=function(taxon){
                         noise_taxon <- list("type"       = "missdetection",
@@ -471,7 +476,7 @@ for (i in 1:length(list.scenarios)) {
                 # create output directory for experiment results
                 dir.experiment          <- paste0(dir.output, experiment.name, "/")
                 dir.metadata            <- paste0(dir.experiment, "metadata.json")
-                if(!dir.exists(dir.experiment)){ # run models and plots only if folders doesn't exist
+                # if(!dir.exists(dir.experiment)){ # run models and plots only if folders doesn't exist
                     dir.create(dir.experiment)
                     
                     # saving metadata to JSON file
@@ -571,54 +576,70 @@ for (i in 1:length(list.scenarios)) {
                         models <- names(list.trained.ann)
                         names(models) <- models
                         models.cv <- list.trained.ann
+                        
+                    } else {
+                        
+                        tune.grid.ann          <- expand.grid(num.units                 = c(8),
+                                                              num.layers                = c(2),
+                                                              learning.rate             = c(0.01),
+                                                              num.epochs                = c(100),
+                                                              batch.size                = c(64))
+                        hyperparameters <- tune.grid.ann[1,]
+                        
                     }
 
                     ### cross-validation ####
-
-                    tune.grid.ann          <- expand.grid(num.units                 = c(8),
-                                                          num.layers                = c(2),
-                                                          learning.rate             = c(0.01),
-                                                          num.epochs                = c(100),
-                                                          batch.size                = c(64))
-                    hyperparameters <- tune.grid.ann[1,]
-
-                    models.cv  <- apply.ml.models(data=preprocessed.data.cv,
-                                                  models=models,
-                                                  split.type="CV",
-                                                  taxa.colnames = taxa.colnames,
-                                                  env.factor = env.factor,
-                                                  env.factor.full = env.factor.full,
-                                                  hyperparameters = hyperparameters)
-                    # for(variable in colnames(data.input)){
-                    #     print(variable)
-                    #          print(summary(preprocessed.data.cv$Split3$`Training data`[,variable]))
-                    #     }
-                    save.models(models=models.cv,
-                                path=dir.experiment,
-                                split.type="CV")
-
+                    
+                    if(file.exists(paste0(dir.experiment, "models_CV.rds"))){
+                        
+                        cat("\nTrained models for CV already exist, we load them in the environment.")
+                        models.cv       <- load.models(path=dir.experiment,
+                                                       split.type="CV")
+                        
+                    } else {
+                        
+                        models.cv  <- apply.ml.models(data=preprocessed.data.cv,
+                                                      models=models,
+                                                      split.type="CV",
+                                                      taxa.colnames = taxa.colnames,
+                                                      env.factor = env.factor,
+                                                      env.factor.full = env.factor.full,
+                                                      hyperparameters = hyperparameters)
+        
+                        save.models(models=models.cv,
+                                    path=dir.experiment,
+                                    split.type="CV")
+                        
+                    }
 
                     ### fit entire dataset ####
+                    
+                    if(file.exists(paste0(dir.experiment, "models_FIT.rds"))){
+                        
+                        cat("\nTrained models for FIT already exist, we load them in the environment.")
+                        models.fit      <- load.models(path=dir.experiment,
+                                                       split.type="FIT")
+                        
+                    } else {
+                        
+                        models.fit <- apply.ml.models(data=preprocessed.data.fit,
+                                                      models=models,
+                                                      split.type="FIT",
+                                                      taxa.colnames,
+                                                      env.factor, env.factor.full,
+                                                      hyperparameters = hyperparameters)
+                        
+                        save.models(models=models.fit,
+                                    path=dir.experiment,
+                                    split.type="FIT")
+                        
+                    }
 
-                    models.fit <- apply.ml.models(data=preprocessed.data.fit,
-                                                  models=models,
-                                                  split.type="FIT",
-                                                  taxa.colnames,
-                                                  env.factor, env.factor.full,
-                                                  hyperparameters = hyperparameters)
-
-                    save.models(models=models.fit,
-                                path=dir.experiment,
-                                split.type="FIT")
 
 
                     # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
                     ## Plots experiment ####
 
-                    # models.fit      <- load.models(path=dir.experiment,
-                    #                                split.type="FIT")
-                    # models.cv       <- load.models(path=dir.experiment,
-                    #                                split.type="CV")
 
                     ### variables for plots ####
 
@@ -723,6 +744,10 @@ for (i in 1:length(list.scenarios)) {
                     std.const.ice   <- readRDS(file=paste0(dir.output, "standardization_constant_ICE.rds"))
                     select.env.fact <- "tempmaxC"
 
+                    df.dist.pdp <- data.frame(model = names(sdm.models))
+                    df.dist.pdp[, names.taxa] <- NA
+
+                    list.df.pdp <- list()
                     list.plots <- list()
 
                     for(taxon.under.obs in names(taxa.colnames)){
@@ -738,7 +763,8 @@ for (i in 1:length(list.scenarios)) {
                         mean.ice.streamb <- temp.pred.ice.streamb %>%
                             group_by_at(select.env.fact[1]) %>%
                             summarize(avg = mean(na.omit(pred))) %>%
-                            mutate(model = "Streambugs")
+                            mutate(model = "Streambugs",
+                                   id = 1:50) # add id to compare the data point with other pdp
                         mean.ice.streamb.bounds  <- mean.ice.streamb %>%
                             summarize(# x.mean=max(tempmaxC), # ! here it's specific to factor
                                 y.mean.min=min(avg),
@@ -757,8 +783,8 @@ for (i in 1:length(list.scenarios)) {
                                             resolution=no.steps,
                                             input.env.factors=input.env.factors)
 
-                        pred.models     <- ice.dfs[["observations"]] %>%
-                                              rename(pred = all_of(taxon.under.obs))
+                        pred.models     <- as.data.frame(ice.dfs[["observations"]] %>%
+                                              rename(pred = all_of(taxon.under.obs)))
                         for(reach in data.base.ice$ReachID){
                             # reach <- data.base.ice$ReachID[1]
                             obs.num <- data.base.ice[which(data.base.ice$ReachID == reach), "observation_number"]
@@ -769,6 +795,8 @@ for (i in 1:length(list.scenarios)) {
                         pred.models.mean         <- pred.models %>%
                             group_by(across(all_of(select.env.fact)), model) %>%
                             summarise(avg = mean(pred))
+                        pred.models.mean$id <- rep(1:50, each = length(sdm.models)) # add id to compare the data point with other pdp
+                        
                         pred.models.mean.bounds  <- pred.models.mean %>% group_by(model) %>%
                             summarise(x.mean=max(across(all_of(select.env.fact))),
                                       y.mean.min=min(avg),
@@ -777,6 +805,26 @@ for (i in 1:length(list.scenarios)) {
                         plot.data <- rbind(temp.pred.ice.streamb[,col.names], pred.models[,col.names] )
                         plot.data.mean  <- rbind(mean.ice.streamb, pred.models.mean)
                         plot.data.mean.bounds  <- rbind(mean.ice.streamb.bounds, pred.models.mean.bounds)
+
+                        # compute MSE (average of squared distances between sdm pdp and streambugs pdp)
+                        df.stream <- mean.ice.streamb %>%
+                            select(id, avg.stream = avg)
+                        df.joined <- pred.models.mean %>%
+                            inner_join(df.stream, by = "id")
+                        mse.by.model <- df.joined %>%
+                            group_by(model) %>%
+                            summarise(
+                                mse = mean((avg - avg.stream)^2, na.rm = TRUE),
+                                avg_diff = mean(abs(avg - avg.stream), na.rm = TRUE)
+                            ) %>%
+                            rename(!!taxon.under.obs := mse)
+                        mse.vec <- setNames(mse.by.model[[taxon.under.obs]], as.character(mse.by.model$model))
+                        res <- as.numeric(round(mse.vec[names(sdm.models)], 3))
+                        out <- paste0(names(sdm.models), ": ", res, collapse = " - ")
+
+                        df.dist.pdp[[taxon.under.obs]] <- mse.vec[ as.character(df.dist.pdp$model) ]
+                        
+                        list.df.pdp[[taxon.under.obs]] <- pred.models.mean %>% rename(!!taxon.under.obs := avg)
 
                         fig3 <- ggplot(data=plot.data) +
                             geom_line(aes(x=.data[[select.env.fact]],
@@ -809,6 +857,7 @@ for (i in 1:length(list.scenarios)) {
                                   legend.title = element_text(size=24),
                                   legend.text = element_text(size=20)) +
                             labs(title = taxon.under.obs,
+                                 subtitle = paste("Average squared distance to Streambugs:", out),
                                  x = "Temperature",
                                  y = "Predicted probability of occurrence")
                         # fig3
@@ -820,6 +869,26 @@ for (i in 1:length(list.scenarios)) {
                         # dev.off()
                     }
 
+                    # make final datframe with all pdp data
+                    fixed.cols <- c("tempmaxC", "model", "id")
+                    df.all.pdp <- list.df.pdp[[1]][ fixed.cols ]
+                    for(taxon in names.taxa) {
+                        # taxon <- names.taxa[1]
+                        df    <- list.df.pdp[[taxon]]
+                        taxon.col <- setdiff(names(df), fixed.cols)
+                        # bind it on, naming it after the list element
+                        df.all.pdp[[ taxon.col ]] <- df[[ taxon.col ]]
+                    }
+                    
+                    # write data of each pdp in csv
+                    file.name                     <- paste0(experiment.name, "data_pdp.csv")
+                    write.table(df.all.pdp, file = paste0(dir.experiment, file.name), sep = ";", row.names = F)
+                    
+                    # write distance to streambugs of each pdp in csv
+                    file.name                     <- paste0(experiment.name, "dist_pdp_streamb.csv")
+                    write.table(df.dist.pdp, file = paste0(dir.experiment, file.name), sep = ";", row.names = F)
+                    
+                    
                     file.name <- paste0("ice_alltaxa")
                     print.pdf.plots(list.plots = list.plots, 
                                     width = 10, # 18, 
@@ -832,7 +901,7 @@ for (i in 1:length(list.scenarios)) {
                     # print time stamp
                     ts      <- format(Sys.time(), "%Y-%m-%d_%H-%M-%S")
                     print(ts)
-                }
+                # }
             }
         }
     }
@@ -866,9 +935,46 @@ model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Li
                      'ANN'     = 'orange',        # Artificial Neural Network
                      'RF'      = "#F8766D") # 'red')#,           # Random Forest
 # 'Null'          = 'black')         # Null Model
-
 scales::show_col(model.color.map)
 
+### list experiments ----
+# names.scenario <- names(list.scenarios)
+# names.all.scenarios <- c()
+# 
+# for (i in names.scenario) {
+#     # i <- names.scenario[1]
+#     temp.list.scen <- list.scenarios
+#     for (j in names.scenario) temp.list.scen[[j]]$flag <- FALSE # turn all flags to FALSE
+#     temp.list.scen[[i]]$flag <- TRUE # turn just the selected flag of the loop to TRUE
+# 
+#     # recover information of noise and seeds tested
+#     noise.tested <- names(which(lapply(temp.list.scen, "[[", 1) == TRUE))
+#     range.noise <- unlist(temp.list.scen[[noise.tested]]["range"])
+#     # range.noise <- range.noise[1:3]
+#     scenario.names <- generate.scenario.names(temp.list.scen, na.to.absence, no.taxa, no.models, vect.seeds)
+#     if (grepl("dataset.size", noise.tested)) {
+#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=sites)"))
+#     } else if (grepl("nb.predictors", noise.tested)) {
+#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=pred)"))
+#     } else if (grepl("noise.temperature", noise.tested)) {
+#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=noisetemp)"))
+#     } else if (grepl("misdetection", noise.tested)) {
+#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=misdet)"))
+#     }
+#     # seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
+#     # id <- paste(amount.noise, seeds, sep = "_")
+#     id <- paste(noise.tested, "-", range.noise)
+#     names(scenario.names) <- id
+#     
+#     names.all.scenarios <- append(names.all.scenarios, scenario.names)
+#     
+#     # names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
+#     # list.exp <- as.list(scenario.names)
+#     # # list.exp <- list.exp[c(1,2,3,5,6,7)]
+#     # names.exp <- names(list.exp)
+#     
+# }
+# 
 # recover information of noise and seeds tested
 noise.tested <- names(which(lapply(list.scenarios, "[[", 1) == TRUE))
 range.noise <- unlist(list.scenarios[[noise.tested]]["range"])
@@ -886,18 +992,14 @@ if (grepl("dataset.size", noise.tested)) {
 seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
 id.noise.seeds <- paste(amount.noise, seeds, sep = "_")
 names(scenario.names) <- id.noise.seeds
-# names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
+names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
+
 list.exp <- as.list(scenario.names)
 # list.exp <- list.exp[c(1,2,3,5,6,7)]
 names.exp <- names(list.exp)
 
-# # Base colours by site count
-# base_colours <- c(
-#     "3000" = "#89CFF0",  # light blue
-#     "2000" = "#A8E6A1",  # light green
-#     "1000" = "#FFD580",  # light orange
-#     "500"  = "#FFA07A"   # light red
-# )
+# STOPPED HERE, TO UPDATE WITH ALL SCENARIOS
+# base colours by amount of noise
 base_colours <- c(
     "#89CFF0",  # light blue
     "#A8E6A1",  # light green
@@ -929,16 +1031,28 @@ color.map <- setNames(df$colour, df$id)
 #                      "4. Noise on temperature"                   = "3000Sites_35Taxa_4SDMs_8EnvFact_noise.temp",
 #                      "5. Misdetection"                           = "3000Sites_35Taxa_4SDMs_8EnvFact_misdetection.all.taxa0.1",
 #                      "6. Absences due to dispersal limitation"   = "3000Sites_35Taxa_4SDMs_8EnvFact_noise.disp")
-# list.exp     <- list("1. 3000 sites"                     = "3000sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-#                      "2. 2000 sites"                    = "2000sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-#                      "3. 1000 sites seed 13"        = "1000sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+# list.exp     <- list("1"                     = "3000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      "2"                    = "2000sites_13seed_6pred_1.5noisetemp_0.15misdet_NAtoNA_35taxa_4models_",
+#                      "3"        = "1000sites_13seed_4pred_3noisetemp_0.3misdet_NAtoNA_35taxa_4models_",
 #                      # "Remove flow velocity"      = "3000Sites_45Taxa_4SDMs_7EnvFact_",
-#                      "4. 1000 sites seed 14"                   = "1000sites_14seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-#                      "5. 1000 sites seed 15"                           = "1000sites_15seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-#                      "6. 500 sites"   = "500sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_")
+#                      "4"                   = "500sites_13seed_2pred_4.5noisetemp_0.45misdet_NAtoNA_35taxa_4models_")
+#                      # "5. 1000 sites seed 15"                           = "1000sites_15seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                      # "6. 500 sites"   = "500sites_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_")
 # 
 # names.exp <- names(list.exp)
-
+# noise.tested <- "combination.noises"
+# range.noise <- c(
+#     "Best" = 1,
+#     "Good" = 2,
+#     "Intermediate" = 3,
+#     "Bad" = 4          
+# )
+# color.map <- c(
+#     "1"         = "#89CFF0",  # Light Blue
+#     "2"         = "#A8E6A1",  # Light Green
+#     "3" = "#FFD580",  # Light Orange
+#     "4"          = "#FFA07A"   # Light Red
+# )
 # test.colors <- RColorBrewer::brewer.pal(8, "Set1")
 # scales::show_col(test.colors)
 
@@ -1073,8 +1187,11 @@ final.multi.all.results$column_label <- factor(final.multi.all.results$column_la
 # Done with ChatGPT 28.05.25
 
 # Extract components
-final.multi.all.results$amount <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "\\d+(\\.\\d+)?(?=_)"))
-final.multi.all.results$seed  <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "(?<=_)\\d+"))
+# final.multi.all.results$amount <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "\\d+(\\.\\d+)?(?=_)"))
+# final.multi.all.results$seed  <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "(?<=_)\\d+"))
+
+final.multi.all.results$amount <- final.multi.all.results$column_label
+final.multi.all.results$seed  <- 13
 
 # Create readable label
 final.multi.all.results$scenario_label <- paste0(final.multi.all.results$amount, " noise – run ", 
@@ -1083,7 +1200,8 @@ final.multi.all.results$scenario_label <- paste0(final.multi.all.results$amount,
 # Sort column_label manually
 sorted_labels <- final.multi.all.results |>
     dplyr::distinct(column_label, amount, seed) |>
-    dplyr::arrange(desc(amount), seed) |>
+    # dplyr::arrange(desc(amount), seed) |>
+    dplyr::arrange(amount, seed) |>
     dplyr::pull(column_label)
 
 # Apply order to both column_label and scenario_label
@@ -1475,8 +1593,7 @@ for (taxon in taxa.for.ice) {
         # facet_grid(column_label_noise ~ model, labeller = label_wrap_gen()) +
         facet_grid(model ~ column_label_noise, labeller = label_wrap_gen()) +
         
-        labs(title = "",
-             title = taxon,
+        labs(title = taxon,
              x = name.select.env.fact,
              y = "Predicted probability of occurrence")
     # fig.ice
@@ -1587,6 +1704,10 @@ print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1.1, height = heig
                 dir.output = dir.compar.plots, 
                 info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
                 file.name = file.name)
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# END CODE ####
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
