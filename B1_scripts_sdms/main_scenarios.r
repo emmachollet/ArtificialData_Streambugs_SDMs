@@ -332,14 +332,14 @@ for (i in 1:length(list.scenarios)) {
                                                   scenario$range[name.range], # TRUE: go through whole range of scenario
                                                   list.scenarios[["dataset.size"]][["range"]]["best"]) # FALSE: take best case of this scenario 
                 number.sample           <- ifelse(dim(data.env.taxa)[1] < number.sample, dim(data.env.taxa)[1], number.sample) # make nb of sample max the size of the dataset
-                # number.sample <- 500
+                # number.sample <- 1000
                 file.name.scenario      <- paste0(file.name.scenario, number.sample, "sites_", seed, "seed_")
                 
                 ### number of predictors ####
                 number.pred             <- ifelse(name.scenario == "nb.predictors", # if we are going through the loop of this scenario
                                                   scenario$range[name.range], # TRUE: go through whole range of scenario
                                                   list.scenarios[["nb.predictors"]][["range"]]["best"]) # FALSE: take best case of this scenario 
-                # number.pred <- 2
+                # number.pred <- 4
                 env.factor              <- c(vect.dir.env.fact, vect.indir.env.fact)[1:number.pred]
                 env.factor.full         <- c(env.factor, "Temp2" = "tempmaxC2", "FV2" = "currentms2")
                 no.env.fact             <- length(env.factor)
@@ -349,7 +349,7 @@ for (i in 1:length(list.scenarios)) {
                 if(name.scenario == "noise.temperature" & name.range != "best"){ # if we are going through noise.temp loop and not best case
                     
                     temp.std.dev     <- scenario$range[name.range] # standard deviation of the gaussian noise added on temperature predictor (in degrees C)
-                    # temp.std.dev <- 4.5
+                    # temp.std.dev <- 3
                     
                     list.noise.temp  <- list(
                         
@@ -371,7 +371,7 @@ for (i in 1:length(list.scenarios)) {
                 if(name.scenario == "misdetection" & name.range != "best"){ # if we are going through noise.temp loop and not best case
                     
                     p                  <- scenario$range[name.range]/100 # probability at which a presence is turned into an absence
-                    # p <- 45/100
+                    # p <- 30/100
                     
                     list.noise.misdet  <- lapply(taxa.colnames, FUN=function(taxon){
                         noise_taxon <- list("type"       = "missdetection",
@@ -926,7 +926,7 @@ dir.compar.plots <- paste0(dir.output, "comparison_plots/")
 dir.create(dir.compar.plots)
 
 # select taxon and env. factor for later analysis
-taxon.under.obs <- names(taxa.colnames)[5]
+taxon.under.obs <- names(taxa.colnames)[4]
 print(taxon.under.obs)
 
 # set color map for models
@@ -937,93 +937,147 @@ model.color.map <- c('GLM'     = "#619CFF",  # 'deepskyblue',   # Generalized Li
 # 'Null'          = 'black')         # Null Model
 scales::show_col(model.color.map)
 
-### list experiments ----
-# names.scenario <- names(list.scenarios)
-# names.all.scenarios <- c()
-# 
-# for (i in names.scenario) {
-#     # i <- names.scenario[1]
-#     temp.list.scen <- list.scenarios
-#     for (j in names.scenario) temp.list.scen[[j]]$flag <- FALSE # turn all flags to FALSE
-#     temp.list.scen[[i]]$flag <- TRUE # turn just the selected flag of the loop to TRUE
-# 
-#     # recover information of noise and seeds tested
-#     noise.tested <- names(which(lapply(temp.list.scen, "[[", 1) == TRUE))
-#     range.noise <- unlist(temp.list.scen[[noise.tested]]["range"])
-#     # range.noise <- range.noise[1:3]
-#     scenario.names <- generate.scenario.names(temp.list.scen, na.to.absence, no.taxa, no.models, vect.seeds)
-#     if (grepl("dataset.size", noise.tested)) {
-#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=sites)"))
-#     } else if (grepl("nb.predictors", noise.tested)) {
-#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=pred)"))
-#     } else if (grepl("noise.temperature", noise.tested)) {
-#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=noisetemp)"))
-#     } else if (grepl("misdetection", noise.tested)) {
-#         amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=misdet)"))
-#     }
-#     # seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
-#     # id <- paste(amount.noise, seeds, sep = "_")
-#     id <- paste(noise.tested, "-", range.noise)
-#     names(scenario.names) <- id
-#     
-#     names.all.scenarios <- append(names.all.scenarios, scenario.names)
-#     
-#     # names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
-#     # list.exp <- as.list(scenario.names)
-#     # # list.exp <- list.exp[c(1,2,3,5,6,7)]
-#     # names.exp <- names(list.exp)
-#     
-# }
-# 
-# recover information of noise and seeds tested
-noise.tested <- names(which(lapply(list.scenarios, "[[", 1) == TRUE))
-range.noise <- unlist(list.scenarios[[noise.tested]]["range"])
-# range.noise <- range.noise[1:3]
-scenario.names <- generate.scenario.names(list.scenarios, na.to.absence, no.taxa, no.models, vect.seeds)
-if (grepl("dataset.size", noise.tested)) {
-    amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=sites)"))
-} else if (grepl("nb.predictors", noise.tested)) {
-    amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=pred)"))
-} else if (grepl("noise.temperature", noise.tested)) {
-    amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=noisetemp)"))
-} else if (grepl("misdetection", noise.tested)) {
-    amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=misdet)"))
-}
-seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
-id.noise.seeds <- paste(amount.noise, seeds, sep = "_")
-names(scenario.names) <- id.noise.seeds
-names(scenario.names) <- c("Best", "Good", "Intermediate", "Bad")
-
-list.exp <- as.list(scenario.names)
-# list.exp <- list.exp[c(1,2,3,5,6,7)]
-names.exp <- names(list.exp)
-
-# STOPPED HERE, TO UPDATE WITH ALL SCENARIOS
-# base colours by amount of noise
-base_colours <- c(
+# set labels and colors for scenarios
+lab.scenarios <- c("Best", "Minor", "Intermediate", "Worst")
+scenario.color.map <- c(
     "#89CFF0",  # light blue
     "#A8E6A1",  # light green
     "#FFD580",  # light orange
     "#FFA07A"   # light red
 )
-names(base_colours) <- amount.noise
+names(scenario.color.map) <- lab.scenarios
+
+# decide if compare all scenarios (T) or only one scenario (F)
+compar.all.scenario <- T
+
+### list experiments ----
+
+# recover information about scenario names, amount of noise and seeds
+
+# prepare dataframe to gather all information
+col.names <- c("name.folder", # 3000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_
+               "name.scenario", # dataset.size
+               "clean.name.scenario", # Dataset Size
+               "value.scenario", # 3000
+               "label.scenario", # Best
+               "value.seed", # 13
+               "id.scenario") # dataset.size - 3000
+df.info.scenarios <- data.frame(matrix(ncol = length(col.names), nrow = 0))
+colnames(df.info.scenarios) <- col.names
+
+# fill data frame with scenarios information
+if(compar.all.scenario){
+    
+    # recover information about all possible scenario
+    names.scenario <- names(list.scenarios)
+    names.all.scenarios <- c()
+    
+    for (name in names.scenario) {
+        # name <- names.scenario[1]
+        temp.list.scen <- list.scenarios
+        for (j in names.scenario) temp.list.scen[[j]]$flag <- FALSE # turn all flags to FALSE
+        temp.list.scen[[name]]$flag <- TRUE # turn just the selected flag of the loop to TRUE
+        
+        # recover information of noise and seeds tested for this scenario
+        noise.tested <- names(which(lapply(temp.list.scen, "[[", 1) == TRUE))
+        range.noise <- unlist(temp.list.scen[[noise.tested]]["range"])
+        # range.noise <- range.noise[1:3]
+        scenario.names <- generate.scenario.names(temp.list.scen, na.to.absence, no.taxa, no.models, vect.seeds)
+        if (grepl("dataset.size", noise.tested)) {
+            amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=sites)"))
+            clean.name <- "Dataset size"
+        } else if (grepl("nb.predictors", noise.tested)) {
+            amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=pred)"))
+            clean.name <- "Number of predictors"
+        } else if (grepl("noise.temperature", noise.tested)) {
+            amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=noisetemp)"))
+            clean.name <- "Noise on temperature"
+        } else if (grepl("misdetection", noise.tested)) {
+            amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=misdet)"))
+            clean.name <- "Misdetection"
+        }
+        seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
+        # id <- paste(noise.tested, "-", range.noise, "-", seeds)
+        id <- paste(noise.tested, "-", range.noise)
+        
+        # print(colnames(df.info.scenarios))
+        
+        for (i in 1:length(scenario.names)) {
+            # i <- 1
+            new.row <- data.frame("name.folder"         = scenario.names[i],
+                                  "name.scenario"       = name,
+                                  "clean.name.scenario" = clean.name,
+                                  "value.scenario"      = amount.noise[i],
+                                  "label.scenario"      = lab.scenarios[i],
+                                  "value.seed"          = seeds[i],
+                                  "id.scenario"         = id[i])
+            df.info.scenarios <- rbind(df.info.scenarios, new.row)
+        }
+    }
+    
+} else {
+    
+    # based on scenario tested defined at the beginning of the script
+    noise.tested <- names(which(lapply(list.scenarios, "[[", 1) == TRUE))
+    range.noise <- unlist(list.scenarios[[noise.tested]]["range"])
+    # range.noise <- range.noise[1:3]
+    scenario.names <- generate.scenario.names(list.scenarios, na.to.absence, no.taxa, no.models, vect.seeds)
+    if (grepl("dataset.size", noise.tested)) {
+        amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=sites)"))
+        clean.name <- "Dataset size"
+    } else if (grepl("nb.predictors", noise.tested)) {
+        amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(?=pred)"))
+        clean.name <- "Number of predictors"
+    } else if (grepl("noise.temperature", noise.tested)) {
+        amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=noisetemp)"))
+        clean.name <- "Noise on temperature"
+    } else if (grepl("misdetection", noise.tested)) {
+        amount.noise <- as.numeric(str_extract(scenario.names, "\\d+(\\.\\d+)?(?=misdet)"))
+        clean.name <- "Misdetection"
+    }
+    seeds <- as.numeric(sub(".*?(\\d+)seed.*", "\\1", scenario.names))
+    id <- paste(noise.tested, "-", range.noise, "-", seeds)
+
+    for (i in 1:length(scenario.names)) {
+        # i <- 1
+        new.row <- data.frame("name.folder"         = scenario.names[i],
+                              "name.scenario"       = name,
+                              "clean.name.scenario" = clean.name,
+                              "value.scenario"      = amount.noise[i],
+                              "label.scenario"      = lab.scenarios[i],
+                              "value.seed"          = seeds[i],
+                              "id.scenario"         = id[i])
+        df.info.scenarios <- rbind(df.info.scenarios, new.row)
+    }
+}
 
 # Map colours to scenarios with shade variation by seed
 # First normalise seed values within each site group
-df <- data.frame(scenario = scenario.names, amount.noise, seeds = as.numeric(seeds), id = id.noise.seeds)
+colnames(df.info.scenarios)
 
-# Scale seeds within site group to [0.4, 1] for visibility
-df$alpha <- ave(df$seeds, df$amount.noise, FUN = function(x) scales::rescale(x, to = c(0.4, 1)))
+if(length(vect.seeds) > 1){
+    # scale seeds within scenario group to analze seed differences
+    df.info.scenarios$alpha <- ave(df.info.scenarios$value.seed, df$value.scenario, FUN = function(x) scales::rescale(x, to = c(0.4, 1)))
+} else {
+    df.info.scenarios$alpha <- 1
+}
 
 # Final colours
-df$colour <- mapply(function(noise, alpha) {
-    alpha(base_colours[as.character(noise)], alpha)
-}, df$amount.noise, df$alpha)
+df.info.scenarios$colour <- mapply(function(noise, alpha) {
+    alpha(scenario.color.map[as.character(noise)], alpha)
+}, df.info.scenarios$label.scenario, df.info.scenarios$alpha)
 
 # Named vector to use in ggplot
-color.map <- setNames(df$colour, df$id)
+color.map <- setNames(df.info.scenarios$colour, df.info.scenarios$id)
+scales::show_col(color.map)
 
 # select experiments to compare
+
+list.exp <- as.list(df.info.scenarios$name.folder)
+names(list.exp) <- df.info.scenarios$id.scenario
+names.exp <- names(list.exp)
+
+# Manually
 # list.exp     <- list("1. Best-case scenario"                     = "3000Sites_35Taxa_4SDMs_8EnvFact_",
 #                      "2. Reduced dataset size"                    = "300Sites_35Taxa_4SDMs_8EnvFact_",
 #                      "3. Removed environmental predictors"        = "3000Sites_35Taxa_4SDMs_4EnvFact_",
@@ -1083,11 +1137,20 @@ scales::show_col(color.map)
 # file.name.exp <- paste0("comparison_", noise.tested, "_",
 #                         ifelse(na.to.absence, "NAtoabs", "NAtoNA"), "_",
 #                         length(list.exp), "exp_")
-file.name.exp <- paste0("comparison_", noise.tested, "_", 
-                        length(list.exp), "exp_",
-                        length(vect.seeds), "seeds_",
-                        ifelse(na.to.absence, "NAtoabs", "NAtoNA_")
-                        )
+if(compar.all.scenario){
+    file.name.exp <- paste0("comparison_", "allscen_", 
+                            length(list.exp), "exp_",
+                            length(vect.seeds), "seeds_",
+                            ifelse(na.to.absence, "NAtoabs", "NAtoNA_")
+    )
+} else {
+    file.name.exp <- paste0("comparison_", noise.tested, "_", 
+                            length(list.exp), "exp_",
+                            length(vect.seeds), "seeds_",
+                            ifelse(na.to.absence, "NAtoabs", "NAtoNA_")
+    )
+}
+
 print(file.name.exp)
 file.name.tax <- paste0(file.name.exp,
                         taxon.under.obs, "_",
@@ -1121,7 +1184,7 @@ multi.all.results <- lapply(list.exp, FUN=function(name){
     # }
     
     restr.all.results <- restructure.all.results(all.results, models)
-    restr.all.results["noise"] <- name
+    restr.all.results["name.folder"] <- name
     
     return(list(all.results, restr.all.results))
 })
@@ -1135,7 +1198,7 @@ table.summary.metrics <- bind_rows(lapply(names(list.exp), FUN = function(name, 
     temp.names <- apply(expand.grid(names(models), select.results), 1, paste, collapse="_")
     temp.summary <- temp.res[, temp.names] %>%
         summarise_if(where(is.numeric), summary.metric, na.rm = TRUE) %>%
-        mutate(scenario = name) %>% 
+        mutate(id.scenario = name) %>% 
         mutate(across(is.numeric, round, digits=2))
     return(temp.summary)
     
@@ -1147,7 +1210,7 @@ list.results.taxa <- lapply(names(taxa.colnames), FUN = function(taxon){
         temp.res <- multi.all.results[[name]][[1]]
         temp.names <- apply(expand.grid(names(models), select.results), 1, paste, collapse="_")
         temp.summary <- temp.res[which(temp.res$taxa == taxon), c("taxa", "prevalence", temp.names)] %>%
-            mutate(scenario = name) %>% 
+            mutate(id.scenario = name) %>% 
             mutate(across(is.numeric, round, digits=2)) %>%
             select(last_col(), everything())
         return(temp.summary)
@@ -1163,81 +1226,105 @@ file.name <- paste0(file.name.exp, "per_taxon", "_results.csv")
 write.table(df.results.all.taxa, file = paste0(dir.compar.plots, file.name), sep = ",", row.names = F)
 
 # extract dataframe with best median for each scenario
-df.best.median <- table.summary.metrics[,c(paste0(names(models), "_dev_pred"), "scenario")]
+df.best.median <- table.summary.metrics[,c(paste0(names(models), "_dev_pred"), "id.scenario")]
 colnames(df.best.median) <- gsub("_dev_pred", "", colnames(df.best.median))    
 df.best.median <- df.best.median  %>% 
     pivot_longer(
         cols = names(models), 
         names_to = "model",
         values_to = "dev") %>%
-    rename(column_label = scenario) %>%
-    group_by(column_label) %>% 
+    # rename(column_label = scenario) %>%
+    group_by(id.scenario) %>% 
     slice(which.min(dev))
-df.best.median$column_label <- factor(df.best.median$column_label, levels = names.exp)
-df.best.median <- as.data.frame(df.best.median[order(df.best.median$column_label),])
+df.best.median$id.scenario <- factor(df.best.median$id.scenario, levels = names.exp)
+df.best.median <- as.data.frame(df.best.median[order(df.best.median$id.scenario),])
+
+# check which columns with scenario info are missing
+cols.to.add <- setdiff(names(df.info.scenarios), names(df.best.median))
+
+# join missing information
+df.best.median <- df.best.median %>%
+    left_join(
+        df.info.scenarios %>% select(id.scenario, all_of(cols.to.add)),
+        by = c("id.scenario")
+    )
+# order levels for later plotting
+df.best.median <- df.best.median %>%
+    mutate(
+        name.scenario = factor(name.scenario, levels = unique(df.info.scenarios$name.scenario)),
+        clean.name.scenario = factor(clean.name.scenario, levels = unique(df.info.scenarios$clean.name.scenario)),
+        id.scenario = factor(id.scenario, levels = df.info.scenarios$id.scenario),
+        label.scenario = factor(label.scenario, levels = lab.scenarios)
+    )
 
 # write summarized results in csv
 file.name <- paste0(file.name.exp, summary.metric, "_results.csv")
 write.table(table.summary.metrics, file = paste0(dir.compar.plots, file.name), sep = ",", row.names = F)
 
-final.multi.all.results <- bind_rows(lapply(multi.all.results, "[[", 2), .id = "column_label")
+# write final long dataset with all results
+final.multi.all.results <- bind_rows(lapply(multi.all.results, "[[", 2), .id = "id.scenario")
 final.multi.all.results$model <- factor(final.multi.all.results$model, levels= names(models))
-final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = names.exp)
+final.multi.all.results$id.scenario <- factor(final.multi.all.results$id.scenario, levels = names.exp)
 
-# Done with ChatGPT 28.05.25
+# check which columns with scenario info are missing
+cols.to.add <- setdiff(names(df.info.scenarios), names(final.multi.all.results))
 
-# Extract components
-# final.multi.all.results$amount <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "\\d+(\\.\\d+)?(?=_)"))
-# final.multi.all.results$seed  <- as.numeric(stringr::str_extract(final.multi.all.results$column_label, "(?<=_)\\d+"))
+# join missing information
+final.multi.all.results <- final.multi.all.results %>%
+    left_join(
+        df.info.scenarios %>% select(name.folder, id.scenario, all_of(cols.to.add)),
+        by = c("name.folder", "id.scenario")
+    )
 
-final.multi.all.results$amount <- final.multi.all.results$column_label
-final.multi.all.results$seed  <- 13
+# apply factor order to columns
+final.multi.all.results <- final.multi.all.results %>%
+    mutate(
+        name.scenario = factor(name.scenario, levels = unique(df.info.scenarios$name.scenario)),
+        clean.name.scenario = factor(clean.name.scenario, levels = unique(df.info.scenarios$clean.name.scenario)),
+        id.scenario = factor(id.scenario, levels = df.info.scenarios$id.scenario),
+        label.scenario = factor(label.scenario, levels = lab.scenarios)
+    )
+# final.multi.all.results$id.scenario <- factor(final.multi.all.results$id.scenario, levels = df.info.scenarios$id.scenario)
+# final.multi.all.results$label.scenario <- factor(final.multi.all.results$label.scenario, levels = lab.scenarios)
 
-# Create readable label
-final.multi.all.results$scenario_label <- paste0(final.multi.all.results$amount, " noise – run ", 
-                                                 as.numeric(factor(final.multi.all.results$seed, 
-                                                                   levels = sort(unique(final.multi.all.results$seed)))))
-# Sort column_label manually
-sorted_labels <- final.multi.all.results |>
-    dplyr::distinct(column_label, amount, seed) |>
-    # dplyr::arrange(desc(amount), seed) |>
-    dplyr::arrange(amount, seed) |>
-    dplyr::pull(column_label)
-
-# Apply order to both column_label and scenario_label
-final.multi.all.results$column_label <- factor(final.multi.all.results$column_label, levels = sorted_labels)
-
-# Also apply to scenario_label (same order)
-label_map <- final.multi.all.results |>
-    dplyr::distinct(column_label, scenario_label) |>
-    dplyr::arrange(factor(column_label, levels = sorted_labels)) |>
-    dplyr::pull(scenario_label)
-
-names(label_map) <- sorted_labels
-
-# # filter results for selected taxon
-# filtered.multi.all.results <- final.multi.all.results %>%
-#     filter(taxa == taxon.under.obs)
+# also apply to scenario_label (same order)
+label.scenario <- df.info.scenarios$label.scenario
+names(label.scenario) <- df.info.scenarios$id.scenario
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # PLOT: multi box plot ----
 
 plot.data <- final.multi.all.results
+# plot.data <- plot.data %>%
+#     mutate(
+#         name.scenario = factor(name.scenario, levels = unique(df.info.scenarios$name.scenario)),
+#         id.scenario = factor(id.scenario, levels = df.info.scenarios$id.scenario),
+#         label.scenario = factor(label.scenario, levels = lab.scenarios)
+#     )
 plot.data$pattern <- ifelse(plot.data$fit_pred == "fit", "Calibration", "Prediction")
 plot.data$pattern <- factor(plot.data$pattern, levels= c("Calibration", "Prediction"))
-plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF", "ANN"))
+# plot.data$model <- factor(plot.data$model, levels = c("GLM", "GAM", "RF", "ANN"))
 
-# Create grouping for boxplots
-plot.data$group_x <- factor(paste0(plot.data$amount, "_", plot.data$fit_pred),
-                             levels = unlist(lapply(sort(unique(plot.data$amount), 
-                                                         decreasing = ifelse(grepl("dataset", noise.tested), T, F)),
-                                                    FUN = function(s) paste0(s, "_", c("fit", "pred"))
-                                                    )))
+# # Create grouping for boxplots
+# plot.data$group_x <- factor(paste0(plot.data$amount, "_", plot.data$fit_pred),
+#                              levels = unlist(lapply(sort(unique(plot.data$amount), 
+#                                                          decreasing = ifelse(grepl("dataset", noise.tested), T, F)),
+#                                                     FUN = function(s) paste0(s, "_", c("fit", "pred"))
+#                                                     )))
 
 plot.data <- plot.data %>% filter(is.finite(dev))
+colnames(plot.data)
+levels(plot.data$name.scenario)
+levels(plot.data$clean.name.scenario)
+levels(plot.data$label.scenario)
+
+text.plot <- plot.data %>%
+    group_by(clean.name.scenario, label.scenario) %>%
+    summarise(text = first(na.omit(value.scenario)), .groups = "drop")
 
 ## color per model ----
 
+# now adjusted to all scenarios
 fig.box1 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
     geom_boxplot_pattern(aes(fill = model, pattern = pattern),
                          pattern_colour = 'black',
@@ -1250,10 +1337,25 @@ fig.box1 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
     ) +
     geom_hline(data = df.best.median, aes(yintercept = dev, color = model),
                linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
-    scale_x_discrete(limits=names(models)) +
-    scale_y_continuous(limits = c(0, 1.7)) +
-    scale_color_manual(values = model.color.map) +
-    facet_wrap(~ column_label, ncol = 4, , labeller = label_wrap_gen()) +
+    # scale_x_discrete(limits=names(models)) +
+    # scale_y_continuous(limits = c(0, 1.7)) +
+    scale_color_manual(values = c("Null" = "grey", model.color.map))
+
+if(compar.all.scenario){
+    fig.box1 <- fig.box1 + 
+        facet_grid(clean.name.scenario ~ label.scenario, 
+                   labeller = labeller(clean.name.scenario = label_wrap_gen(width = 10))) +
+        geom_label(data = text.plot, aes(x = -Inf, y = -Inf, label = text),
+                   inherit.aes = FALSE, 
+                   hjust = -0.2,   # push text a bit inside from the left edge
+                   vjust = -0.5,   # push text a bit inside from the bottom edge
+                   size = 3.3)
+} else {
+    fig.box1 <- fig.box1 + 
+        facet_wrap(~ id.scenario, ncol = 4, labeller = label_wrap_gen())
+}
+
+fig.box1 <- fig.box1 +
     scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
     scale_fill_manual(values = c("Null" = "grey", model.color.map)) +
     labs(x = "Model",
@@ -1263,7 +1365,9 @@ fig.box1 <- ggplot(data=plot.data, aes(x=model, y=dev)) +
          pattern = "")
 # fig.box1
 
-pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels.pdf"), width = width.a4*1.2, height = height.a4*0.5)
+# now adjusted to all scenarios
+pdf(paste0(dir.compar.plots, file.name.exp, "boxplot_colormodels.pdf"), 
+    width = width.a4*1.2, height = height.a4*0.8)
 print(fig.box1)
 dev.off()
 
@@ -1273,14 +1377,14 @@ dev.off()
 
 plot.data2 <- plot.data %>% filter(model != "Null")
 
-# # Force color.map to have names that match column_label factor levels
-# names(color.map) <- levels(plot.data2$column_label)
-# names(label_map) <- levels(plot.data2$column_label)
+# # Force color.map to have names that match id.scenario factor levels
+# names(color.map) <- levels(plot.data2$id.scenario)
+# names(label_map) <- levels(plot.data2$id.scenario)
 
 if(length(vect.seeds) > 1){
     
     fig.box2 <- ggplot(data = plot.data2, aes(x = group_x, y = dev)) +
-        geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
+        geom_boxplot_pattern(aes(fill = id.scenario, pattern = pattern),
                              pattern_colour = 'black',
                              pattern_fill = 'black',
                              pattern_density = 0.1,
@@ -1290,7 +1394,10 @@ if(length(vect.seeds) > 1){
         scale_color_manual(values = color.map) +
         scale_fill_manual(values = color.map, labels = label_map) +
         scale_pattern_manual(values = c("Calibration" = "stripe", "Prediction" = "none")) +
-        facet_wrap(~ model, ncol = 4, labeller = label_wrap_gen()) +
+        # ifelse(compar.all.scenario, 
+        #        facet_grid(clean.name.scenario ~ label.scenario, 
+        #                                        labeller = labeller(clean.name.scenario = label_wrap_gen(width = 10))),
+        #        facet_wrap(~ model, ncol = 4, labeller = label_wrap_gen())) +
         labs(
             y = "Standardized deviance",
             fill = "Scenario",
@@ -1304,7 +1411,7 @@ if(length(vect.seeds) > 1){
 } else {
     
     fig.box2 <- ggplot(data=plot.data2, aes(x=fit_pred, y=dev)) +
-        geom_boxplot_pattern(aes(fill = column_label, pattern = pattern),
+        geom_boxplot_pattern(aes(fill = id.scenario, pattern = pattern),
                              pattern_colour = 'black',
                              pattern_fill = 'black',
                              pattern_density = 0.1,
@@ -1317,8 +1424,23 @@ if(length(vect.seeds) > 1){
         #            linetype="longdash", size = 1, alpha = 0.8, show.legend = FALSE) +
         scale_x_discrete(limits=c("fit", "pred")) +
         scale_y_continuous(limits = c(0, 1.7)) +
-        scale_color_manual(values = color.map) +
-        facet_wrap(~ model, ncol = 2, , labeller = label_wrap_gen()) +
+        scale_color_manual(values = color.map)
+    
+    if(compar.all.scenario){
+        # NOT WORKING
+        # fig.box2 <- fig.box2 + 
+        #     facet_grid(clean.name.scenario ~ model, 
+        #                labeller = labeller(clean.name.scenario = label_wrap_gen(width = 10))) +
+        #     geom_label(data = text.plot, aes(x = -Inf, y = -Inf, label = text),
+        #                inherit.aes = FALSE, 
+        #                hjust = -0.2,   # push text a bit inside from the left edge
+        #                vjust = -0.5,   # push text a bit inside from the bottom edge
+        #                size = 3.3)
+    } else {
+        fig.box2 <- fig.box2 + 
+            facet_wrap(~ model, ncol = 2, labeller = label_wrap_gen())
+    }
+    fig.box2 <- fig.box2 +
         scale_pattern_manual(values= c("Calibration" = "stripe", "Prediction" = "none")) + #,
         scale_fill_manual(values = color.map) +
         labs(x = "Model",
@@ -1381,13 +1503,13 @@ for (taxon in names(taxa.colnames)) {
     } else {
         
         fig.perf1 <- ggplot(data=plot.data) +
-            geom_point(aes(x=column_label,
+            geom_point(aes(x=id.scenario,
                            y=dev,
                            shape=shape,
                            color=model),
                        size=3,
                        alpha=0.7) +
-            geom_line(aes(x = column_label,
+            geom_line(aes(x = id.scenario,
                           y = dev,
                           group = interaction(model, shape),
                           color = model,
@@ -1479,8 +1601,8 @@ for (i in 1:length(list.exp)) {
     # group_by(across(all_of(select.env.fact)), model) %>%
     # summarise(avg = mean(all_of(taxa.for.ice)))
     
-    observations.mean["noise"] <- name.exp
-    observations["noise"]      <- name.exp
+    observations.mean["name.folder"] <- name.exp
+    observations["name.folder"]      <- name.exp
     
     multi.ice[[name.exp]]      <- list(observations, observations.mean)
     # return(list(observations, observations.mean))
@@ -1488,7 +1610,7 @@ for (i in 1:length(list.exp)) {
 }
 
 list.ice.bound <- lapply(lapply(multi.ice, "[[", 2), function(obs.mean){
-    observations.mean.bounds  <- as.data.frame(obs.mean %>% group_by(model, noise) %>%
+    observations.mean.bounds  <- as.data.frame(obs.mean %>% group_by(model, name.folder) %>%
                                                    summarise(x.mean=max(across(all_of(name.select.env.fact))),
                                                              y.mean.min=across(all_of(taxa.for.ice), min, na.rm = TRUE),
                                                              y.mean.max=across(all_of(taxa.for.ice), max, na.rm = TRUE)))
@@ -1501,14 +1623,14 @@ max.temp <- max(long.multi.ice[,select.env.fact])
 min.temp <- min(long.multi.ice[,select.env.fact])
 
 multi.mean <- lapply(multi.ice, "[[", 2)
-final.multi.ice <- bind_rows(multi.mean, .id = "column_label")
+final.multi.ice <- bind_rows(multi.mean, .id = "id.scenario")
 final.multi.ice$model <- factor(final.multi.ice$model, levels = names(sdm.models))
-final.multi.ice$column_label_noise <- factor(final.multi.ice$column_label, levels = names.exp)
+final.multi.ice$column_label_noise <- factor(final.multi.ice$id.scenario, levels = names.exp)
 
-final.multi.bound <- bind_rows(list.ice.bound, .id = "column_label") 
+final.multi.bound <- bind_rows(list.ice.bound, .id = "id.scenario") 
 final.multi.bound$x.mean <- round(max.temp, digits = 1)
 final.multi.bound$model <- factor(final.multi.bound$model, levels = names(sdm.models))
-final.multi.bound$column_label_noise <- factor(final.multi.bound$column_label, levels = unlist(names(list.exp)))
+final.multi.bound$column_label_noise <- factor(final.multi.bound$id.scenario, levels = unlist(names(list.exp)))
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## produce plot ----
@@ -1550,7 +1672,7 @@ for (taxon in taxa.for.ice) {
         rename(y.mean.max = all_of(paste0("y.mean.max", taxon)))
     
     # preare streambugs ice data
-    plot.data.stream <- pred.ice.streamb[,c("ReachID", "Watershed", "column_label", "observation_number", "model",
+    plot.data.stream <- pred.ice.streamb[,c("ReachID", "Watershed", "id.scenario", "observation_number", "model",
                                                  select.env.fact, paste0("Occurrence.", taxon))] %>%
         rename(pred = paste0("Occurrence.", taxon)) %>%
         group_by_at(select.env.fact[1]) %>%
@@ -1652,7 +1774,7 @@ for (taxon in taxa.for.ice) {
     occ.taxon <- paste0("Occurrence.", taxon)
     
     # preare streambugs ice data
-    plot.data.stream <- pred.ice.streamb[,c("ReachID", "Watershed", "column_label", "observation_number", "model",
+    plot.data.stream <- pred.ice.streamb[,c("ReachID", "Watershed", "id.scenario", "observation_number", "model",
                                             select.env.fact, paste0("Occurrence.", taxon))] %>%
         rename(pred = paste0("Occurrence.", taxon)) %>%
         group_by_at(select.env.fact[1]) %>%
@@ -1671,9 +1793,9 @@ for (taxon in taxa.for.ice) {
         geom_line(data=plot.data.stream,
                   aes(x=.data[[name.select.env.fact]], y=.data[["avg"]]),
                   size=1, color = "darkgrey", alpha = 0.8) +
-        facet_wrap(~factor(column_label, levels=unlist(names(list.exp))), ncol = 4,
+        facet_wrap(~factor(id.scenario, levels=unlist(names(list.exp))), ncol = 4,
                    labeller = label_wrap_gen())+
-        #facet_wrap(~column_label) +
+        #facet_wrap(~id.scenario) +
         xlim(lb, hb) +
         scale_y_continuous(limits = c(0,1)) +
         scale_color_manual(values=model.color.map) +
@@ -1896,7 +2018,7 @@ print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1.1, height = heig
 # 
 # pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, taxa.colnames)] %>% #, paste0("Occurrence.", taxon))] %>%
 #     mutate(#observation_number = rep(1:no.sites, each = no.steps),
-#            column_label = 1,
+#            id.scenario = 1,
 #            model = "Streambugs") # %>%
 # pred.ice.streamb$observation_number <- NA
 # for(reach in data.base.ice$ReachID){
@@ -1935,7 +2057,7 @@ print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1.1, height = heig
 #     # extract ice dataframe for taxon selected for analysis
 #     pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, paste0("Occurrence.", taxon))] %>%
 #         mutate(observation_number = rep(1:no.sites, each = no.steps),
-#                column_label = 1,
+#                id.scenario = 1,
 #                model = "Streambugs") %>%
 #         rename(pred = paste0("Occurrence.", taxon))
 # 
