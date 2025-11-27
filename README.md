@@ -2,13 +2,13 @@ README IN CONSTRUCTION
 
 # ArtificialData_Streambugs_SDMs
 
-This rpository provides the data, scripts and plots needed to produce the results of the manuscript *["Are we asking too much from species distribution models? Impact of data limitations on the predictive performance, overfitting and interpretability "](future_link)* (submitted to *Journal of Biogeography*, Dec 2024)
+This repository provides the data, scripts and plots needed to produce the results of the manuscript *["Noise, bias and data limitations: Virtual benchmarking of species distribution models’ robustness for prediction and inference"](future_link)* (submitted to *Ecological Modelling*, Nov 2025)
 
 > *Authors:* Emma Chollet Ramampiandra (ECR), Gaspard Fragnière (GF), Andreas Scheidegger (AS), Nele Schuwirth (NS)
 >
-> *Correspondence:* <emma.chollet@eawag.ch>
+> *Correspondence:* <emma.chollet@hotmail.com>
 >
-> *Date:* 13.12.2024
+> *Date:* 27.11.2025
 
 
 ## Overview

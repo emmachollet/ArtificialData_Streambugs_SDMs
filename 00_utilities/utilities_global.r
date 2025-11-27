@@ -522,6 +522,35 @@ generate.scenario.names <- function(list.scenarios, na.to.absence, no.taxa, no.m
 #     return(scenario_names)
 # }
 
+fct.bind.info.scenario <- function(df){
+    
+    # df needs to have column: id.scenario
+    # df.info.scenarios needs to be well defined
+    
+    # to debug
+    # df <- long.multi.ice
+    
+    # check which columns with scenario info are missing
+    cols.to.add <- setdiff(names(df.info.scenarios), names(df))
+    
+    # join missing information
+    df <- df %>%
+        left_join(
+            df.info.scenarios %>% select(id.scenario, all_of(cols.to.add)),
+            by = c("id.scenario")
+        )
+    
+    # apply factor order to columns
+    df <- df %>%
+        mutate(
+            name.scenario = factor(name.scenario, levels = unique(df.info.scenarios$name.scenario)),
+            clean.name.scenario = factor(clean.name.scenario, levels = unique(df.info.scenarios$clean.name.scenario)),
+            id.scenario = factor(id.scenario, levels = df.info.scenarios$id.scenario),
+            label.scenario = factor(label.scenario, levels = lab.scenarios)
+        )
+    return(df)
+}
+
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 ## Subfunctions used by the above functions ----
 
