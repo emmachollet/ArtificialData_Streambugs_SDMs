@@ -77,7 +77,7 @@ Figure 2: Catchment delimitation used to define initial taxa pools. Ask Rosi Sib
 
 | filename                      | description                                                  |
 | :---------------------------- | ------------------------------------------------------------ |
-| **main_streambugs.r**         | **Set working directory here. Check carefully options at the beginning of the script (e.g., taxa selection, catchment selection, nb of sites, ICE simulation or not). Run to simulate data with Streambugs, and to produce according datasets and plots. ** |
+| **main_streambugs.r**         | **Set working directory here. Check carefully options at the beginning of the script (e.g., taxa selection, catchment selection, nb of sites, ICE simulation or not). Run to simulate data with Streambugs, and to produce according datasets and plots.** |
 | functions_run_streambugs.r    | Script with two big functions specific to our application: 1. prepare taxa parameters and variables per catchment (mix of original functions and new updates for instance interpolation to adapt responses to our application), 2. run Streambugs per catchment. |
 | startjobs_main_streambugs.txt | Text file used to start a job on the SIAM server, don't forget to set "server" to TRUE in "main_streambugs.r". |
 | outputtextfile.txt            | Text file with output from the R console if script is run on server. |
