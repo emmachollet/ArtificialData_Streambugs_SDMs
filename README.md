@@ -17,7 +17,7 @@ This repository provides the data, scripts and plots of the manuscript *["Noise,
 
 Figure 1: Diagram representing the workflow of the study.
 
-<img src="/C1_documentation/analysis_noise_scenarios.png" width="75%">
+<img src="/00_utilities/analysis_noise_scenarios.png" width="75%">
 
 
 ## Data information
@@ -40,6 +40,8 @@ Directory: *ArtificialData_Streambugs_SDMs*
 | **set_folders_structure.r** | **Set working directory here. Run first to create all necessary folders.** |
 | README.md                   | Text file (markdown format). Description of the repository.  |
 | .gitignore                  | Text file. List of folders that are not updated on the repository because too heavy (A3, B1, B2, C1). |
+| figure_workflow.png         | Figure of the workflow of the study.                         |
+| MapRiverBasinRegion.jpg     | Swiss map colored according to catchment delimitation used for initial taxa pools, produced by Rosi Siber. |
 
 ### 00_utilities
 
@@ -67,7 +69,7 @@ Directory: *ArtificialData_Streambugs_SDMs*
 
 Figure 2: Catchment delimitation used to define initial taxa pools. Ask Rosi Siber to include this as a column when preparing input environmental data.
 
-<img src="/C1_documentation/MapRiverBasinRegion.jpg" width="75%">
+<img src="/00_utilities/MapRiverBasinRegion.jpg" width="75%">
 
 
 
