@@ -22,7 +22,6 @@ Figure 1: Diagram representing the workflow of the study.
 
 ## Data information
 
-The input data is already pre-processed (pre-processing information available upon request). 
 - The macroinvertebrate biological data (observations) come from the MIDAT database, run by info fauna CSCF (Centre Suisse de Cartographie de la Faune) & karch.
 - The environmental data consists of environmental factors selected and calculated based on previous studies. They are derived from the Swiss Federal Office for the Environment (water quality monitoring data, hydrological data, hydromorphological data, land use data), the Swiss Federal Office of Topography (topographical data), and the Swiss Federal Statistical Office (population statistics). They are calculated for monitoring and synthetic sites with the help of Rosi Siber.
 - The macroinvertebrate and environmental data were pre-processed in the data package *PreprocessSwissInvertebrateEnvironmentalModellingData* to obtain the input datasets used here.
