@@ -47,7 +47,6 @@ file.synth.points <- "Synthetic_environmental_data_2024-03-19.dat" # output of: 
 file.selected.taxa      <- "selected_taxa_analysis.csv"
 
 source(paste0(dir.utilities, "utilities_global.r"))
-source("utilities_streambugs.r")
 source("functions_run_streambugs.r")
 source("library/application specific NIS/load_library.r")
 
@@ -57,10 +56,10 @@ source("library/application specific NIS/load_library.r")
 ## Analysis options ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-server <- T
+server <- F
 
 # run simulations to produce ICE
-ICE <- F # if False, simulations run for whole dataset
+ICE <- F # if False, simulations run for the environmental dataset
 no.sites.ice <- 50
 # custom.range <- c(5:10)
 # no.steps.ice <- length(custom.range)
@@ -78,7 +77,7 @@ inp <- NA # set NA for time-dependent input and parameters
 
 # set-up output times
 
-# # sequenced output times of different timesteps length
+# # sequenced output times of different timesteps length, for debugging numerical problems
 # n.years1       <- 2 # number of years
 # n.days.appart1 <- 1/10  # number of days from one time step to another (can be smaller than one day, e.g., 0.5)
 # tout1          <- c(seq(0, n.years1, by = n.days.appart1/365)) # set up time vector of [n.years*365/n.days.appart] steps
@@ -94,7 +93,8 @@ inp <- NA # set NA for time-dependent input and parameters
 #           seq(10.003,n.years,by=1/365)) # t steadystate:170-200
 
 # continuous output times of same timesteps length
-n.years       <- 100 # number of years
+n.years       <- 10 # number of years to test
+# n.years       <- 100 # number of years, final simulation
 n.days.appart <- 1  # number of days from one time step to another (can be smaller than one day, e.g., 0.5)
 tout          <- c(seq(0, n.years, by = n.days.appart/365)) # set up time vector of [n.years*365/n.days.appart] steps
 # tout <- c(0, 0.001, 0.002)
@@ -112,6 +112,7 @@ catch.variable <- "Watershed"
 # catch.variable <- "Watershed_Reg"
 
 # tune parameters to get stronger presence/absence response to environmental factors, necessary for our application
+# different things tested, at the end we chose to update traits only
 # if Flag True, then Value is applied to the tuned parameter
 par.adjust <- list("curve.curr.temp"     = list("Flag" = F, "Value" = 0),  # assign Value (e.g., -10) to curve parameter of limitation factor of current and temperature, to get stronger (pres/abs) taxa
                    "curve.orgmic.sapro"  = list("Flag" = F, "Value" = 10),   # assign Value (e.g., -10) to curve parameter of limitation factor of orgmicropoll and saproby, to get stronger (pres/abs) taxa
@@ -119,9 +120,9 @@ par.adjust <- list("curve.curr.temp"     = list("Flag" = F, "Value" = 0),  # ass
                    "sens.anal.init.cond" = list("Flag" = F, "Value" = 0.5),  # do a sensitivity analysis of results to initial conditions (initial densities, original 1gDM) multiplied by Value
                    "hdens"               = list("Flag" = F, "Value" = 0.05), # multiply hdens by small number (e.g., 0.05) to get strong self-inhibition, main impact on abundance and not pres/abs 
                    "thresh.indiv"        = list("Flag" = F, "Value" = 1),    # define presence data points above specific threshold Value (e.g., 1) of number of individuals
-                   "update.traits"       = list("Flag" = T, "Value" = ".hybrid"))
+                   "update.traits"       = list("Flag" = T, "Value" = ".hybrid")) # update traits hybrid manually and from Vermeiren et al. 2020 
 
-correct.shade        <- 0.6 # factor to correct shading (fshade) for now, otherwise algae is too limited
+correct.shade        <- 0.6 # factor to correct shading (fshade) for our application, otherwise algae is too limited
 
 # catchment selection for simulation (can be specific or all to analyze taxa pool and results)
 select.catch <- "all"
@@ -148,7 +149,7 @@ if(ICE){
   n.sites.per.catch    <- no.sites.ice * no.steps.ice
 } else {
   # n.sites.per.catch <- "all"
-  n.sites.per.catch <- 2
+  n.sites.per.catch <- 2 # to test before bigger run
 }
 sites.selection      <- list("n.sites" = n.sites.per.catch, 
                              "select.sites" = select.sites)
@@ -169,7 +170,7 @@ vect.col.pres.abs <- c( "Present" = "#00BFC4", "Absent" = "#F8766D")
 scales::show_col(vect.col.pres.abs)
 
 # define run name for all output files
-name.par.adjust <- ""
+name.par.adjust <- "" # name of how we adjusted the parameters
 # for (i in 1:length(par.adjust)) {
 #   name.par.adjust <- paste0(name.par.adjust, ifelse(par.adjust[[i]][["Flag"]], paste0(names(par.adjust)[i], par.adjust[[i]][["Value"]], "_"), ""))
 # }
@@ -221,7 +222,6 @@ data.env.all <- bind_rows(data.env.midat, data.env.synth)
 remove(data.env.synth) # remove entire synthetic sample points data from environement because slows down the system
 data.env.all <- filter(data.env.all, tempmaxC > 4) # remove sites with temperature bellow 4 degrees
 data.env.all$Watershed <- gsub("Doux", "Doubs", data.env.all$Watershed) # correct cute mistake
-
 
 # clean ReachID names
 data.env.all$ReachID <- gsub("CSCF_", "", data.env.all$ReachID) # remove some characters in ReachID names
@@ -554,11 +554,9 @@ if(!file.exists(paste0(dir.outputs, file.name))){
 }
 
 
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # SIMULATIONS ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 ## Run streambugs ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -917,8 +915,10 @@ threshold.mean <- 2.852e-03*0.01
 threshold.test <- 3.947e-03*0.01 # 1% change in individual of the mean of the size of all invertebrates
 threshold.select <- threshold.test
 
-# analyze results for 1 sites, 20 steps, differences in steady state parameters (tail and threshold)
 
+# old analysis of thresholds and steady state, not deleted in case it is useful again (which i don't wish you <3)
+
+# analyze results for 1 sites, 20 steps, differences in steady state parameters (tail and threshold)
 # options()$nwarnings  ## check current state
 # # [1] 50
 # 
@@ -1055,9 +1055,6 @@ threshold.select <- threshold.test
 # print.pdf.plots(list.plots = list.plots, width = 8, height = 6, dir.output = dir.outputs, info.file.name = name.run, file.name = file.name,
 #                 png = F)
 
-
-
-# source("utilities.r")
 
 print(vect.analysis.env.fact)
 vect.analysis <- c("ReachID", "X", "Y", "MonitoringProgram", catch.variable, vect.analysis.env.fact)
@@ -1292,9 +1289,8 @@ if(ICE){
   print(select.env.fact)
   vect.reaches.ice <- data.base.ice$ReachID
   
+  # old analysis, not deleted in case it is useful again
   # catch <- "Aare"
-  # 
-  # 
   # 
   # data.test <- data.results.ice %>%
   #   filter(Watershed == catch)

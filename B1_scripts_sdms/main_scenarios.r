@@ -967,7 +967,7 @@ scenario.color.map <- c(
 names(scenario.color.map) <- lab.scenarios
 
 # decide if compare all scenarios (T) or only one scenario (F)
-compar.all.scenario <- F
+compar.all.scenario <- T
 
 ### list experiments ----
 
@@ -1070,47 +1070,47 @@ if(compar.all.scenario){
     }
 }
 
-# # add combined scenarios manually
-# df.combined     <-  data.frame("name.folder" = c("3000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-#                                                  "2000sites_13seed_6pred_1.5noisetemp_0.15misdet_NAtoNA_35taxa_4models_",
-#                                                  "1000sites_13seed_4pred_3noisetemp_0.3misdet_NAtoNA_35taxa_4models_",
-#                                                  "500sites_13seed_2pred_4.5noisetemp_0.45misdet_NAtoNA_35taxa_4models_"),
-#                                "name.scenario"       = "combined",
-#                                "clean.name.scenario" = "Combined scenarios",
-#                                "value.scenario"      = "-",
+# add combined scenarios manually
+df.combined     <-  data.frame("name.folder" = c("3000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+                                                 "2000sites_13seed_6pred_1.5noisetemp_0.15misdet_NAtoNA_35taxa_4models_",
+                                                 "1000sites_13seed_4pred_3noisetemp_0.3misdet_NAtoNA_35taxa_4models_",
+                                                 "500sites_13seed_2pred_4.5noisetemp_0.45misdet_NAtoNA_35taxa_4models_"),
+                               "name.scenario"       = "combined",
+                               "clean.name.scenario" = "Combined scenarios",
+                               "value.scenario"      = "-",
+                               "label.scenario"      = lab.scenarios,
+                               "value.seed"          = 13,
+                               "id.scenario"         = paste("combined", lab.scenarios, sep = " - "))
+df.info.scenarios <- rbind(df.info.scenarios, df.combined)
+
+# # add dispersal scenarios manually
+# noise.tested <- "disp.lim"
+# df.combined.no.disp     <-  data.frame("name.folder" = c("3000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                                                  "2000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                                                  "1000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
+#                                                  "500sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_"),
+#                                "name.scenario"       = "size.no.disp",
+#                                "clean.name.scenario" = "Without noise due to dispersal limitation",
+#                                "value.scenario"      = c("3000 sites", "2000 sites", "1000 sites", "500 sites"),
 #                                "label.scenario"      = lab.scenarios,
 #                                "value.seed"          = 13,
-#                                "id.scenario"         = paste("combined", lab.scenarios, sep = " - "))
-# df.info.scenarios <- rbind(df.info.scenarios, df.combined)
-
-# add dispersal scenarios manually
-noise.tested <- "disp.lim"
-df.combined.no.disp     <-  data.frame("name.folder" = c("3000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-                                                 "2000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-                                                 "1000sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_",
-                                                 "500sites_13seed_8pred_0noisetemp_0misdet_NAtoNA_35taxa_4models_"),
-                               "name.scenario"       = "size.no.disp",
-                               "clean.name.scenario" = "Without noise due to dispersal limitation",
-                               "value.scenario"      = c("3000 sites", "2000 sites", "1000 sites", "500 sites"),
-                               "label.scenario"      = lab.scenarios,
-                               "value.seed"          = 13,
-                               "id.scenario"         = paste("size.no.disp", lab.scenarios, sep = " - "))
-df.info.scenarios <- rbind(df.info.scenarios, df.combined.no.disp)
-
-df.combined.disp     <-  data.frame("name.folder" = c("3000sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_",
-                                                 "2000sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_",
-                                                 "1000sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_",
-                                                 "500sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_"),
-                               "name.scenario"       = "size.disp",
-                               "clean.name.scenario" = "With noise due to dispersal limitation",
-                               "value.scenario"      = c("3000 sites", "2000 sites", "1000 sites", "500 sites"),
-                               "label.scenario"      = lab.scenarios,
-                               "value.seed"          = 13,
-                               "id.scenario"         = paste("size.disp", lab.scenarios, sep = " - "))
-df.info.scenarios <- rbind(df.info.scenarios, df.combined.disp)
-
-# reorder manually for plotting
-df.info.scenarios <- df.info.scenarios[c(1,5,2,6,3,7,4,8),]
+#                                "id.scenario"         = paste("size.no.disp", lab.scenarios, sep = " - "))
+# df.info.scenarios <- rbind(df.info.scenarios, df.combined.no.disp)
+# 
+# df.combined.disp     <-  data.frame("name.folder" = c("3000sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_",
+#                                                  "2000sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_",
+#                                                  "1000sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_",
+#                                                  "500sites_13seed_8pred_0noisetemp_0misdet_NAtoabs_35taxa_4models_"),
+#                                "name.scenario"       = "size.disp",
+#                                "clean.name.scenario" = "With noise due to dispersal limitation",
+#                                "value.scenario"      = c("3000 sites", "2000 sites", "1000 sites", "500 sites"),
+#                                "label.scenario"      = lab.scenarios,
+#                                "value.seed"          = 13,
+#                                "id.scenario"         = paste("size.disp", lab.scenarios, sep = " - "))
+# df.info.scenarios <- rbind(df.info.scenarios, df.combined.disp)
+#
+# # reorder manually for plotting
+# df.info.scenarios <- df.info.scenarios[c(1,5,2,6,3,7,4,8),]
 
 # Map colours to scenarios with shade variation by seed
 # First normalise seed values within each site group
@@ -2006,166 +2006,166 @@ if(compar.all.scenario){
 }
 
 file.name <- "pdp_all_taxa"
-print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1.1, height = height.a4*1,
+print.pdf.plots(list.plots = list.plots.pdp, width = width.a4*1, height = height.a4*1,
                 dir.output = dir.compar.plots, 
                 info.file.name = paste0(file.name.exp, length(taxa.for.ice), "taxa_", select.env.fact, "_"),
                 file.name = file.name)
 
 
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-## ICE Streambugs ####
-
-select.env.fact <- vect.all.env.fact[2]
-name.select.env.fact <- names(select.env.fact)
-
-# recover 50 sites used for the ice plot of streambugs
-data.base.ice            <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
-data.base.ice$observation_number <- 1:nrow(data.base.ice)
-data.base.ice$tempmaxC2  <- data.base.ice$tempmaxC^2
-data.base.ice$currentms2 <- data.base.ice$currentms^2
-
-# preprocess input data for ice plots
-preprocessed.data.ice <- preprocess.data(data=data.base.ice,
-                                         env.fact=vect.all.env.fact,
-                                         dir=dir.output,
-                                         split.type="ICE")
-
-# recover streambugs output for the 50 sites and 50 steps
-name.ice.streambugs <- "8Catch_50Sites_ICE_50Steps_PolyInterp30_runC_100Yea_36501Steps_"
-ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
-                                       "WideData_ResultsProbObs.csv"), sep = ";")
-no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
-no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_Poly")[2])
+# # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# ## ICE Streambugs ####
 # 
-# # process data for ice plot
-# pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, taxa.colnames)] %>% 
-#     mutate(column_label = 1,
-#            model = "Streambugs") # %>%
-# pred.ice.streamb$observation_number <- NA
-# for(reach in data.base.ice$ReachID){
-#     # reach <- data.base.ice$ReachID[1]
-#     obs.num <- data.base.ice[which(data.base.ice$ReachID == reach), "observation_number"] # match unique number per site to have consistent line colouring
-#     rind <- which(grepl(reach, pred.ice.streamb$ReachID))
-#     pred.ice.streamb[rind, "observation_number"] <- obs.num
+# select.env.fact <- vect.all.env.fact[2]
+# name.select.env.fact <- names(select.env.fact)
+# 
+# # recover 50 sites used for the ice plot of streambugs
+# data.base.ice            <- read.csv(paste0(dir.input.data, "WideDataInputs_ICE_50Sites.csv"), sep = ";")
+# data.base.ice$observation_number <- 1:nrow(data.base.ice)
+# data.base.ice$tempmaxC2  <- data.base.ice$tempmaxC^2
+# data.base.ice$currentms2 <- data.base.ice$currentms^2
+# 
+# # preprocess input data for ice plots
+# preprocessed.data.ice <- preprocess.data(data=data.base.ice,
+#                                          env.fact=vect.all.env.fact,
+#                                          dir=dir.output,
+#                                          split.type="ICE")
+# 
+# # recover streambugs output for the 50 sites and 50 steps
+# name.ice.streambugs <- "8Catch_50Sites_ICE_50Steps_PolyInterp30_runC_100Yea_36501Steps_"
+# ice.df.streambugs   <- read.csv(paste0(dir.input.data, name.ice.streambugs,
+#                                        "WideData_ResultsProbObs.csv"), sep = ";")
+# no.sites <- as.numeric(stringr::str_match(name.ice.streambugs, "Catch_(.+)Sites")[2])
+# no.steps <- as.numeric(stringr::str_match(name.ice.streambugs, "ICE_(.+)Steps_Poly")[2])
+# # 
+# # # process data for ice plot
+# # pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, taxa.colnames)] %>% 
+# #     mutate(column_label = 1,
+# #            model = "Streambugs") # %>%
+# # pred.ice.streamb$observation_number <- NA
+# # for(reach in data.base.ice$ReachID){
+# #     # reach <- data.base.ice$ReachID[1]
+# #     obs.num <- data.base.ice[which(data.base.ice$ReachID == reach), "observation_number"] # match unique number per site to have consistent line colouring
+# #     rind <- which(grepl(reach, pred.ice.streamb$ReachID))
+# #     pred.ice.streamb[rind, "observation_number"] <- obs.num
+# # }
+# # env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
+# # 
+# # # compute pdp for the selected taxon
+# # mean.ice.streamb <- pred.ice.streamb %>%
+# #     group_by_at(select.env.fact[1]) %>%
+# #     summarize(across(all_of(taxa.colnames), mean, na.rm = TRUE)) %>%
+# #     mutate(model = "Streambugs")
+# # mean.ice.streamb.bounds  <- mean.ice.streamb %>%
+# #     # group_by(model) %>%
+# #     summarize(x.mean=max({{select.env.fact}}), # ! here it's specific to factor
+# #         y.mean.min=across(all_of(names.taxa), min, na.rm = TRUE),
+# #         y.mean.max=across(all_of(names.taxa), max, na.rm = TRUE)) 
+# # 
+# # points.ice.streamb <- data.base.ice[,c("ReachID", select.env.fact[1])]
+# # points.ice.streamb$pred <- NA
+# # for(site in points.ice.streamb$ReachID){
+# # 
+# # }
+# 
+# list.plots.stream <- list()
+# names.taxa <- names(taxa.colnames)
+# 
+# for(taxon in names.taxa){
+# 
+#     # taxon <- names.taxa[1]
+#     # extract ice dataframe for taxon selected for analysis
+#     pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, paste0("Occurrence.", taxon))] %>%
+#         mutate(observation_number = rep(1:no.sites, each = no.steps),
+#                id.scenario = 1,
+#                model = "Streambugs") %>%
+#         rename(pred = paste0("Occurrence.", taxon))
+# 
+#     env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
+# 
+#     # compute pdp for the selected taxon
+#     mean.ice.streamb <- pred.ice.streamb %>%
+#         group_by_at(select.env.fact[1]) %>%
+#         summarize(avg = mean(na.omit(pred))) %>%
+#         mutate(model = "Streambugs")
+#     mean.ice.streamb.bounds  <- mean.ice.streamb %>%
+#         # group_by(model) %>%
+#         summarize(x.mean=max(.data[[name.select.env.fact]]*0.99), # ! here it's specific to factor
+#             y.mean.min=min(avg),
+#             y.mean.max=max(avg)) 
+#     
+#     # recover preference for temperature
+#     name.pref.temp <- "df.preferences_PolyInterp30__266Taxa_tempmaxtolval.csv"
+#     name.pref.temp <- "df.preferences_PolyInterp30__266Taxa_currenttolval.csv"
+#     
+#     df.pref.temp <- read.csv(paste0(dir.input.data, name.pref.temp), sep = ",")
+#     df.pref.temp.taxon <- df.pref.temp %>%
+#         select(Values, all_of(taxon)) %>%
+#         filter(Values >= min(mean.ice.streamb[, name.select.env.fact]) & Values <= max(mean.ice.streamb[, name.select.env.fact])) %>%
+#         rename(PrefTrait = all_of(taxon)) %>%
+#         mutate(ExpTrans = exp.transform(PrefTrait, intercept = 0, curv = -10))  # Applying the log function to column2
+# 
+#     plot.data <- pred.ice.streamb
+#     plot.data.mean  <- mean.ice.streamb
+#     plot.data.mean.bounds  <- mean.ice.streamb.bounds
+#     plot.data.pref <- df.pref.temp.taxon
+#     # plot.data$model <- factor(plot.data$model, levels=c("GLM", "GAM", "RF"))
+# 
+#     fig3 <- ggplot(data=plot.data) +
+#         geom_line(aes(x=.data[[select.env.fact]],
+#                       y=pred,
+#                       group=observation_number,
+#                       color=as.character(observation_number)),
+#                   show.legend = FALSE, alpha = 0.7) +
+#         geom_line(data=plot.data.mean,
+#                   aes(x=.data[[name.select.env.fact]], y=avg),
+#                   size=1.5) +
+#         geom_rug(data = env.factor.sampled,
+#                  aes(x=variable),
+#                  color="grey20",
+#                  alpha=0.7,
+#                  inherit.aes=F) +
+#         geom_point(data = plot.data.pref,
+#                    aes(x = Values, y = ExpTrans),
+#                    shape = 4, color = "black", size = 2, stroke = 0.8) +
+#         # scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
+#         geom_segment(data=plot.data.mean.bounds,
+#                      inherit.aes = FALSE,
+#                      lineend="round",
+#                      linejoin="round",
+#                      aes(x=x.mean,
+#                          y=y.mean.min,
+#                          xend=x.mean,
+#                          yend=y.mean.max),
+#                      arrow=arrow(length = unit(0.3, "cm"),
+#                                  ends = "both")) +
+#         # facet_wrap(~factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 5) +
+#         # theme_bw() +
+#         # theme(strip.background = element_rect(fill = "white"),
+#         #       legend.title = element_text(size=24),
+#         #       legend.text = element_text(size=20)) +
+#         labs(title = taxon,
+#              x = name.select.env.fact,
+#              y = "Predicted probability of occurrence")
+# 
+#     list.plots.stream[[taxon]] <- fig3
+#     # fig3
 # }
-# env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
 # 
-# # compute pdp for the selected taxon
-# mean.ice.streamb <- pred.ice.streamb %>%
-#     group_by_at(select.env.fact[1]) %>%
-#     summarize(across(all_of(taxa.colnames), mean, na.rm = TRUE)) %>%
-#     mutate(model = "Streambugs")
-# mean.ice.streamb.bounds  <- mean.ice.streamb %>%
-#     # group_by(model) %>%
-#     summarize(x.mean=max({{select.env.fact}}), # ! here it's specific to factor
-#         y.mean.min=across(all_of(names.taxa), min, na.rm = TRUE),
-#         y.mean.max=across(all_of(names.taxa), max, na.rm = TRUE)) 
+# # Figure SI A 5
+# # file.name <- "ice_streambugs_all_taxa_grid"
+# # pdf(paste0(dir.output, file.name, ".pdf"), width = width.a4*1.2, height = height.a4*1.2)
+# # grid.arrange(grobs=list.plots.stream, ncol = 5)
+# # dev.off()
 # 
-# points.ice.streamb <- data.base.ice[,c("ReachID", select.env.fact[1])]
-# points.ice.streamb$pred <- NA
-# for(site in points.ice.streamb$ReachID){
+# p <- grid.arrange(grobs =list.plots.stream, ncol = 5)
 # 
+# # save png and pdf
+# for(suffix in plot.suffix){
+#     file.name <- paste0(dir.output, "ice_streambugs_all_taxa_grid", suffix)
+#     ggsave(file.name, plot = p, width = 2480*2.2,
+#            height = 3508*2.2,
+#            units = c("px"))
 # }
-
-list.plots.stream <- list()
-names.taxa <- names(taxa.colnames)
-
-for(taxon in names.taxa){
-
-    # taxon <- names.taxa[1]
-    # extract ice dataframe for taxon selected for analysis
-    pred.ice.streamb <- ice.df.streambugs[,c("ReachID", "Watershed", select.env.fact, paste0("Occurrence.", taxon))] %>%
-        mutate(observation_number = rep(1:no.sites, each = no.steps),
-               id.scenario = 1,
-               model = "Streambugs") %>%
-        rename(pred = paste0("Occurrence.", taxon))
-
-    env.factor.sampled <- data.frame(variable = data.base.ice[,select.env.fact])
-
-    # compute pdp for the selected taxon
-    mean.ice.streamb <- pred.ice.streamb %>%
-        group_by_at(select.env.fact[1]) %>%
-        summarize(avg = mean(na.omit(pred))) %>%
-        mutate(model = "Streambugs")
-    mean.ice.streamb.bounds  <- mean.ice.streamb %>%
-        # group_by(model) %>%
-        summarize(x.mean=max(.data[[name.select.env.fact]]*0.99), # ! here it's specific to factor
-            y.mean.min=min(avg),
-            y.mean.max=max(avg)) 
-    
-    # recover preference for temperature
-    name.pref.temp <- "df.preferences_PolyInterp30__266Taxa_tempmaxtolval.csv"
-    name.pref.temp <- "df.preferences_PolyInterp30__266Taxa_currenttolval.csv"
-    
-    df.pref.temp <- read.csv(paste0(dir.input.data, name.pref.temp), sep = ",")
-    df.pref.temp.taxon <- df.pref.temp %>%
-        select(Values, all_of(taxon)) %>%
-        filter(Values >= min(mean.ice.streamb[, name.select.env.fact]) & Values <= max(mean.ice.streamb[, name.select.env.fact])) %>%
-        rename(PrefTrait = all_of(taxon)) %>%
-        mutate(ExpTrans = exp.transform(PrefTrait, intercept = 0, curv = -10))  # Applying the log function to column2
-
-    plot.data <- pred.ice.streamb
-    plot.data.mean  <- mean.ice.streamb
-    plot.data.mean.bounds  <- mean.ice.streamb.bounds
-    plot.data.pref <- df.pref.temp.taxon
-    # plot.data$model <- factor(plot.data$model, levels=c("GLM", "GAM", "RF"))
-
-    fig3 <- ggplot(data=plot.data) +
-        geom_line(aes(x=.data[[select.env.fact]],
-                      y=pred,
-                      group=observation_number,
-                      color=as.character(observation_number)),
-                  show.legend = FALSE, alpha = 0.7) +
-        geom_line(data=plot.data.mean,
-                  aes(x=.data[[name.select.env.fact]], y=avg),
-                  size=1.5) +
-        geom_rug(data = env.factor.sampled,
-                 aes(x=variable),
-                 color="grey20",
-                 alpha=0.7,
-                 inherit.aes=F) +
-        geom_point(data = plot.data.pref,
-                   aes(x = Values, y = ExpTrans),
-                   shape = 4, color = "black", size = 2, stroke = 0.8) +
-        # scale_x_continuous(limits = c(min(env.factor.sampled), max(env.factor.sampled))) +
-        geom_segment(data=plot.data.mean.bounds,
-                     inherit.aes = FALSE,
-                     lineend="round",
-                     linejoin="round",
-                     aes(x=x.mean,
-                         y=y.mean.min,
-                         xend=x.mean,
-                         yend=y.mean.max),
-                     arrow=arrow(length = unit(0.3, "cm"),
-                                 ends = "both")) +
-        # facet_wrap(~factor(model, levels = c("Streambugs", names(sdm.models))), ncol = 5) +
-        # theme_bw() +
-        # theme(strip.background = element_rect(fill = "white"),
-        #       legend.title = element_text(size=24),
-        #       legend.text = element_text(size=20)) +
-        labs(title = taxon,
-             x = name.select.env.fact,
-             y = "Predicted probability of occurrence")
-
-    list.plots.stream[[taxon]] <- fig3
-    # fig3
-}
-
-# Figure SI A 5
-# file.name <- "ice_streambugs_all_taxa_grid"
-# pdf(paste0(dir.output, file.name, ".pdf"), width = width.a4*1.2, height = height.a4*1.2)
-# grid.arrange(grobs=list.plots.stream, ncol = 5)
-# dev.off()
-
-p <- grid.arrange(grobs =list.plots.stream, ncol = 5)
-
-# save png and pdf
-for(suffix in plot.suffix){
-    file.name <- paste0(dir.output, "ice_streambugs_all_taxa_grid", suffix)
-    ggsave(file.name, plot = p, width = 2480*2.2,
-           height = 3508*2.2,
-           units = c("px"))
-}
 
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 # END CODE ####

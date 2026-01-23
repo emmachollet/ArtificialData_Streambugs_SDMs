@@ -181,7 +181,7 @@ gg_color_hue <- function(n) {
 ## Taxonomy ####
 ## ~~~~~~~~~~~~~~~~~~~~~~~
 
-get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.plots){
+get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, vect.catch.select, dir.outputs){
     # required input: 
     # data.inv = the wide-format monitoring data of the invertebrates, with taxa in columnnames starting with Occurrence_
     # data.tax = a taxonomic dictionary with all taxa in Switzerland and their taxonomic resolution
@@ -304,7 +304,7 @@ get.df.prev.pres.taxonomy <- function(data.inv, data.taxonomy, catch.variable, v
     list.plots[[length(list.plots) + 1]] <- q
     
     file.name <- "Distribution_Prev_NbPresPoints_SelectCatch"
-    print.pdf.plots(list.plots = list.plots, width = 12, height = 8, dir.output = dir.plots, info.file.name = "", file.name = file.name, 
+    print.pdf.plots(list.plots = list.plots, width = 12, height = 8, dir.output = dir.outputs, info.file.name = "", file.name = file.name, 
                     png = F)
     
     

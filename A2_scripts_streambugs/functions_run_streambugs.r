@@ -1,6 +1,6 @@
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##
-## --- utilities needed to preprocess data and run Streambugs  ---
+## --- functions needed to preprocess data and run Streambugs  ---
 ## --- to create synthetic data ---
 ##
 ## --- October 2023 -- Emma Chollet ---
@@ -8,14 +8,22 @@
 ## ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # get the state variables for a specific catchment
-construct.variables.par.catch <- function(catch, data.env.inputs, 
-                                          list.par.update, par.adjust, no.class.new = 20,
-                                          data.taxa.selection, taxa.selection, 
-                                          selected.taxa.analysis,
-                                          sites.selection, select.taxonomy, 
-                                          catch.variable,
+construct.variables.par.catch <- function(catch,                  # applied per catchment
+                                          data.env.inputs,        # input environmental data
+                                          list.par.update,        # parameters list updated
+                                          par.adjust,             # options to update parameters
+                                          no.class.new = 20,      # nb of new interpolation classes
+                                          data.taxa.selection,    # input taxa data
+                                          taxa.selection,         # option of taxa selection
+                                          selected.taxa.analysis, # vect of taxa selected for analysis
+                                          sites.selection,        # option how to select sites
+                                          select.taxonomy,        # vect of taxonomic levels selected
+                                          catch.variable,         # catchment delimitation
                                           plot.foodweb = F, name.run,
                                           dir.inputs, dir.outputs){
+    
+    # this function returns the variable names and parameters needed to run streambugs embeded in a list
+    
     # catch = vect.catch.select[1]
     # catch <- "Prevalence"
   
@@ -51,8 +59,8 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
     }
 
     Reaches   <- env.data$ReachID
-    Habitats <- env.data$Habitat
-    list.metadata.catch[["Reaches"]] <- Reaches
+    Habitats  <- env.data$Habitat
+    list.metadata.catch[["Reaches"]]  <- Reaches
     list.metadata.catch[["Habitats"]] <- Habitats
     
     # taxa pool of the catchment
@@ -428,7 +436,11 @@ construct.variables.par.catch <- function(catch, data.env.inputs,
 }
 
 
-run.streambugs.catch <- function(y.names.par.catch, tout, return.res.add = F, name.run, dir.output, run.C = T, write.plot.results = F, ...){
+run.streambugs.catch <- function(y.names.par.catch, # list of variable names and parameters obtained from "construct.variables.per.catch"
+                                 tout, 
+                                 return.res.add = F, 
+                                 name.run, 
+                                 dir.output, run.C = T, write.plot.results = F, ...){
     
   # return.res.add <- T
   # y.names.par.catch <- list.variables.par.catch[[1]]
