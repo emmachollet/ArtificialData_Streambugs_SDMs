@@ -15,9 +15,7 @@ This repository provides the data, scripts and plots of the manuscript *["Noise,
 
 **Structure of the datapackage**: Folders and files are named according to their content and order. Follow this README, and run scripts in **bold** to produce the data, plots and results.
 
-Figure 1: Diagram representing the workflow of the study.
-
-<img src="/00_utilities/analysis_noise_scenarios.png" width="75%">
+(For a diagram representing the workflow of the study, see paper Fig. 1)
 
 
 ## Data information
@@ -37,7 +35,7 @@ Directory: *ArtificialData_Streambugs_SDMs*
 | filename                    | description                                                  |
 | --------------------------- | ------------------------------------------------------------ |
 | **set_folders_structure.r** | **Set working directory here. Run first to create all necessary folders.** |
-| README.md                   | Text file (markdown format). Description of the repository.  |
+| README.md                   | Text file (markdown format, best shown on github). Description of the repository.  |
 | .gitignore                  | Text file. List of folders that are not updated on the repository because too heavy (A3, B1, B2, C1). |
 | figure_workflow.png         | Figure of the workflow of the study.                         |
 | MapRiverBasinRegion.jpg     | Swiss map colored according to catchment delimitation used for initial taxa pools, produced by Rosi Siber. |
@@ -78,10 +76,10 @@ Figure 2: Catchment delimitation used to define initial taxa pools. Ask Rosi Sib
 | filename                      | description                                                  |
 | :---------------------------- | ------------------------------------------------------------ |
 | **main_streambugs.r**         | **Set working directory here. Check carefully options at the beginning of the script (e.g., taxa selection, catchment selection, nb of sites, ICE simulation or not). Run to simulate data with Streambugs, and to produce according datasets and plots.** |
-| functions_run_streambugs.r    | Script with two big functions specific to our application: 1. prepare taxa parameters and variables per catchment (mix of original functions and new updates for instance interpolation to adapt responses to our application), 2. run Streambugs per catchment. |
-| startjobs_main_streambugs.txt | Text file used to start a job on the SIAM server, don't forget to set "server" to TRUE in "main_streambugs.r". |
+| functions_run_streambugs.r    | Script with two big functions specific to our application: 1. prepare taxa parameters and variables per catchment (mix of original functions and new updates, for instance interpolation to adapt responses to our application), 2. run Streambugs per catchment. |
+| startjobs_main_streambugs.txt | Text file used to start a job on an external server, don't forget to set "server" to TRUE in "main_streambugs.r". |
 | outputtextfile.txt            | Text file with output from the R console if script is run on server. |
-| library/                      | Scripts with hard coded functions of Streambugs.             |
+| library/                      | Scripts with application specific functions of Streambugs.             |
 
 ### A3_outputs_streambugs
 
