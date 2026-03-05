@@ -1,6 +1,6 @@
 # ArtificialData_Streambugs_SDMs
 
-This repository provides the data, scripts and plots of the manuscript *["Noise, bias and data limitations: Virtual benchmarking of species distribution models’ robustness for prediction and inference"](future_link)* (submitted to *Ecological Modelling*, Nov 2025)
+This repository provides the data, scripts and plots of the manuscript *["Noise, bias and data limitations: Virtual benchmarking of species distribution models’ robustness for prediction and inference"](future_link)*
 
 > *Authors:* Emma Chollet Ramampiandra (ECR), Gaspard Fragnière (GF), Andreas Scheidegger (AS), Nele Schuwirth (NS)
 >
