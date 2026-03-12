@@ -1,0 +1,311 @@
+$Catchment
+[1] "Aare"
+
+$Reaches
+[1] "CH114BEAa" "CH032AGAa"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"                 "Simuliidae"                   "Limoniidae"                  
+ [4] "Baetisrhodani"                "Baetisalpinus"                "Empididae"                   
+ [7] "Ceratopogonidae"              "Elmidae"                      "Nemouramortoni"              
+[10] "Baetismuticus"                "Drususdiscolor"               "Protonemuralateralis"        
+[13] "Athericidae"                  "Gammaridae"                   "Rhyacophilatristis"          
+[16] "Planariidae"                  "Leuctrabraueri"               "Nemouraminima"               
+[19] "Hydraenidae"                  "Ecdyonurushelveticus"         "Sericostoma"                 
+[22] "Habroleptoidesconfusa"        "Scirtidae"                    "Brachypterarisi"             
+[25] "Sphaeriidae"                  "Blephariceridae"              "Odontocerumalbicorne"        
+[28] "Leuctranigra"                 "Tipulidae"                    "Drususannulatus"             
+[31] "Dixidae"                      "Drususbiguttatus"             "Metanoeaflavipennis"         
+[34] "Ecdyonurusvenosus"            "Habrophlebialauta"            "Stratiomyidae"               
+[37] "Potamophylaxcingulatus"       "Leuctramajor"                 "Protonemuraintricata"        
+[40] "Philopotamusludificatus"      "Centroptilumluteolum"         "Epeorusalpicola"             
+[43] "Hydropsychesiltalai"          "Epeorusassimilis"             "Baetislutheri"               
+[46] "Rhithrogenapicteti"           "Ephemeradanica"               "Dugesiidae"                  
+[49] "Paraleptophlebiasubmarginata" "Dytiscidae"                   "Lymnaeidae"                  
+[52] "Habroleptoidesauberti"        "Isoperlagrammatica"           "Isoperlarivulorum"           
+[55] "Capnioneuranemuroides"        "Chloroperlasusemicheli"       "Melampophylaxmucoreus"       
+[58] "Rhyacophilapubescens"         "Ecclisopteryxmadida"          "Erpobdellidae"               
+[61] "Leuctrahippopus"              "Nemouraflexuosa"              "Cordulegastridae"            
+[64] "Allogamusauricollis"          "Electrogenaujhelyii"          "Sialidae"                    
+[67] "Chaetopteryxvillosa"          "Serratellaignita"             "Rhithrogenahybrida"          
+[70] "Nemouramarginata"             "Ephemerellamucronata"         "Ptychopteridae"              
+[73] "Rhithrogenasemicolorata"     
+
+$simulation_time
+   user  system elapsed 
+   9.50    0.00   11.14 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "Limmat"
+
+$Reaches
+[1] "CH049ZHLi" "CH042ZHLi"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"                 "Simuliidae"                   "Limoniidae"                  
+ [4] "Baetisrhodani"                "Baetisalpinus"                "Empididae"                   
+ [7] "Ceratopogonidae"              "Elmidae"                      "Nemouramortoni"              
+[10] "Baetismuticus"                "Drususdiscolor"               "Protonemuralateralis"        
+[13] "Athericidae"                  "Gammaridae"                   "Rhyacophilatristis"          
+[16] "Planariidae"                  "Leuctrabraueri"               "Nemouraminima"               
+[19] "Hydraenidae"                  "Ecdyonurushelveticus"         "Sericostoma"                 
+[22] "Habroleptoidesconfusa"        "Scirtidae"                    "Brachypterarisi"             
+[25] "Sphaeriidae"                  "Blephariceridae"              "Odontocerumalbicorne"        
+[28] "Leuctranigra"                 "Tipulidae"                    "Drususannulatus"             
+[31] "Dixidae"                      "Ecdyonurusvenosus"            "Habrophlebialauta"           
+[34] "Stratiomyidae"                "Potamophylaxcingulatus"       "Leuctramajor"                
+[37] "Protonemuraintricata"         "Philopotamusludificatus"      "Metanoearhaetica"            
+[40] "Rhithrogenaputhzi"            "Centroptilumluteolum"         "Epeorusalpicola"             
+[43] "Hydropsychesiltalai"          "Epeorusassimilis"             "Baetislutheri"               
+[46] "Ephemeradanica"               "Dugesiidae"                   "Protonemuranimborum"         
+[49] "Paraleptophlebiasubmarginata" "Ecdyonuruspicteti"            "Dytiscidae"                  
+[52] "Habroleptoidesauberti"        "Isoperlagrammatica"           "Isoperlarivulorum"           
+[55] "Capnioneuranemuroides"        "Chloroperlasusemicheli"       "Rhyacophilapubescens"        
+[58] "Erpobdellidae"                "Leuctrahippopus"              "Thaumaleidae"                
+[61] "Allogamusauricollis"          "Hydropsychetenuis"            "Amphinemurasulcicollis"      
+[64] "Leuctrainermis"               "Torleyamajor"                
+
+$simulation_time
+   user  system elapsed 
+   8.10    0.04    9.27 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "Reuss"
+
+$Reaches
+[1] "CH074NWRe" "CH076ZGRe"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"                 "Simuliidae"                   "Limoniidae"                  
+ [4] "Baetisrhodani"                "Baetisalpinus"                "Empididae"                   
+ [7] "Ceratopogonidae"              "Elmidae"                      "Nemouramortoni"              
+[10] "Baetismuticus"                "Drususdiscolor"               "Protonemuralateralis"        
+[13] "Athericidae"                  "Gammaridae"                   "Rhyacophilatristis"          
+[16] "Planariidae"                  "Leuctrabraueri"               "Nemouraminima"               
+[19] "Hydraenidae"                  "Ecdyonurushelveticus"         "Sericostoma"                 
+[22] "Habroleptoidesconfusa"        "Scirtidae"                    "Brachypterarisi"             
+[25] "Sphaeriidae"                  "Blephariceridae"              "Odontocerumalbicorne"        
+[28] "Leuctranigra"                 "Tipulidae"                    "Cryptothrixnebulicola"       
+[31] "Dixidae"                      "Rhithrogenaloyolaea"          "Drususbiguttatus"            
+[34] "Metanoeaflavipennis"          "Ecdyonurusvenosus"            "Habrophlebialauta"           
+[37] "Stratiomyidae"                "Potamophylaxcingulatus"       "Protonemurabrevistyla"       
+[40] "Leuctramajor"                 "Protonemuraintricata"         "Philopotamusludificatus"     
+[43] "Rhithrogenaputhzi"            "Centroptilumluteolum"         "Epeorusalpicola"             
+[46] "Epeorusassimilis"             "Rhyacophilaintermedia"        "Baetislutheri"               
+[49] "Rhithrogenapicteti"           "Rhithrogenaalpestris"         "Ephemeradanica"              
+[52] "Dugesiidae"                   "Protonemuranimborum"          "Paraleptophlebiasubmarginata"
+[55] "Ecdyonuruspicteti"            "Dytiscidae"                   "Habroleptoidesauberti"       
+[58] "Isoperlagrammatica"           "Rhyacophilahirticornis"       "Isoperlarivulorum"           
+[61] "Capnioneuranemuroides"        "Ecclisopteryxmadida"          "Thaumaleidae"                
+[64] "Cordulegastridae"             "Allogamusauricollis"          "Hydropsychetenuis"           
+[67] "Perlagrandis"                 "Chaetopteryxvillosa"          "Amphinemurasulcicollis"      
+[70] "Silopallipes"                 "Perlamarginata"               "Rhithrogenagratianopolitana" 
+[73] "Nemurellapictetii"            "Rhyacophilapraemorsa"         "Rhyacophilatorrentium"       
+
+$simulation_time
+   user  system elapsed 
+  10.31    0.02   11.75 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "Rhein"
+
+$Reaches
+[1] "752203Rh" "752211Rh"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"            "Simuliidae"              "Limoniidae"              "Baetisrhodani"          
+ [5] "Baetisalpinus"           "Empididae"               "Ceratopogonidae"         "Elmidae"                
+ [9] "Nemouramortoni"          "Baetismuticus"           "Drususdiscolor"          "Protonemuralateralis"   
+[13] "Athericidae"             "Gammaridae"              "Rhyacophilatristis"      "Planariidae"            
+[17] "Leuctrabraueri"          "Nemouraminima"           "Hydraenidae"             "Ecdyonurushelveticus"   
+[21] "Sericostoma"             "Scirtidae"               "Blephariceridae"         "Odontocerumalbicorne"   
+[25] "Leuctranigra"            "Tipulidae"               "Cryptothrixnebulicola"   "Dixidae"                
+[29] "Rhithrogenaloyolaea"     "Ecdyonurusvenosus"       "Stratiomyidae"           "Protonemurabrevistyla"  
+[33] "Leuctramajor"            "Philopotamusludificatus" "Metanoearhaetica"        "Rhithrogenaputhzi"      
+[37] "Epeorusalpicola"         "Rhyacophilaintermedia"   "Rhithrogenaalpestris"    "Protonemuranimborum"    
+[41] "Ecdyonuruspicteti"       "Rhyacophilahirticornis"  "Isoperlarivulorum"       "Chloroperlasusemicheli" 
+[45] "Thaumaleidae"            "Drususmelanchaetes"      "Ecdyonurusalpinus"       "Siphonoperlamontana"    
+[49] "Rhithrogenanivata"       "Dictyogenusalpinus"      "Rhyacophilaglareosa"     "Consorophylaxconsors"   
+
+$simulation_time
+   user  system elapsed 
+   6.28    0.00    7.36 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "RheinabBS"
+
+$Reaches
+[1] "CH069JURh" "CH070TGRh"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"                 "Simuliidae"                   "Limoniidae"                  
+ [4] "Baetisrhodani"                "Baetisalpinus"                "Empididae"                   
+ [7] "Ceratopogonidae"              "Elmidae"                      "Nemouramortoni"              
+[10] "Baetismuticus"                "Protonemuralateralis"         "Athericidae"                 
+[13] "Gammaridae"                   "Rhyacophilatristis"           "Planariidae"                 
+[16] "Leuctrabraueri"               "Nemouraminima"                "Hydraenidae"                 
+[19] "Ecdyonurushelveticus"         "Sericostoma"                  "Habroleptoidesconfusa"       
+[22] "Scirtidae"                    "Brachypterarisi"              "Sphaeriidae"                 
+[25] "Odontocerumalbicorne"         "Tipulidae"                    "Drususannulatus"             
+[28] "Dixidae"                      "Ecdyonurusvenosus"            "Habrophlebialauta"           
+[31] "Stratiomyidae"                "Potamophylaxcingulatus"       "Leuctramajor"                
+[34] "Protonemuraintricata"         "Philopotamusludificatus"      "Centroptilumluteolum"        
+[37] "Hydropsychesiltalai"          "Epeorusassimilis"             "Baetislutheri"               
+[40] "Rhithrogenapicteti"           "Ephemeradanica"               "Dugesiidae"                  
+[43] "Paraleptophlebiasubmarginata" "Dytiscidae"                   "Lymnaeidae"                  
+[46] "Habroleptoidesauberti"        "Isoperlagrammatica"           "Capnioneuranemuroides"       
+[49] "Melampophylaxmucoreus"        "Rhyacophilapubescens"         "Erpobdellidae"               
+[52] "Leuctrahippopus"              "Nemouraflexuosa"              "Cordulegastridae"            
+[55] "Electrogenaujhelyii"          "Siphonoperlatorrentium"       "Sialidae"                    
+[58] "Serratellaignita"             "Hydroptila"                   "Nemouramarginata"            
+[61] "Ecdyonurustorrentis"          "Hydropsycheinstabilis"        "Tabanidae"                   
+[64] "Calopterygidae"              
+
+$simulation_time
+   user  system elapsed 
+   7.94    0.00    9.31 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "Rhone"
+
+$Reaches
+[1] "CH018VSRh" "CH132VDRh"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"            "Simuliidae"              "Limoniidae"              "Baetisrhodani"          
+ [5] "Baetisalpinus"           "Empididae"               "Ceratopogonidae"         "Nemouramortoni"         
+ [9] "Baetismuticus"           "Drususdiscolor"          "Protonemuralateralis"    "Athericidae"            
+[13] "Rhyacophilatristis"      "Planariidae"             "Hydraenidae"             "Ecdyonurushelveticus"   
+[17] "Sericostoma"             "Blephariceridae"         "Tipulidae"               "Cryptothrixnebulicola"  
+[21] "Dixidae"                 "Rhithrogenaloyolaea"     "Drususbiguttatus"        "Metanoeaflavipennis"    
+[25] "Stratiomyidae"           "Potamophylaxcingulatus"  "Protonemurabrevistyla"   "Philopotamusludificatus"
+[29] "Epeorusalpicola"         "Rhyacophilaintermedia"   "Rhithrogenaalpestris"    "Protonemuranimborum"    
+[33] "Ecdyonuruspicteti"       "Lymnaeidae"              "Rhyacophilahirticornis"  "Isoperlarivulorum"      
+[37] "Chloroperlasusemicheli"  "Thaumaleidae"            "Drususmelanchaetes"      "Ecdyonurusalpinus"      
+[41] "Rhithrogenahybrida"      "Rhithrogenadegrangei"    "Siphonoperlamontana"     "Leuctraschmidi"         
+[45] "Hydrophilidae"           "Dictyogenusalpinus"      "Drususmuelleri"          "Rhyacophilaglareosa"    
+[49] "Leuctrainermis"          "Drususnigrescens"        "Leuctrarauscheri"       
+
+$simulation_time
+   user  system elapsed 
+   5.87    0.00    6.78 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "RhoneLeman"
+
+$Reaches
+[1] "CH130VDRh" "CH131VDRh"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"            "Simuliidae"              "Limoniidae"              "Baetisrhodani"          
+ [5] "Baetisalpinus"           "Empididae"               "Ceratopogonidae"         "Elmidae"                
+ [9] "Baetismuticus"           "Protonemuralateralis"    "Athericidae"             "Gammaridae"             
+[13] "Rhyacophilatristis"      "Planariidae"             "Nemouraminima"           "Hydraenidae"            
+[17] "Ecdyonurushelveticus"    "Sericostoma"             "Habroleptoidesconfusa"   "Scirtidae"              
+[21] "Brachypterarisi"         "Sphaeriidae"             "Odontocerumalbicorne"    "Leuctranigra"           
+[25] "Tipulidae"               "Drususannulatus"         "Dixidae"                 "Ecdyonurusvenosus"      
+[29] "Habrophlebialauta"       "Stratiomyidae"           "Potamophylaxcingulatus"  "Protonemuraintricata"   
+[33] "Centroptilumluteolum"    "Hydropsychesiltalai"     "Epeorusassimilis"        "Baetislutheri"          
+[37] "Rhithrogenapicteti"      "Dugesiidae"              "Dytiscidae"              "Lymnaeidae"             
+[41] "Habroleptoidesauberti"   "Capnioneuranemuroides"   "Rhyacophilapubescens"    "Erpobdellidae"          
+[45] "Cordulegastridae"        "Hydropsychetenuis"       "Chaetopteryxvillosa"     "Glossiphoniidae"        
+[49] "Hydropsycheinstabilis"   "Melampophylaxmelampus"   "Electrogenalateralis"    "Tinodesunicolor"        
+[53] "Micropternasequax"       "Psychomyiapusilla"       "Glyphotaeliuspellucidus" "Potamopyrgusantipodarum"
+
+$simulation_time
+   user  system elapsed 
+   7.13    0.00    8.13 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+$Catchment
+[1] "Ticino"
+
+$Reaches
+[1] "722083Ti" "722107Ti"
+
+$Habitats
+[1] "random" "random"
+
+$Invertebrates
+ [1] "Chironomidae"            "Simuliidae"              "Limoniidae"              "Baetisrhodani"          
+ [5] "Baetisalpinus"           "Empididae"               "Ceratopogonidae"         "Elmidae"                
+ [9] "Nemouramortoni"          "Baetismuticus"           "Drususdiscolor"          "Protonemuralateralis"   
+[13] "Athericidae"             "Rhyacophilatristis"      "Planariidae"             "Leuctrabraueri"         
+[17] "Nemouraminima"           "Hydraenidae"             "Ecdyonurushelveticus"    "Sericostoma"            
+[21] "Habroleptoidesconfusa"   "Scirtidae"               "Brachypterarisi"         "Blephariceridae"        
+[25] "Odontocerumalbicorne"    "Leuctranigra"            "Tipulidae"               "Cryptothrixnebulicola"  
+[29] "Drususannulatus"         "Dixidae"                 "Rhithrogenaloyolaea"     "Drususbiguttatus"       
+[33] "Metanoeaflavipennis"     "Potamophylaxcingulatus"  "Protonemurabrevistyla"   "Philopotamusludificatus"
+[37] "Rhithrogenaputhzi"       "Epeorusalpicola"         "Hydropsychesiltalai"     "Epeorusassimilis"       
+[41] "Rhyacophilaintermedia"   "Protonemuranimborum"     "Dytiscidae"              "Rhyacophilahirticornis" 
+[45] "Isoperlarivulorum"       "Chloroperlasusemicheli"  "Rhyacophilapubescens"    "Leuctrahippopus"        
+[49] "Thaumaleidae"            "Drususmelanchaetes"      "Ecdyonurusalpinus"       "Siphonoperlatorrentium" 
+[53] "Perlamarginata"          "Leuctrainermis"          "Leuctrarosinae"          "Rhithrogenagrischuna"   
+[57] "Rhyacophilarectispina"   "Drususalpinus"           "Isoperlacarbonaria"      "Catagapetusnigrans"     
+[61] "Leuctraarmata"          
+
+$simulation_time
+   user  system elapsed 
+   7.95    0.02    8.87 
+
+$warnings
+list()
+
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+[1] "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+The entire simulation time is: 93.85 1.36 119.82 NA NA

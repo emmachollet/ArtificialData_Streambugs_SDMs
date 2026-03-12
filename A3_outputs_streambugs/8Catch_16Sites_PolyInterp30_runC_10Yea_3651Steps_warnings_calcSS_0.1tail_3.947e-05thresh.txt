@@ -1,0 +1,80 @@
+Ratio of the tail of the output time vector: 0.1 
+Distribution of invertebrates mass/size: 6.161534e-05 0.0003411765 0.000535 0.002851836 0.003947059 0.036 
+Threshold selected: 3.947e-05
+Catchment: Aare 
+Number of warnings: 6 
+Warnings steady state:
+[1] "CH114BEAa_random_Algae_Algae"                      "CH114BEAa_random_Rhyacophilatristis_Invertebrates"
+[3] "CH114BEAa_random_Nemouraflexuosa_Invertebrates"    "CH032AGAa_random_Baetisrhodani_Invertebrates"     
+[5] "CH032AGAa_random_Rhyacophilatristis_Invertebrates" "CH032AGAa_random_Isoperlagrammatica_Invertebrates"
+
+Catchment: Limmat 
+Number of warnings: 6 
+Warnings steady state:
+[1] "CH049ZHLi_random_Algae_Algae"                      "CH049ZHLi_random_Rhyacophilatristis_Invertebrates"
+[3] "CH049ZHLi_random_Isoperlagrammatica_Invertebrates" "CH042ZHLi_random_Algae_Algae"                     
+[5] "CH042ZHLi_random_Drususdiscolor_Invertebrates"     "CH042ZHLi_random_Drususannulatus_Invertebrates"   
+
+Catchment: Reuss 
+Number of warnings: 10 
+Warnings steady state:
+ [1] "CH074NWRe_random_Drususbiguttatus_Invertebrates"            
+ [2] "CH074NWRe_random_Metanoeaflavipennis_Invertebrates"         
+ [3] "CH074NWRe_random_Ecclisopteryxmadida_Invertebrates"         
+ [4] "CH074NWRe_random_Cordulegastridae_Invertebrates"            
+ [5] "CH074NWRe_random_Perlamarginata_Invertebrates"              
+ [6] "CH076ZGRe_random_Baetisrhodani_Invertebrates"               
+ [7] "CH076ZGRe_random_Baetismuticus_Invertebrates"               
+ [8] "CH076ZGRe_random_Odontocerumalbicorne_Invertebrates"        
+ [9] "CH076ZGRe_random_Ecdyonurusvenosus_Invertebrates"           
+[10] "CH076ZGRe_random_Paraleptophlebiasubmarginata_Invertebrates"
+
+Catchment: Rhein 
+Number of warnings: 15 
+Warnings steady state:
+ [1] "752203Rh_random_Limoniidae_Invertebrates"             "752203Rh_random_Baetisalpinus_Invertebrates"         
+ [3] "752203Rh_random_Nemouramortoni_Invertebrates"         "752203Rh_random_Drususdiscolor_Invertebrates"        
+ [5] "752203Rh_random_Protonemuralateralis_Invertebrates"   "752203Rh_random_Leuctrabraueri_Invertebrates"        
+ [7] "752203Rh_random_Cryptothrixnebulicola_Invertebrates"  "752203Rh_random_Protonemurabrevistyla_Invertebrates" 
+ [9] "752203Rh_random_Leuctramajor_Invertebrates"           "752203Rh_random_Metanoearhaetica_Invertebrates"      
+[11] "752203Rh_random_Epeorusalpicola_Invertebrates"        "752203Rh_random_Rhyacophilahirticornis_Invertebrates"
+[13] "752203Rh_random_Drususmelanchaetes_Invertebrates"     "752203Rh_random_Dictyogenusalpinus_Invertebrates"    
+[15] "752211Rh_random_Drususmelanchaetes_Invertebrates"    
+
+Catchment: RheinabBS 
+Number of warnings: 6 
+Warnings steady state:
+[1] "CH069JURh_random_Drususannulatus_Invertebrates"    "CH069JURh_random_Baetislutheri_Invertebrates"     
+[3] "CH070TGRh_random_Algae_Algae"                      "CH070TGRh_random_Rhyacophilatristis_Invertebrates"
+[5] "CH070TGRh_random_Isoperlagrammatica_Invertebrates" "CH070TGRh_random_Nemouraflexuosa_Invertebrates"   
+
+Catchment: Rhone 
+Number of warnings: 8 
+Warnings steady state:
+[1] "CH018VSRh_random_Baetisalpinus_Invertebrates"      "CH018VSRh_random_Drususbiguttatus_Invertebrates"  
+[3] "CH018VSRh_random_Drususmelanchaetes_Invertebrates" "CH018VSRh_random_Dictyogenusalpinus_Invertebrates"
+[5] "CH018VSRh_random_Drususnigrescens_Invertebrates"   "CH132VDRh_random_Drususbiguttatus_Invertebrates"  
+[7] "CH132VDRh_random_Drususmelanchaetes_Invertebrates" "CH132VDRh_random_Drususnigrescens_Invertebrates"  
+
+Catchment: RhoneLeman 
+Number of warnings: 5 
+Warnings steady state:
+[1] "CH130VDRh_random_Drususannulatus_Invertebrates"  "CH130VDRh_random_Baetislutheri_Invertebrates"   
+[3] "CH131VDRh_random_Algae_Algae"                    "CH131VDRh_random_Drususannulatus_Invertebrates" 
+[5] "CH131VDRh_random_Epeorusassimilis_Invertebrates"
+
+Catchment: Ticino 
+Number of warnings: 22 
+Warnings steady state:
+ [1] "722083Ti_random_Limoniidae_Invertebrates"             "722083Ti_random_Athericidae_Invertebrates"           
+ [3] "722083Ti_random_Leuctrabraueri_Invertebrates"         "722083Ti_random_Nemouraminima_Invertebrates"         
+ [5] "722083Ti_random_Odontocerumalbicorne_Invertebrates"   "722083Ti_random_Leuctranigra_Invertebrates"          
+ [7] "722083Ti_random_Rhyacophilaintermedia_Invertebrates"  "722083Ti_random_Rhyacophilahirticornis_Invertebrates"
+ [9] "722083Ti_random_Siphonoperlatorrentium_Invertebrates" "722083Ti_random_Leuctrainermis_Invertebrates"        
+[11] "722083Ti_random_Rhyacophilarectispina_Invertebrates"  "722083Ti_random_Isoperlacarbonaria_Invertebrates"    
+[13] "722107Ti_random_Drususdiscolor_Invertebrates"         "722107Ti_random_Athericidae_Invertebrates"           
+[15] "722107Ti_random_Ecdyonurushelveticus_Invertebrates"   "722107Ti_random_Rhyacophilaintermedia_Invertebrates" 
+[17] "722107Ti_random_Rhyacophilahirticornis_Invertebrates" "722107Ti_random_Rhyacophilapubescens_Invertebrates"  
+[19] "722107Ti_random_Siphonoperlatorrentium_Invertebrates" "722107Ti_random_Perlamarginata_Invertebrates"        
+[21] "722107Ti_random_Rhyacophilarectispina_Invertebrates"  "722107Ti_random_Isoperlacarbonaria_Invertebrates"    
+Time calculation steady state: 0.64 0.04 5.15 NA NA 
