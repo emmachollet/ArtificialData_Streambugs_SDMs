@@ -19,25 +19,6 @@ if ( !require(dplyr) )
   library(dplyr)
 }
 
-# if ( !require(vioplot) )
-# {
-#   install.packages("vioplot")
-#   library(vioplot)
-# }
-
-# load streambugs core
-# --------------------
-
-# # XXX ECR: uncommented ####
-# 
-# path.core <- "library/core/"
-# 
-# source(paste(path.core,"streambugs.r",sep=""))
-# source(paste(path.core,"streambugs_rhs.r",sep=""))
-# source(paste(path.core,"streambugs_aux.r",sep=""))
-# source(paste(path.core,"get_par_trait_cond.r",sep=""))
-# 
-# rm(path.core)
 
 # load streambugs application files
 
@@ -78,8 +59,6 @@ source("library/calc_prior_dens.r")
 
 # application specific files: 
 
-# source("library/application specific NIS/boxplot_freqobs_pobs.r")
-# source("library/application specific NIS/boxplot_freqobs_pobs_binary.r")
 source("library/application specific NIS/check_observations.r")
 source("library/application specific NIS/calc_max_correct_modres.r")
 source("library/application specific NIS/compare_observed_predicted.r")
@@ -98,8 +77,3 @@ source("library/application specific NIS/simulate_and_return_likeli_moresites.r"
 source("library/application specific NIS/simulate_and_return_likeli_catchments.r")
 source("library/application specific NIS/simulate_streambugs_return_resadd.r")
 source("library/application specific NIS/simulation_parsamp.r") 
-# source("library/application specific NIS/mcmc_simulation_caseE.r") 
-# source("library/application specific NIS/mcmc_caseE_parallel.r")
-# source("library/application specific NIS/mcmc_simulation_caseE_parallel.r")
-
-

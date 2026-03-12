@@ -22,13 +22,13 @@ graphics.off() # Clean graphics display
 
 if ( !require("dplyr") ) { install.packages("dplyr"); library("dplyr") }               # to sort, join, merge data
 if ( !require("tidyr") ) { install.packages("tidyr"); library("tidyr") }               # to sort, join, merge data
-# if ( !require("tidyverse") ) { install.packages("tidyverse"); library("tidyverse") }               # to sort, join, merge data
+# if ( !require("tidyverse") ) { install.packages("tidyverse"); library("tidyverse") }   # to sort, join, merge data
 if ( !require("ggplot2") ) { install.packages("ggplot2"); library("ggplot2") }         # to do nice plots
 # if ( !require("plotly") ) { install.packages("plotly"); library("plotly") }            # to do nice "interactive" plots
 # if ( !require("sf") ) { install.packages("sf"); library("sf") }                        # to read layers for plotting maps
-if ( !require("pracma") ) { install.packages("pracma"); library("pracma") }            # to do polynomial interpolation (of ecological traits)                # to read layers for plotting maps
-if ( !require("stringr") ) { install.packages("stringr"); library("stringr") }                        # to handle character vectors
-if ( !require("parallel") ) { install.packages("parallel"); library("parallel") }                        # to run things on parallel on the server
+if ( !require("pracma") ) { install.packages("pracma"); library("pracma") }            # to do polynomial interpolation (of ecological traits)
+if ( !require("stringr") ) { install.packages("stringr"); library("stringr") }         # to handle character vectors
+if ( !require("parallel") ) { install.packages("parallel"); library("parallel") }      # to run things on parallel on the server
 
 ## Directory and file definitions ####
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
