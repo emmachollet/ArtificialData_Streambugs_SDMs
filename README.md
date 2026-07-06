@@ -1,7 +1,7 @@
 # ArtificialData_Streambugs_SDMs
 
-*Correspondence:* <emma.chollet@hotmail.com>
-*Date:* 06.07.2026
+> *Correspondence:* <emma.chollet@hotmail.com>
+> *Date:* 06.07.2026
 
 ## Overview
 
@@ -45,15 +45,11 @@ To reproduce the complete workflow on R 4.4.1:
 
 ### Overarching folder
 
-Directory: *ArtificialData_Streambugs_SDMs*
-
 | filename                    | description                                                  |
 | --------------------------- | ------------------------------------------------------------ |
 | **set_folders_structure.r** | **Open. Set working directory here. Run first to create all necessary folders.** |
 | README.md                   | Text file (markdown format, best shown on github). Description of the repository. |
 | .gitignore                  | Text file. List of folders that are not updated on the repository because too heavy (A3, B1, B2, C1). |
-|                             |                                                              |
-| MapRiverBasinRegion.jpg     | Swiss map colored according to catchment delimitation used for initial taxa pools, produced by Rosi Siber. |
 
 ### 00_utilities
 
@@ -96,7 +92,7 @@ Directory: *ArtificialData_Streambugs_SDMs*
 
 ### A3_outputs_streambugs
 
-Folders and files (csv and pdf) produced by the script "main_sdms.r". Refer to their name for their content.
+Folders and files (csv and pdf) produced by the script `main_streambugs.r`. Refer to their name for their content.
 
 ### B1_scripts_SDMs
 
@@ -108,9 +104,13 @@ Folders and files (csv and pdf) produced by the script "main_sdms.r". Refer to t
 | ml_models.r               | Script with functions to apply null and machine learning models. We calculate explicitly the loss function, the likelihood and the standardized deviance for our application case. |
 | performances_assessment.r | Script with function to summarize and restructure results.   |
 
-### 
+### B2_outputs_sdms
+
+Folders and files (csv and pdf) produced by the script `main_sdms.r`. Refer to their name for their content.
 
 ## Authors contribution
+
+*Authors:* Emma Chollet Ramampiandra (ECR), Gaspard Fragnière (GF), Andreas Scheidegger (AS), Nele Schuwirth (NS)
 
 NS initiated the study and acquired funding. ECR, NS and AS designed the study. ECR implemented the models and carried out the simulations and visualizations of the results with support by GF, especially for implementation of the data limitation scenarios. All authors contributed to the analysis of the results. ECR wrote the first draft of the paper and all authors contributed to revisions.
 
