@@ -18,8 +18,7 @@ directories <- c(
     "A2_scripts_streambugs",
     "A3_outputs_streambugs",
     "B1_scripts_sdms",
-    "B2_outputs_sdms",
-    "C1_documentation"
+    "B2_outputs_sdms"
 )
 
 for(directory in directories){
