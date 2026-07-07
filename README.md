@@ -1,6 +1,7 @@
 # ArtificialData_Streambugs_SDMs
 
 > *Correspondence:* <emma.chollet@hotmail.com>
+> 
 > *Date:* 06.07.2026
 
 ## Overview
@@ -9,6 +10,7 @@
 
 **Structure**: Folders and files are named according to their content and order.
 
+```
 ArtificialData_Streambugs_SDMs/
 │
 ├── 00_utilities
@@ -18,9 +20,11 @@ ArtificialData_Streambugs_SDMs/
 │
 ├── B1_scripts_sdms
 ├── B2_outputs_sdms
-├── C1_documentation
 │
+├── .gitignore
+├── set_folders_structure.r
 └── README.md
+```
 
 ## Quick start
 
@@ -49,7 +53,7 @@ To reproduce the complete workflow on R 4.4.1:
 | --------------------------- | ------------------------------------------------------------ |
 | **set_folders_structure.r** | **Open. Set working directory here. Run first to create all necessary folders.** |
 | README.md                   | Text file (markdown format, best shown on github). Description of the repository. |
-| .gitignore                  | Text file. List of folders that are not updated on the repository because too heavy (A3, B1, B2, C1). |
+| .gitignore                  | Text file. List of folders that are not updated on the repository because too heavy (A3, B2). |
 
 ### 00_utilities
 
@@ -58,6 +62,7 @@ To reproduce the complete workflow on R 4.4.1:
 | utilities_global.r         | Global functions that are needed in many R scripts (e.g., print plots in pdf, process inputs to plot Swiss maps, but also specific functions for processing data for Streambugs or the SDMs). |
 | selected_taxa_analysis.csv | List of taxa selected for further analysis, based on previous studies or ecological interest. |
 | swiss.map.gdb              | Folder. Containing files (gdb) necessary to plot Swiss map with lake and rivers. |
+| NotesEquStreambugs.pdf     | Handwritten notes on Streambugs equations and functions.     |
 | MapRiverBasinRegion.jpg    | Swiss map colored according to catchment delimitation used for initial taxa pools, produced by Rosi Siber. |
 
 <img src="/00_utilities/MapRiverBasinRegion.jpg" width="75%">
@@ -75,7 +80,7 @@ To reproduce the complete workflow on R 4.4.1:
 | BDM_950samples_294taxa_13envfact_ProcessedDataset.csv       | Macroinvertebrate data from BDM program (EPT at species level) for 950 samples, used to define initial taxa pool per catchment (see Figure 2). Output of datapackage: *PreprocessSwissInvertebrateEnvironmentalModellingData* |
 | Synthetic_environmental_data_2024-03-19.dat                 | Environmental inputs for 95'000 artificial sampling sites in Switzerland selected based on a 2kmx2km grid and snapped to the closest river. Provided by GIS expert (Rosi Siber in 2024). |
 | invertebrates_taxonomy_2023-08-03.dat                       | Complete taxonomy (Phylum, Class, Order, Family, Genus, Species) of all macroinvertebrates. |
-| parameter_input_Reform.dat                                  | Global parameter values for Streambugs, derived from Paillex et al. (2017). Both in Delta and Lognormal distribution (takes a bit more time to be "sampled", can be changed to Delta only). Some parameters (e.g., tempmax and current intercept and curve) are modified to get stronger response to fit the purpose of this study, see **XXX**.pptx for more documentation. |
+| parameter_input_Reform.dat                                  | Global parameter values for Streambugs, derived from Paillex et al. (2017). Both in Delta and Lognormal distribution (takes a bit more time to be "sampled", can be changed to Delta only). Some parameters (e.g., tempmax and current intercept and curve) are modified to get stronger response to fit the purpose of this study. |
 | correction_preference_traits.csv                            | List of ecological preferences corrected manually for our application to make smoother response shapes (otherwise they are sometimes multimodal). |
 | T1d_BDM_CH_Tvsappestsubst_maxpost_trait_pars_2023-12-15.dat | Ecological preferences from Vermeiren et al. (2020), used to update the traits derived from the databases to get stronger responses to fit the purpose of the study. |
 
@@ -99,21 +104,17 @@ Folders and files (csv and pdf) produced by the script `main_streambugs.r`. Refe
 
 | filename                  | description                                                  |
 | :------------------------ | ------------------------------------------------------------ |
-| **main_sdms.r**           | **Open. Set working directory here. <br />- Check carefully Global inputs at the beginning of the script: env pred (dir, indir.), taxa  list (prev. threshold, NA threshold), models and training options. <br />- Check Noise scenario options. <br />- Run to apply each model to each scenario and produce plots per model per scenario and comparison plots.<br />- Warning: ANN required a specific pathway of dependencies, using "reticulate" and "keras", this might require investigation to reproduce it on your computer. ** |
+| **main_sdms.r**           | **Open. Set working directory here. <br />- Check carefully Global inputs at the beginning of the script: env pred (dir, indir.), taxa  list (prev. threshold, NA threshold), models and training options. <br />- Check Noise scenario options. <br />- Run to apply each model to each scenario and produce plots per model per scenario and comparison plots.<br />- Warning: ANN required a specific pathway of dependencies, using "reticulate" and "keras", this might require investigation to reproduce it on your computer.** |
 | data_noising.r            | Script with functions to add noise to the data.              |
 | ml_models.r               | Script with functions to apply null and machine learning models. We calculate explicitly the loss function, the likelihood and the standardized deviance for our application case. |
-| performances_assessment.r | Script with function to summarize and restructure results.   |
+| performances_assessment.r | Script with functions to summarize and restructure results.  |
 
 ### B2_outputs_sdms
 
-Folders and files (csv and pdf) produced by the script `main_sdms.r`. Refer to their name for their content.
+Folders and files (csv, png and pdf) produced by the script `main_sdms.r`. One folder is created for each simulation/scenario, with its specific results and plots. The folder "comparison_plots" contains the plots comparing the different scenarios, used in the manuscript. Refer to the name of the folders and file to understand their content.
 
 ## Authors contribution
 
 *Authors:* Emma Chollet Ramampiandra (ECR), Gaspard Fragnière (GF), Andreas Scheidegger (AS), Nele Schuwirth (NS)
 
 NS initiated the study and acquired funding. ECR, NS and AS designed the study. ECR implemented the models and carried out the simulations and visualizations of the results with support by GF, especially for implementation of the data limitation scenarios. All authors contributed to the analysis of the results. ECR wrote the first draft of the paper and all authors contributed to revisions.
-
-## Acknowledgement
-
-We thank the Swiss National Science Foundation (SNSF) for funding this study (grant 310030_192503). We thank the Swiss Federal Office for the Environment (FOEN), especially Yael Schindler Wildhaber, and the info fauna CSCF & karch, especially Maxime Chèvre, for access to the data and support. We thank Rosi Siber for data preparation, and Helen Moor and Antoine Adde for helpful comments on an earlier version of the manuscript.
